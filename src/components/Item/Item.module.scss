@@ -1,0 +1,17 @@
+.MenuItem {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: baseline; /* label과 p의 baseline을 맞추기 */
+}
+
+.MenuItem label {
+  width: 75px; /* label의 고정 너비 */
+  font-weight: bold;
+  color: var(--gray-gray-80);
+}
+
+.MenuItem p {
+  margin: 0;
+  // padding-left: 10px;
+  flex-grow: 1; /* p가 label 옆에 늘어나는 걸 방지 */
+}

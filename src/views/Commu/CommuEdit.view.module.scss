@@ -1,0 +1,58 @@
+.ViewBoard {
+  width: 80%;
+  height: auto;
+  padding: 80px;
+  margin: 0 auto;
+}
+.Category {
+  font-size: 15px;
+  color: green;
+}
+
+.Profile {
+  height: auto;
+  border-bottom: 1px solid lightgray;
+  display: flex;
+}
+.Btn {
+  margin-left: 88%;
+  padding: 10px;
+  width: 1000px;
+  display: flex;
+}
+
+.Btn1 {
+  font-size: 15px;
+  color: white;
+  background-color: green;
+  border-radius: 5px;
+  padding: 5px;
+  width: 60px;
+  margin-right: 7px;
+}
+
+.ViewBoards {
+  border: 1px solid lightgray;
+  padding: 10px;
+}
+
+.Info {
+  padding: 0 0 0 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Comment {
+  padding: 20px;
+  border: 1px solid lightgray;
+  display: flex;
+  flex-direction: column;
+}
+.Text {
+  width: 100%;
+  min-height: 300px;
+}
+.Title {
+  margin: 10px 0 0 10px;
+  font-size: 15px;
+}

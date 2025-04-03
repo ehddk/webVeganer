@@ -1,0 +1,53 @@
+.Title {
+  padding: 120px 120px 30px 120px;
+}
+.Board {
+  width: 1400px;
+  border: 1px solid lightgray;
+  height: auto;
+  margin-left: 120px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 80px;
+}
+
+.BoardTitle {
+  margin: 30px 0 0 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.BoardBody {
+  width: 1200px;
+  border: 0;
+  padding: 20px;
+  background-color: lightgray;
+}
+
+.BoardContent {
+  width: 1200px;
+  border: 0;
+  padding: 20px;
+  background-color: lightgray;
+  height: 400px;
+}
+
+.ListTop {
+  margin: 20px 0 0 80px;
+  background-color: lightgray;
+  border-bottom: 1px solid black;
+  width: 1240px;
+}
+
+.Con {
+  display: flex;
+  padding: 60px;
+  gap: 40px;
+  margin: 0 auto;
+}
+
+.Btn {
+  width: 100px;
+  padding: 10px;
+}

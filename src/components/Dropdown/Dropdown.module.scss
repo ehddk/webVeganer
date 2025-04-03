@@ -1,0 +1,130 @@
+@layer Dropdown {
+  .DropdownRoot {
+    position: relative;
+  }
+
+  .DropdownTrigger {
+    cursor: pointer;
+    padding: 8px;
+    height: 24px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 8px;
+    gap: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--color);
+
+    &.text {
+      background: transparent;
+    }
+
+    &.small {
+      height: 32px;
+    }
+
+    &.medium {
+      height: 40px;
+    }
+
+    &.large {
+      height: 48px;
+    }
+  }
+
+  .DropdownTriggerText {
+    color: var(--color);
+  }
+
+  .LeftIcon {
+    flex-shrink: 0;
+
+    & path {
+      fill: var(--icon-color);
+    }
+  }
+
+  .RightIcon {
+    margin-left: auto;
+    flex-shrink: 0;
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+    transform-origin: top top;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    & path {
+      fill: var(--icon-color);
+    }
+
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+
+  .DropdownMenu {
+    width: 100%;
+    z-index: 1000;
+    border-radius: 8px;
+    padding: 8px;
+
+    &.shadow {
+      background-color: var(--backgroundDefault, #ffffff);
+      box-shadow: 0 30px 40px 0 var(--shadow12, #919eab1f);
+      border: 1px solid var(--grey8, #919eab14);
+    }
+
+    &.line {
+      background-color: var(--backgroundDefault, #ffffff);
+      border: 1px solid var(--grey20, #919eab33);
+    }
+  }
+
+  .DropdownItem {
+    padding: 0 8px;
+    border-radius: 8px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &.small {
+      height: 32px;
+      line-height: 32px;
+    }
+
+    &.medium {
+      height: 40px;
+      line-height: 40px;
+    }
+
+    &.shadow {
+      &:hover {
+        background: var(--grey8, #919eab14);
+      }
+    }
+
+    &.line {
+      border-bottom: 1px solid var(--grey16, #919eab29);
+
+      &:hover {
+        background: var(--grey8, #919eab14);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    &.selected {
+      color: var(--textDisabled, #c4cdd5);
+    }
+
+    &.disabled {
+      pointer-events: none;
+    }
+  }
+}

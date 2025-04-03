@@ -1,0 +1,32 @@
+.Wrapper {
+  border-top: 1px solid lightgray;
+  background-color: lightgray;
+  height: 300px;
+  padding: 20px;
+}
+.List {
+  display: flex;
+
+  justify-content: "space-between";
+  width: "1450px";
+  margin: "0 auto";
+}
+.Logo {
+  width: 30%;
+  text-align: left;
+
+  h4 {
+    color: gray;
+  }
+}
+
+.Time,
+.Call {
+  width: 30%;
+}
+
+.Call {
+  h4 {
+    color: gray;
+  }
+}

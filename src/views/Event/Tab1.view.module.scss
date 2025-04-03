@@ -1,0 +1,27 @@
+.OptionContainer {
+  padding: 70px;
+}
+.MenuList {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  font-size: 20px;
+}
+.GridContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-left: 7%;
+  margin-top: 60px;
+  gap: 30px;
+
+  .ItemContainer {
+    width: 300px;
+    height: 300px;
+    border: 1px solid red;
+  }
+}
+
+.ItemInfo {
+  margin-top: 10px;
+  text-align: center;
+}

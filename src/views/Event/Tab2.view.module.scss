@@ -1,0 +1,30 @@
+.GridContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 0 0 80px 0;
+}
+
+.ItemContainer {
+  width: 600px;
+  height: 200px;
+  box-shadow: 3px 3px 2px lightgray;
+  border: 1px solid lightgray;
+}
+
+.DetailContainer {
+  display: flex;
+  gap: 25px;
+  padding: 20px;
+}
+
+.LeftContainer {
+  width: 150px;
+  height: 150px;
+  border: 1px solid blue;
+}
+.RightContainer {
+  width: 400px;
+  height: 150px;
+  border: 1px solid red;
+}

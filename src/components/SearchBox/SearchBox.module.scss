@@ -1,0 +1,30 @@
+.SearchBox {
+  //border: 1px solid var(--gray-gray-70);
+  border-radius: 5px;
+  max-width: 800px;
+  width: 100%;
+  height: 45px;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+.Line {
+  display: flex;
+  align-items: center;
+
+  line-height: 10px;
+}
+.Icon {
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+}
+.Input {
+  flex: 1; // Take up remaining space
+  border: 0;
+  height: 35px;
+  padding: 5px;
+  margin-left: 20px;
+  font-size: 12px;
+  background-color: var(--gray-gray-95);
+  border-radius: 5px;
+}

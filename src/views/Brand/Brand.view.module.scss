@@ -1,0 +1,147 @@
+.Banner {
+  background-color: #7bac7a;
+  opacity: 0.8;
+  height: 405px;
+  width: 100%;
+
+  @media screen and (max-width: 1200px) {
+    width: 100%;
+  }
+}
+.RightSide {
+  padding: 30px;
+  width: 50%;
+}
+.Inside {
+  background-color: #33691e;
+  width: 80%;
+  height: 250px;
+  margin: 0 auto;
+}
+
+.Intro {
+  width: 100%;
+
+  background-color: #f9f9f9;
+}
+
+.Content1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Content2 {
+  background: #f9f9f9;
+
+  margin: 0 auto;
+  padding: 30px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  // justify-content: center;
+  max-width: 800px;
+}
+.Left {
+  padding: 30px;
+
+  @media screen and (max-width: 1200px) {
+    padding: 10px;
+  }
+  //width: 55%;
+  // height: auto;
+  // padding: 80px;
+}
+
+.Right {
+  // width: 50%;
+
+  //padding: 40px;
+
+  .SubTitle {
+    // padding: 50px;
+    margin-right: 70px;
+    font-size: 30px;
+    @media screen and (max-width: 1200px) {
+      font-size: 20px;
+      margin-right: 20px;
+    }
+  }
+}
+.Cont {
+  // width: 100%;
+  //width: 1260px;
+  margin: 0 auto;
+  background-color: ivory;
+}
+
+.Title {
+  display: flex;
+  flex-direction: column;
+  padding: 40px 40px 0 400px;
+}
+.Step {
+  display: flex;
+  padding: 50px;
+  height: 230px;
+}
+
+.Line {
+  height: 115px;
+  position: relative;
+  text-align: center;
+  &::after {
+    content: "";
+    position: absolute;
+    height: 100px;
+    width: 3px;
+    background: black;
+    top: 0;
+    left: 0;
+    transition: height 0.35s ease;
+  }
+  &::before {
+    content: "";
+    height: 2px;
+    width: 3px;
+    background: black;
+    top: 0;
+    left: 0;
+    position: absolute;
+  }
+}
+
+.Img {
+  width: 70px;
+  height: 60px;
+}
+.LeftSide {
+  width: 50%;
+  padding: 30px;
+  margin-top: 40px;
+  border-right: 1px solid #006400;
+}
+
+.Icon {
+  height: 60px;
+  color: gray;
+}
+.First {
+  width: 45%;
+  padding: 30px;
+  margin-top: 40px;
+  border-right: 1px solid #006400;
+}
+
+.Sort {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 30px;
+}
+
+// .TitlePurpose {
+//   margin-right: 30px;
+// }
+.TitlePurposeContent {
+  font-size: 15px;
+  line-height: 30px;
+}

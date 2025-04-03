@@ -1,0 +1,63 @@
+.Wrapper {
+  height: 70px;
+  padding: 20px;
+}
+.Menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-right: 10px;
+}
+
+.MenuList {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+.Menu a {
+  /* .Menu 안에 있는 a 태그에만 스타일 적용 */
+  text-decoration: none;
+  color: black;
+}
+
+.UtilMenu {
+  text-decoration: none;
+  color: gray;
+  font-size: 15px;
+}
+.LoginUl {
+  list-style-type: none;
+  display: flex;
+  gap: 10px;
+  color: gray;
+  position: absolute; // 수정된 부분: position을 fixed로 변경
+  right: 20px;
+
+  z-index: 9999;
+}
+
+.Hamburger {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.DropdownMenu {
+  width: 120px;
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.23);
+  text-align: center;
+}
+
+@media screen and (max-width: 496px) {
+  /* max-width 사용 */
+  .MenuList {
+    display: none;
+  }
+  .Hamburger {
+    display: block; /* 430px 이하에서 나타남 */
+  }
+}

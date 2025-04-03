@@ -1,0 +1,58 @@
+.Wrapper {
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  // margin-bottom: 80px;
+
+  text-align: center;
+  // align-items: center;
+  // justify-content: center;
+  margin: 0 auto;
+}
+
+.InputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.Input {
+  font-size: 15px;
+  height: 48px;
+  padding: 10px;
+  border: 0;
+  border-radius: 5px;
+  font-size: 12px;
+  background-color: #919eab14;
+}
+.BtnWrapper {
+  display: flex;
+
+  flex-direction: column;
+  gap: 20px;
+}
+.FormWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.Btn1 {
+  padding: 15px;
+
+  border-radius: 5px;
+
+  background-color: rgb(63, 129, 63);
+  color: white;
+  border: 0;
+  font-size: 15px;
+}
+.Btn2 {
+  padding: 15px;
+  width: 310px;
+  border-radius: 5px;
+
+  border: 1px solid rgb(63, 129, 63);
+  background-color: white;
+  font-size: 15px;
+}
