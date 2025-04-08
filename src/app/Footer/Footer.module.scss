@@ -1,32 +1,74 @@
 .Wrapper {
-  border-top: 1px solid lightgray;
-  background-color: lightgray;
-  height: 300px;
-  padding: 20px;
+  background-color: rgb(225, 223, 223);
+  // height: 300px;
+  padding: 30px;
 }
 .List {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 1250px;
 
-  justify-content: "space-between";
-  width: "1450px";
-  margin: "0 auto";
+  margin: 0 auto;
 }
 .Logo {
-  width: 30%;
-  text-align: left;
+  // width: 30%;
+  // text-align: left;
 
-  h4 {
-    color: gray;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.Content {
+  display: flex;
+  gap: 30px;
+}
+
+.Menu {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+  li {
+    a {
+      &::after {
+        content: "|";
+        padding-left: 8px;
+      }
+    }
+    &:last-child {
+      a {
+        &::after {
+          content: "";
+        }
+      }
+    }
+  }
+}
+.Info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  ul {
+    list-style: none;
+    gap: 5px;
+    li {
+      gap: 5px;
+
+      p {
+        color: gray;
+      }
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    display: flex;
+    flex-direction: column;
   }
 }
 
-.Time,
-.Call {
-  width: 30%;
-}
-
-.Call {
-  h4 {
-    color: gray;
-  }
+.BottomMenu {
+  display: flex;
+  justify-content: center;
 }
