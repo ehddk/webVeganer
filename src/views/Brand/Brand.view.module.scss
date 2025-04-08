@@ -8,10 +8,7 @@
     width: 100%;
   }
 }
-.RightSide {
-  padding: 30px;
-  width: 50%;
-}
+
 .Inside {
   background-color: #33691e;
   width: 80%;
@@ -20,96 +17,114 @@
 }
 
 .Intro {
-  width: 100%;
-
-  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
 }
-
 .Content1 {
+  max-width: 1200px;
+
+  margin: 0 auto;
   display: flex;
   align-items: center;
+  padding-top: 20px;
+
   justify-content: center;
+
+  @media screen and (max-width: 1200px) {
+    padding: 20px;
+    flex-direction: column-reverse;
+  }
+  .SubTitle {
+    @media screen and (max-width: 1200px) {
+      font-size: 17px;
+    }
+  }
 }
 .Content2 {
-  background: #f9f9f9;
-
+  //background: #f9f9f9;
+  max-width: 900px;
   margin: 0 auto;
   padding: 30px;
   display: flex;
   gap: 10px;
   align-items: center;
   // justify-content: center;
-  max-width: 800px;
+  @media screen and (max-width: 1200px) {
+    flex-direction: column;
+  }
+  .TitlePurpose {
+    @media screen and (max-width: 1200px) {
+      font-size: 17px;
+    }
+  }
+}
+.Divider {
+  height: 1px;
+  width: 300px;
+  margin: 0 auto;
+  background-color: #006400;
 }
 .Left {
-  padding: 30px;
+  padding: 10px;
+  width: 50%;
+
+  .description {
+    font-size: 15px;
+    line-height: 20px;
+  }
 
   @media screen and (max-width: 1200px) {
     padding: 10px;
+    width: 100%;
   }
   //width: 55%;
   // height: auto;
   // padding: 80px;
 }
 
-.Right {
-  // width: 50%;
+.Content3 {
+  width: 100%;
+  max-width: 1260px;
 
-  //padding: 40px;
-
-  .SubTitle {
-    // padding: 50px;
-    margin-right: 70px;
-    font-size: 30px;
-    @media screen and (max-width: 1200px) {
-      font-size: 20px;
-      margin-right: 20px;
-    }
-  }
-}
-.Cont {
-  // width: 100%;
-  //width: 1260px;
   margin: 0 auto;
+  padding-top: 30px;
   background-color: ivory;
 }
 
 .Title {
   display: flex;
   flex-direction: column;
-  padding: 40px 40px 0 400px;
+  text-align: center;
+
+  @media screen and (max-width: 1200px) {
+    font-size: 10px;
+  }
 }
-.Step {
+.Container {
   display: flex;
   padding: 50px;
-  height: 230px;
-}
+  margin: 0 auto;
+  // height: 230px;
 
-.Line {
-  height: 115px;
-  position: relative;
-  text-align: center;
-  &::after {
-    content: "";
-    position: absolute;
-    height: 100px;
-    width: 3px;
-    background: black;
-    top: 0;
-    left: 0;
-    transition: height 0.35s ease;
-  }
-  &::before {
-    content: "";
-    height: 2px;
-    width: 3px;
-    background: black;
-    top: 0;
-    left: 0;
-    position: absolute;
+  @media screen and (max-width: 1200px) {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
   }
 }
 
+.Icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 30px;
+  margin: 0 auto;
+  @media screen and (max-width: 1200px) {
+    padding: 0;
+  }
+}
 .Img {
   width: 70px;
   height: 60px;
@@ -117,13 +132,18 @@
 .LeftSide {
   width: 50%;
   padding: 30px;
-  margin-top: 40px;
+
   border-right: 1px solid #006400;
+
+  @media screen and (max-width: 1200px) {
+    border: 0;
+    width: 100%;
+  }
 }
 
 .Icon {
-  height: 60px;
-  color: gray;
+  //height: 30px;
+  color: rgb(175, 175, 175);
 }
 .First {
   width: 45%;
@@ -132,16 +152,23 @@
   border-right: 1px solid #006400;
 }
 
-.Sort {
+.Step {
+  display: flex;
+  flex-direction: column;
   font-size: 20px;
   font-weight: 800;
-  margin: 30px;
+  gap: 10px;
+  @media screen and (max-width: 1200px) {
+    font-size: 15px;
+  }
 }
 
-// .TitlePurpose {
-//   margin-right: 30px;
-// }
 .TitlePurposeContent {
   font-size: 15px;
   line-height: 30px;
+  width: 50%;
+
+  @media screen and (max-width: 1200px) {
+    width: 100%;
+  }
 }
