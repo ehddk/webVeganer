@@ -2,6 +2,11 @@
   height: 70px;
   padding: 20px;
 }
+.Header {
+  display: flex;
+  max-width: 1250px;
+  margin: 0 auto;
+}
 .Menu {
   display: flex;
   justify-content: center;
