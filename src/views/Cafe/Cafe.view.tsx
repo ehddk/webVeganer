@@ -7,6 +7,7 @@ import seoulList from "@/app/services/seoulData";
 import styles from "./Cafe.view.module.scss";
 import cn from "classnames/bind";
 import { useModal } from "@/hooks/modal/useModal";
+import InfoModal from "@/components/Modal/InfoModal/InfoModal";
 
 const cx = cn.bind(styles);
 
@@ -20,18 +21,21 @@ export default function CafeView() {
   //   const handleMovePage=()=>{
   //     history.push('/info')
   // }
+
   const handleModal = () => {
-    showModal({
-      type: "default",
-      title: "지역 찾기",
-      description: "원하는 지역을 선택하세요.",
-      positive: {
-        text: "확인",
-        onClick: () => {
-          closeModal();
-        },
-      },
-    });
+    // showModal({
+    //   type: "default",
+    //   title: "지역 찾기",
+    //   dimmedColor: "transparent",
+    //   description: "원하는 지역을 선택하세요.",
+    //   positive: {
+    //     text: "확인",
+    //     onClick: () => {
+    //       closeModal();
+    //     },
+    //   },
+    // });
+    setIsModalOpen(true);
   };
   const closeModal = () => {
     setIsModalOpen(false);
@@ -108,6 +112,15 @@ export default function CafeView() {
           </div>
         ))}
       </div>
+      {isModalOpen && (
+        <InfoModal onClose={closeModal}>
+          <Modal
+            onCheck={undefined}
+            onClose={undefined}
+            onSelectedLocation={undefined}
+          />
+        </InfoModal>
+      )}
     </>
   );
 }
