@@ -49,24 +49,21 @@ export default function MainPage() {
 
   const commuList = commuData.category.filter((item) => item.category);
   return (
-    <>
-      <div>
-        <div className={cx("Banner")} />
-        <SearchBox
-          placeholder="음식점,카페, 제품 등등을 검색해보세요"
-          value={undefined}
-          onChange={undefined}
-        />
-
-        <section className={cx("Popular")}>
+    <div className={cx("Wrapper")}>
+      <div className={cx("Banner")} />
+      <SearchBox
+        placeholder="음식점,카페, 제품 등등을 검색해보세요"
+        value={undefined}
+        onChange={undefined}
+      />
+      <section className={cx("Content")}>
+        <div className={cx("Popular")}>
           <div className={cx("SubT")}>
-            <h1>
-              요즘 뜨는 <br /> 인기 식당
-            </h1>
-
+            <h1>요즘 뜨는</h1> <h1>인기 식당</h1>
             <Button
               text={"비건식당 구경하러가기"}
               onClick={() => router.push("/food")}
+              backgroundColor="rgb(70, 144, 70)"
             ></Button>
           </div>
           <div className={cx("Cont")}>
@@ -87,9 +84,9 @@ export default function MainPage() {
               </ul>
             ))}
           </div>
-        </section>
+        </div>
 
-        <section className={cx("Cafe")}>
+        <div className={cx("Cafe")}>
           <div className={cx("Left")}>
             <h1>
               요즘 뜨는 <br /> 비건 카페
@@ -97,6 +94,7 @@ export default function MainPage() {
             <Button
               text={"비건카페 구경하러가기"}
               onClick={() => router.push("/Cafe")}
+              backgroundColor="rgb(70,144,70)"
             ></Button>
           </div>
 
@@ -109,7 +107,7 @@ export default function MainPage() {
                       <div className={cx("BoardList")}>
                         <div className={cx("Left")}>
                           <h3>{item.cafeName}</h3>
-                          <p className={cx("Content")}>{item.content}</p>
+                          <p className={cx("ItemContent")}>{item.content}</p>
                           <p className={cx("Date")}>{item.date}</p>
                         </div>
                         <div className={cx("Right")}>
@@ -122,8 +120,8 @@ export default function MainPage() {
               ))}
             </div>
           </div>
-        </section>
-      </div>
-    </>
+        </div>
+      </section>
+    </div>
   );
 }
