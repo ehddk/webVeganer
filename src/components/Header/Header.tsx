@@ -19,48 +19,6 @@ export default function Header({ session }) {
     setDropdownOpen(!isDropdownOpen);
   };
 
-  const headerStyle = {
-    display: "flex",
-    lineHeight: "center",
-    alignItems: "center",
-    height: "50px",
-    justifyContent: "space-between",
-    padding: "15px",
-    margin: "0 100px",
-  };
-
-  const menu = {
-    display: "flex",
-    gap: "100px",
-    listStyleType: "none",
-    marginTop: "40px",
-    fontSize: "20px",
-  };
-
-  const loginUl = {
-    listStyleType: "none",
-    display: "flex",
-    gap: "10px",
-    color: "gray",
-    position: "absolute", // 수정된 부분: position을 fixed로 변경
-    right: "20px",
-    top: "-10px",
-    zIndex: "9999",
-  };
-
-  const dropdownStyle = {
-    background: "lightgray",
-    width: "120px",
-    height: "70px",
-    marginTop: "-10px",
-    borderRadius: "10px",
-    position: "absolute",
-    left: "83%", // Center the dropdown horizontally
-    transform: "translateX(-50%)", // Adjust for centering
-    zIndex: "9999",
-    listStyleType: "none",
-  };
-
   const handleMenuItemClick = (path) => {
     router.push(path);
     setDropdownOpen(false);
@@ -91,7 +49,9 @@ export default function Header({ session }) {
           alignItems: "center",
         }}
       >
-        <h1>Veganer</h1>
+        <a href="/">
+          <h1>Veganer</h1>
+        </a>
         <nav className={cx("Menu")}>
           <ul className={cx("MenuList")}>
             <li>
