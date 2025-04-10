@@ -2,6 +2,9 @@
 import City from "@/app/services/cityData";
 import { useState } from "react";
 import hangjungdongData from "@/app/services/map";
+import styles from "./Modal.module.scss";
+import cn from "classnames/bind";
+const cx = cn.bind(styles);
 
 function Modal({ onCheck, onClose, onSelectedLocation }) {
   //const [selectedLocation, setSelectedLocation] = useState(null);
@@ -9,21 +12,6 @@ function Modal({ onCheck, onClose, onSelectedLocation }) {
   const [selectedSigugun, setSelectedSigugun] = useState(null);
   const [selectedDong, setSelectedDong] = useState(null);
   const [selectedCodeNm, setSelectedCodeNm] = useState(null);
-
-  const ModalOverlay = {
-    position: "fixed",
-    top: "0",
-    left: "0",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-    display: "flex",
-
-    // justifyContent: "center",
-    // alignItems: "center",
-    margin: "0 auto",
-    zIndex: "1000",
-  };
 
   const ModalContent = {
     width: "700px",
@@ -56,13 +44,6 @@ function Modal({ onCheck, onClose, onSelectedLocation }) {
     margin: "0 610px",
   };
 
-  const content = {
-    // float:"left",
-    padding: "40px",
-
-    width: "600px",
-    height: "510px",
-  };
   const title = {
     width: "600px",
     height: "40px",
@@ -101,23 +82,15 @@ function Modal({ onCheck, onClose, onSelectedLocation }) {
 
   const hangjungdong = hangjungdongData;
   return (
-    <div style={ModalOverlay}>
-      <div style={ModalContent}>
+    <div>
+      <div className={cx("ModalContent")}>
         <div style={{ margin: "0 auto" }}>
-          <button style={CancelButton} onClick={onClose}>
+          {/* <button style={CancelButton} onClick={onClose}>
             X
-          </button>
-          <div style={content}>
+          </button> */}
+          <div className={cx("Content")}>
             <div style={title}>
-              <p
-                style={{
-                  fontSize: "30px",
-                  padding: "0 440px 0 0",
-                  borderBottom: "3px solid navy",
-                }}
-              >
-                지역 선택
-              </p>
+              <p className={cx("Title")}>지역 선택</p>
             </div>
             <div>
               <div style={left}>
