@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import seoulList from "@/app/services/seoulData";
 import styles from "./Cafe.view.module.scss";
 import cn from "classnames/bind";
+import { useModal } from "@/hooks/modal/useModal";
 
 const cx = cn.bind(styles);
 
@@ -20,7 +21,17 @@ export default function CafeView() {
   //     history.push('/info')
   // }
   const handleModal = () => {
-    setIsModalOpen(true);
+    showModal({
+      type: "default",
+      title: "지역 찾기",
+      description: "원하는 지역을 선택하세요.",
+      positive: {
+        text: "확인",
+        onClick: () => {
+          closeModal();
+        },
+      },
+    });
   };
   const closeModal = () => {
     setIsModalOpen(false);
@@ -59,6 +70,7 @@ export default function CafeView() {
   const handleSearch = (e) => {
     setSearchCafe(e.target.value);
   };
+  const { showModal, hideModal, ModalComponent } = useModal();
 
   return (
     <>
@@ -74,12 +86,6 @@ export default function CafeView() {
           <button className={cx("Button")} onClick={handleModal}>
             지역 찾기
           </button>
-          {isModalOpen && (
-            <Modal
-              onClose={closeModal}
-              onSelectedLocation={handleSelectedLocation}
-            ></Modal>
-          )}
         </div>
       </div>
       <div className={cx("Grid")}>
