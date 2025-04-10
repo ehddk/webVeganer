@@ -6,13 +6,14 @@ const cx = cn.bind(styles);
 type ButtonProps = {
   text: string;
   onClick?: () => void;
+  backgroundColor?: string;
 };
 export default function Button(props: ButtonProps) {
-  const { text, onClick } = props;
+  const { text, onClick, backgroundColor } = props;
   let router = useRouter();
 
   return (
-    <button className={cx("Btn")} onClick={onClick}>
+    <button className={cx("Btn")} onClick={onClick} style={{ backgroundColor }}>
       {text}
     </button>
   );
