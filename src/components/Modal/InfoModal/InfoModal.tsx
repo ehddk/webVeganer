@@ -6,12 +6,12 @@ import { IoMdClose } from "react-icons/io";
 
 const cx = cn.bind(styles);
 
-interface InfoModalProps {
+interface IModalProps {
   onClose: () => void;
   responsive?: boolean;
 }
 
-const InfoModal = (props: React.PropsWithChildren<InfoModalProps>) => {
+const IModal = (props: React.PropsWithChildren<IModalProps>) => {
   const { children, onClose, responsive = false } = props;
 
   return (
@@ -37,4 +37,4 @@ const InfoModal = (props: React.PropsWithChildren<InfoModalProps>) => {
   );
 };
 
-export default InfoModal;
+export default IModal;
