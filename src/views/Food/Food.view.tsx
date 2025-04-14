@@ -6,6 +6,7 @@ import SearchBox from "../../components/SearchBox/SearchBox";
 import Modal from "../../components/Modal/Modal";
 import seoulList from "@/app/services/seoulData";
 import { useRouter } from "next/navigation";
+import InfoModal from "@/components/Modal/InfoModal/InfoModal";
 
 const cx = cn.bind(styles);
 
@@ -69,19 +70,13 @@ function FoodView() {
           <button onClick={handleModal} className={cx("Button")}>
             지역 찾기
           </button>
-          {isModalOpen && (
-            <Modal
-              onClose={closeModal}
-              onSelectedLocation={handleSelectedLocation}
-              onCheck={undefined}
-            ></Modal>
-          )}
         </div>
       </div>
 
       <div className={cx("Grid")}>
         {filteredRestaurants.map((restaurant, index) => (
           <div
+            className={cx("Item")}
             key={index}
             onClick={() =>
               router.push(
@@ -89,11 +84,8 @@ function FoodView() {
               )
             }
           >
-            <div className={cx("Item")}>
-              <img
-                style={{ borderRadius: "5px" }}
-                src="https://picsum.photos/300/250"
-              />
+            <div className={cx("Thumbnail")}>
+              <img src="https://picsum.photos/800/600" />
             </div>
             <div className={cx("RestaurantInfo")}>
               <p>{restaurant.upso_nm}</p>
@@ -102,6 +94,15 @@ function FoodView() {
           </div>
         ))}
       </div>
+      {isModalOpen && (
+        <InfoModal onClose={closeModal} responsive={true}>
+          <Modal
+            onCheck={undefined}
+            onClose={undefined}
+            onSelectedLocation={undefined}
+          />
+        </InfoModal>
+      )}
     </>
   );
 }

@@ -8,6 +8,7 @@ import styles from "./Cafe.view.module.scss";
 import cn from "classnames/bind";
 import { useModal } from "@/hooks/modal/useModal";
 import InfoModal from "@/components/Modal/InfoModal/InfoModal";
+import IModal from "@/components/Modal/InfoModal/InfoModal";
 
 const cx = cn.bind(styles);
 
@@ -95,6 +96,7 @@ export default function CafeView() {
       <div className={cx("Grid")}>
         {filteredCafe.map((cafe, index) => (
           <div
+            className={cx("Item")}
             key={index}
             onClick={() =>
               router.push(
@@ -102,18 +104,21 @@ export default function CafeView() {
               )
             }
           >
-            <div className={cx("Item")}></div>
+            <div className={cx("Thumbnail")}>
+              <img
+                src="https://picsum.photos/800/600"
+                alt={`${cafe.upso_nm} 이미지`}
+              />
+            </div>
             <div className={cx("RestaurantInfo")}>
-              {" "}
-              {/* 식당 정보 div 추가 */}
-              <p>{cafe.upso_nm}</p>
-              <p>{cafe.cgg_code_nm}</p>
+              <p className={cx("CafeName")}>{cafe.upso_nm}</p>
+              <p className={cx("Location")}>{cafe.cgg_code_nm}</p>
             </div>
           </div>
         ))}
       </div>
       {isModalOpen && (
-        <InfoModal onClose={closeModal}>
+        <InfoModal onClose={closeModal} responsive={true}>
           <Modal
             onCheck={undefined}
             onClose={undefined}
