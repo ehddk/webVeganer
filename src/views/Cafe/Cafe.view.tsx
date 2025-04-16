@@ -106,7 +106,7 @@ export default function CafeView() {
           >
             <div className={cx("Thumbnail")}>
               <img
-                src="https://picsum.photos/800/600"
+                src="https://picsum.photos/200/200"
                 alt={`${cafe.upso_nm} 이미지`}
               />
             </div>

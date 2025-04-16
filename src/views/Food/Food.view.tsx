@@ -85,7 +85,7 @@ function FoodView() {
             }
           >
             <div className={cx("Thumbnail")}>
-              <img src="https://picsum.photos/800/600" />
+              <img src="https://picsum.photos/200/200" />
             </div>
             <div className={cx("RestaurantInfo")}>
               <p>{restaurant.upso_nm}</p>
