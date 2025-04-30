@@ -3,8 +3,18 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
+
+interface BlogItem {
+  title: string;
+  link: string;
+  description: string;
+  bloggername: string;
+  postdate: string;
+}
 export default function Blog({ query }) {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<BlogItem[]>([]); // 빈 배열로 초기화
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -13,10 +23,35 @@ export default function Blog({ query }) {
     background: green;
     border: 0;
     padding: 5px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 4px;
+
+    &:hover {
+      background: darkgreen;
+    }
   `;
+
+  const BlogItem = styled.div`
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  `;
+
   useEffect(() => {
     const fetchData = async () => {
-      if (query) {
+      if (!query) return;
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
         const res = await fetch(
           `/api/crawl/blog?query=${encodeURIComponent(query)}`,
           {
@@ -27,50 +62,102 @@ export default function Blog({ query }) {
           }
         );
 
+        if (!res.ok) {
+          throw new Error(`API 요청 실패: ${res.status}`);
+        }
+
         const data = await res.json();
-        setItems(data.items);
+        console.log("받아온 데이터:", data);
+
+        // 데이터 구조 확인 - 네이버 API는 items 배열로 반환
+        if (data.items && Array.isArray(data.items)) {
+          setItems(data.items);
+        } else {
+          // 데이터가 객체인 경우 (0, 1, 2... 키를 가진 객체)
+          const itemsArray = [];
+          for (let key in data) {
+            if (!isNaN(parseInt(key))) {
+              itemsArray.push(data[key]);
+            }
+          }
+          setItems(itemsArray);
+        }
+      } catch (err) {
+        console.error("데이터 가져오기 오류:", err);
+        setError(err.message);
+        setItems([]); // 오류 발생 시 빈 배열로 설정
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, [query]);
 
+  // 총 페이지 수 계산
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const currentItems = items.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  if (isLoading) return <div>데이터를 불러오는 중입니다...</div>;
+  if (error) return <div>오류가 발생했습니다: {error}</div>;
+
   return (
     <div style={{ padding: "20px" }}>
       <div style={{ marginTop: "20px" }}>
-        {currentItems.length > 0 ? (
+        {items.length > 0 ? (
           currentItems.map((item, index) => (
-            <div key={index} style={{ marginBottom: "20px" }}>
+            <BlogItem key={index}>
               <Link
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: "black" }}
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                <p>{item.title}</p>
+                <h3
+                  style={{ margin: "0 0 10px 0" }}
+                  dangerouslySetInnerHTML={{ __html: item.title }}
+                />
               </Link>
-              <p>{item.description}</p>{" "}
-              {/* Use descriptions array to get the corresponding description */}
-            </div>
+              <p
+                style={{ color: "#555", margin: "0 0 10px 0" }}
+                dangerouslySetInnerHTML={{ __html: item.description }}
+              />
+              <div style={{ fontSize: "12px", color: "#888" }}>
+                {item.bloggername} |
+                {item.postdate &&
+                  ` ${new Date(
+                    item.postdate.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3")
+                  ).toLocaleDateString()}`}
+              </div>
+            </BlogItem>
           ))
         ) : (
           <p>검색 결과가 없습니다.</p>
         )}
       </div>
-      <div style={{ marginTop: "20px" }}>
-        {currentPage > 1 && (
-          <Btn onClick={() => setCurrentPage(currentPage - 1)}>이전</Btn>
-        )}
-        {currentPage < totalPages && (
-          <Btn onClick={() => setCurrentPage(currentPage + 1)}>다음</Btn>
-        )}
-      </div>
+
+      {totalPages > 1 && (
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {currentPage > 1 && (
+            <Btn onClick={() => setCurrentPage(currentPage - 1)}>이전</Btn>
+          )}
+          <span style={{ margin: "0 10px", lineHeight: "30px" }}>
+            {currentPage} / {totalPages}
+          </span>
+          {currentPage < totalPages && (
+            <Btn onClick={() => setCurrentPage(currentPage + 1)}>다음</Btn>
+          )}
+        </div>
+      )}
     </div>
   );
 }
