@@ -80,7 +80,7 @@ function FoodView() {
             key={index}
             onClick={() =>
               router.push(
-                `/Food/info?name=${restaurant.upso_nm}&loca=${restaurant.cgg_code_nm}`
+                `/food/info?name=${restaurant.upso_nm}&loca=${restaurant.cgg_code_nm}`
               )
             }
           >
