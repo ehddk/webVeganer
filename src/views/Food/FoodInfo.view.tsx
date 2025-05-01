@@ -1,19 +1,21 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import seoulList from "../../services/seoulData";
+import { useSearchParams } from "next/navigation";
+import seoulList from "@/app/services/seoulData";
 import styles from "./FoodInfo.view.module.scss";
 import cn from "classnames/bind";
-import KakaoMap from "../../services/kakaoMap";
+import KakaoMap from "@/app/services/kakaoMap";
 import Blog from "../../components/blog";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
+import Item from "@/components/Item/Item";
 
 const cx = cn.bind(styles);
 
 export default function FoodInfoView() {
   const params = useSearchParams();
-  const restaurantName = params.get("name");
-  const location = params.get("loca");
+  const restaurantName = params?.get("name");
+  const location = params?.get("loca");
+  const [menu, setMenu] = useState([]);
 
   const getInfo = (restaurantName, location) => {
     const restaurantData = seoulList.data.find(
@@ -28,13 +30,24 @@ export default function FoodInfoView() {
     return <p>해당 식당 정보를 찾을 수 없습니다.</p>;
   }
 
+  const handleMenu = async (name) => {
+    try {
+      const res = await fetch(`/api/menu?name=${encodeURIComponent(name)}`);
+      const data = await res.json();
+      if (data.menu) {
+        setMenu(data.menu);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <div className={cx("Banner")} />
       <div
         style={{ margin: "0 auto", backgroundColor: "#f9f9f9", width: "80%" }}
       >
-        <div style={{ padding: "50px" }}>
+        <div className={cx("Item")}>
           <h3>{restaurantName}</h3>
           <p>
             {location} | {restaurantInfo.bizcnd_code_nm}
@@ -47,34 +60,31 @@ export default function FoodInfoView() {
           </ul>
         </div>
         <div className={cx("Item")}>
-          <p>운영 시간</p>
-          <p>위치 : {restaurantInfo.rdn_code_nm}</p>
-          <p>문의 전화 : {restaurantInfo.tel_no}</p>
-          <p>홈페이지</p>
-          <p>예약, 포장, 반려동물 동반 가능</p>
+          <Item
+            title={"운영 시간"}
+            location={restaurantInfo.rdn_code_nm}
+            tel={restaurantInfo.tel_no}
+            detail={"예약, 포장, 반려동물 동반 가능"}
+          ></Item>
         </div>
         <div className={cx("Item")}>
           <h2>메뉴 소개</h2>
-          <div className={cx("Items")}>
-            <h3>애피타이저</h3>
-            <p>메뉴</p>
-            <h3>메인</h3>
-            <p>메뉴</p>
-          </div>
+          <button onClick={() => handleMenu(cafeName)}>더보기</button>
+
+          {menu && (
+            <div>
+              {menu.map((item, index) => (
+                <p key={index}>{item.name}</p>
+              ))}
+            </div>
+          )}
         </div>
         <div className={cx("Item")}>
           <h2>방문자 후기</h2>
           <div className={cx("Items")}>
             <div style={{ padding: "10px" }}>
               <p>작성자</p>
-              <ul
-                style={{
-                  display: "flex",
-                  gap: "20px",
-                  listStyle: "none",
-                  marginLeft: "-40px",
-                }}
-              >
+              <ul>
                 <li>별점</li>
                 <li>날짜</li>
                 <li>좋아요</li>
@@ -98,15 +108,7 @@ export default function FoodInfoView() {
         </div>
         <div className={cx("Item")}>
           <h2>블로그 후기</h2>
-          <div
-            style={{
-              borderRadius: "5px",
-              width: "85%",
-              height: "auto",
-              border: "1px solid black",
-              padding: "10px",
-            }}
-          >
+          <div>
             <Blog query={restaurantName} />
           </div>
         </div>
