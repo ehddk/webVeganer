@@ -1,0 +1,83 @@
+@layer Table {
+  .Cell {
+    background-color: #fff;
+    padding-block: 8px;
+    border-bottom: 1px dashed var(--grey-20, rgba(145, 158, 171, 0.2));
+    color: var(--Text-Primary, #1c252e);
+    text-align: center;
+
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.bordered {
+      border: 1px solid #ddd;
+    }
+
+    &.compact {
+      padding: 8px;
+    }
+  }
+
+  .HeaderCell {
+    color: var(--Text-Secondary, #637381);
+    text-align: center;
+
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-block: 8px;
+    position: relative;
+    background-color: var(--grey-8, rgba(145, 158, 171, 0.08));
+
+    &.bordered {
+      border: 1px solid #ddd;
+    }
+
+    &.compact {
+      padding: 8px;
+    }
+  }
+
+  .Row {
+    &:hover {
+      .Cell:not(.isSelected) {
+        background-color: var(--grey-4, rgba(145, 158, 171, 0.04));
+      }
+    }
+
+    &.striped:nth-child(even) {
+      .Cell:not(.isSelected) {
+        background-color: var(--grey-4, rgba(145, 158, 171, 0.04));
+      }
+    }
+
+    .Cell.isSelected {
+      background-color: var(--primary-4, rgba(0, 167, 111, 0.04));
+    }
+
+    &:first-child {
+      .HeaderCell:not(.bordered) {
+        &:first-child {
+          border-top-left-radius: 8px;
+        }
+
+        &:last-child {
+          border-top-right-radius: 8px;
+        }
+      }
+    }
+  }
+
+  .Root {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+
+    & * {
+      box-sizing: border-box;
+    }
+  }
+}
