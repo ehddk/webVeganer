@@ -1,24 +1,39 @@
 .ModalContent {
-  width: 700px;
-  height: auto;
+  width: 600px;
+  // height: auto;
+  display: flex;
+
   background-color: white;
 
   box-shadow: 0 20px 50px 20px var(--shadow12, #919eab1f);
-  //   border-radius: 10px;
-  //   padding: 20px;
-  //   display: flex;
-
-  //   position: fixed;
-  //   top: 66px;
-  //   right: 446px;
 }
 
 .Content {
-  padding: 40px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .Title {
   font-size: 30px;
 
   border-bottom: 1px solid gray;
+}
+
+.CityList {
+  padding: 5px;
+
+  margin-top: 3px;
+}
+.Button {
+  justify-content: center;
+  align-items: center;
+}
+.Save {
+  width: 100px;
+
+  background-color: navy;
+  color: white;
+  border: 0;
 }
