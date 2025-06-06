@@ -3,4 +3,11 @@
   flex-direction: column;
   margin-top: 30px;
   gap: 20px;
+  height: 100vh;
+}
+
+.RegisterButton {
+  width: 100px;
+  margin-left: auto;
+  // align-self: flex-start;
 }
