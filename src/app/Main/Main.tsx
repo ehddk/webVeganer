@@ -59,7 +59,7 @@ export default function MainPage() {
       <section className={cx("Content")}>
         <div className={cx("Popular")}>
           <div className={cx("SubT")}>
-            <h1>요즘 뜨는</h1> <h1>인기 식당</h1>
+            <h2>요즘 뜨는 인기 식당</h2>
             <Button
               text={"비건식당 구경하러가기"}
               onClick={() => router.push("/food")}
@@ -88,12 +88,10 @@ export default function MainPage() {
 
         <div className={cx("Cafe")}>
           <div className={cx("Left")}>
-            <h1>
-              요즘 뜨는 <br /> 비건 카페
-            </h1>
+            <h1>요즘 뜨는 비건 카페</h1>
             <Button
               text={"비건카페 구경하러가기"}
-              onClick={() => router.push("/Cafe")}
+              onClick={() => router.push("/cafe")}
               backgroundColor="rgb(70,144,70)"
             ></Button>
           </div>
