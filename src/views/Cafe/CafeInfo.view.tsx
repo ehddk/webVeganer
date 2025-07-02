@@ -1,15 +1,15 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import seoulList from "../../services/seoulData";
+import seoulList from "@/app/services/seoulData";
 import styles from "./CafeInfo.view.module.scss";
 import cn from "classnames/bind";
 import { FaRegThumbsUp } from "react-icons/fa6";
-import KakaoMap from "../../services/kakaoMap";
-import Blog from "@/app/components/blog";
+import KakaoMap from "@/app/services/kakaoMap";
+import Blog from "@/components/blog";
 import { useState, useEffect } from "react";
-import Item from "@/app/components/Item/Item";
-import Divider from "@/app/components/Divider/Divider";
+import Item from "@/components/Item/Item";
+import Divider from "@/components/Divider/Divider";
 const cx = cn.bind(styles);
 
 export default function CafeInfoView() {
@@ -103,9 +103,8 @@ export default function CafeInfoView() {
               }}
             >
               {Review.map((review) => (
-                <>
+                <div key={review.id}>
                   <div
-                    key={review.id}
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <p>{review.author}님의 리뷰입니다</p>
@@ -114,34 +113,27 @@ export default function CafeInfoView() {
                   <span>{review.content}</span>
                   <FaRegThumbsUp />
                   <Divider />
-                </>
+                </div>
               ))}
             </div>
           </div>
-          <div className={cx("Item")}>
-            <h2>지도</h2>
-            <KakaoMap address={CafeInfo.rdn_code_nm}></KakaoMap>
-          </div>
+        </div>
+        <div className={cx("Item")}>
+          <h2>지도</h2>
+          <KakaoMap address={CafeInfo.rdn_code_nm}></KakaoMap>
+        </div>
+        <div className={cx("Item")}>
+          <h2>블로그 후기</h2>
           <div
-            style={{
-              borderTop: "1px solid black",
-              padding: "50px",
-              width: "85%",
-              margin: "0 auto",
-            }}
+          // style={{
+          //   borderRadius: "5px",
+          //   width: "85%",
+          //   height: "auto",
+          //   border: "1px solid black",
+          //   padding: "10px",
+          // }}
           >
-            <h2>블로그 후기</h2>
-            <div
-              style={{
-                borderRadius: "5px",
-                width: "85%",
-                height: "auto",
-                border: "1px solid black",
-                padding: "10px",
-              }}
-            >
-              <Blog query={cafeName} />
-            </div>
+            <Blog query={cafeName} />
           </div>
         </div>
       </div>
