@@ -4,6 +4,7 @@ import styles from "./CommuRegister.view.module.scss";
 import cn from "classnames/bind";
 import { Controller, Form, useForm } from "react-hook-form";
 import { useModal } from "@/hooks/modal/useModal";
+import { ArticleMutation } from "@/\bapi/mutation";
 const cx = cn.bind(styles);
 
 type FormType = {
@@ -46,10 +47,23 @@ export default function CommuWRegisterView() {
       dimmedColor: "transparent",
       positive: {
         text: "확인",
-        onClick: () => {
-          // 여기에 등록 로직을 추가하세요
-          console.log("등록 완료");
-          router.push("/commu");
+        onClick: async () => {
+          const res = await ArticleMutation.post({
+            body: {
+              author: "익명",
+              author_id: "12",
+              title: form.getValues("title"),
+              content: form.getValues("content"),
+            },
+          });
+
+          console.log(res);
+          if (!res) {
+            alert("등록에 실패했습니다.");
+            return;
+          }
+          alert("등록이 완료되었습니다.");
+          //router.push("/commu");
         },
       },
       negative: {
