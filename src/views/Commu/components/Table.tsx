@@ -17,7 +17,7 @@ type PostListResponse = {
 };
 
 type CommunityTableProps = {
-  table: TableType<PostListResponse>;
+  table: TableType<Article.GetList.Response> | null;
 };
 
 const PostListTable = (props: CommunityTableProps) => {
