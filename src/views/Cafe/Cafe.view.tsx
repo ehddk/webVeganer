@@ -9,6 +9,7 @@ import cn from "classnames/bind";
 import { useModal } from "@/hooks/modal/useModal";
 import InfoModal from "@/components/Modal/InfoModal/InfoModal";
 import IModal from "@/components/Modal/InfoModal/InfoModal";
+import KakaoMap from "@/app/services/kakaoMap";
 
 const cx = cn.bind(styles);
 
@@ -67,7 +68,7 @@ export default function CafeView() {
     };
     filterCafes();
   }, [selectedLocation, searchCafe]);
-  const handleSelectedLocation = (selectedCodeNm) => {
+  const handleSelectedLocation = (selectedCodeNm: string) => {
     // const filteredCafe=seoulList.data.filter(item=>item.bizcnd_code_nm==="베이커리" && item.cgg_code_nm===selectedCodeNm)
     setSelectedLocation(selectedCodeNm);
   };
@@ -79,7 +80,6 @@ export default function CafeView() {
 
   return (
     <>
-      {/* <img src="/cafe.png" style={{ width: "100%", height: "300px" }}></img> */}
       <SearchBox
         value={searchCafe}
         onChange={handleSearch}
@@ -100,7 +100,7 @@ export default function CafeView() {
             key={index}
             onClick={() =>
               router.push(
-                `/Cafe/Info?name=${encodeURIComponent(cafe.upso_nm)}&loca=${cafe.cgg_code_nm}`
+                `/cafe/Info?name=${encodeURIComponent(cafe.upso_nm)}&loca=${cafe.cgg_code_nm}`
               )
             }
           >
@@ -117,12 +117,13 @@ export default function CafeView() {
           </div>
         ))}
       </div>
+
       {isModalOpen && (
         <InfoModal onClose={closeModal} responsive={true}>
           <Modal
             onCheck={undefined}
-            onClose={undefined}
-            onSelectedLocation={undefined}
+            onClose={closeModal}
+            onSelectedLocation={handleSelectedLocation}
           />
         </InfoModal>
       )}
