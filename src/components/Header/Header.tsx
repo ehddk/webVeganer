@@ -64,7 +64,7 @@ export default function Header({ session }) {
               <Link href={"/food"}>음식점</Link>
             </li>
             <li>
-              <Link href={"/event"}>이벤트</Link>
+              <Link href={"/event/menu1"}>이벤트</Link>
             </li>
             <li>
               <Link href={"/commu"}>커뮤니티</Link>
