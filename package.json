@@ -12,6 +12,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@tanstack/react-table": "^8.21.3",
     "next": "^15.3.1",
+    "path-to-regexp": "^8.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-kakao-maps-sdk": "^1.1.27"
@@ -30,5 +31,6 @@
     "typescript": "^5",
     "uuid": "^9.0.1",
     "yup": "^1.6.1"
-  }
+  },
+  "proxy": "http://localhost:4000"
 }
