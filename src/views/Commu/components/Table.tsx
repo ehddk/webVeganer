@@ -3,6 +3,8 @@ import cn from "classnames/bind";
 import styles from "./Table.module.scss";
 
 import Tables from "@/components/Tables/Table";
+import { useRouter } from "next/navigation";
+import { LINK_ROUTE } from "@/constants/link.constants";
 
 const cx = cn.bind(styles);
 
@@ -16,13 +18,16 @@ type PostListResponse = {
   category: string;
 };
 
+type IArticle = Article.GetList.Response[number];
+
 type CommunityTableProps = {
-  table: TableType<Article.GetList.Response> | null;
+  table: TableType<IArticle>;
+  // TableType<Article.GetList.Response> | null;
 };
 
 const PostListTable = (props: CommunityTableProps) => {
   const { table } = props;
-
+  const router = useRouter();
   // Add a check to make sure table exists before trying to use it
   if (!table) {
     return (
@@ -45,6 +50,9 @@ const PostListTable = (props: CommunityTableProps) => {
 
   const rowsExist = table.getRowModel().rows.length > 0;
 
+  const goDetail = (id: string) => {
+    router.push(LINK_ROUTE.ARTICLE.DETAIL.uri({ id }));
+  };
   return (
     <div className={cx("Wrapper")}>
       <Tables.Root>
@@ -77,6 +85,7 @@ const PostListTable = (props: CommunityTableProps) => {
                     key={cell.id}
                     size={cell.column.getSize()}
                     className={cx("Cell")}
+                    onClick={goDetail}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </Tables.Cell>

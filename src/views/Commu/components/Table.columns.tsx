@@ -11,30 +11,6 @@ type TableType = Article.GetList.Response[number];
 
 export const articleTableColumns: ColumnDef<TableType>[] = [
   {
-    id: "select",
-    size: 70,
-    header: (props) => {
-      const { table } = props;
-      const isAllSelected = table.getIsAllRowsSelected();
-      const isSomeSelected = table.getIsSomeRowsSelected();
-
-      <AllSelectCheckBoxHeaderCell
-        {...props}
-        // checked={false} // Replace with actual logic to determine the checked state
-        checked={isAllSelected}
-        // indeterminate 상태도 전달할 수 있도록 확장 가능
-        onToggleAll={(checked) => {
-          table.toggleAllRowsSelected(checked);
-        }}
-      />;
-    },
-    cell: RowSelectCheckBoxCell
-    // (props) => {
-    //   const { row } = props;
-    //   return <div className={cx("SelectCell")}>{row.original.id}</div>;
-    // },
-  },
-  {
     header: "순서",
     size: 60,
     cell: (props) => {
