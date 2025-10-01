@@ -22,11 +22,12 @@ type IArticle = Article.GetList.Response[number];
 
 type CommunityTableProps = {
   table: TableType<IArticle>;
+  onClick?: (id: string) => void;
   // TableType<Article.GetList.Response> | null;
 };
 
 const PostListTable = (props: CommunityTableProps) => {
-  const { table } = props;
+  const { table, onClick: handleRowClick } = props;
   const router = useRouter();
   // Add a check to make sure table exists before trying to use it
   if (!table) {
@@ -85,7 +86,7 @@ const PostListTable = (props: CommunityTableProps) => {
                     key={cell.id}
                     size={cell.column.getSize()}
                     className={cx("Cell")}
-                    onClick={goDetail}
+                    onClick={handleRowClick?.bind(null, row.original.id)}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </Tables.Cell>
