@@ -1,18 +1,23 @@
-import { connectDB } from "@/util/database";
-import { ObjectId } from "mongodb";
+// import { connectDB } from "@/util/database";
+// import { ObjectId } from "mongodb";
 import Link from "next/link";
-import Comment from "../../components/Comment/Comment";
+import Comment from "../../../components/Comment/Comment";
 import styles from "./CommuDetail.view.module.scss";
 import cn from "classnames/bind";
 const cx = cn.bind(styles);
 
-export default async function CommuDetailView(props) {
-  const db = (await connectDB).db("vegan");
-  let result = await db
-    .collection("post")
-    .findOne({ _id: new ObjectId(props.params.id) });
-  //const filteredList = commuData.category.filter(item => item.category === selectedMenu || selectedMenu === "");
-  console.log(result);
+type CommuDetailViewProps = {
+  data: Article.GetOne.Response;
+};
+export default async function CommuDetailView(props: CommuDetailViewProps) {
+  const { data } = props;
+  console.log("data", data);
+  // const db = (await connectDB).db("vegan");
+  // let result = await db
+  //   .collection("post")
+  //   .findOne({ _id: new ObjectId(data.id) });
+  // //const filteredList = commuData.category.filter(item => item.category === selectedMenu || selectedMenu === "");
+  // console.log(result);
 
   return (
     <>
@@ -20,7 +25,7 @@ export default async function CommuDetailView(props) {
         <div className={cx("Btn")}>
           <button className={cx("Btn1")}>
             <Link
-              href={"/Commu"}
+              href={"/commu"}
               style={{ textDecoration: "none", color: "white" }}
             >
               목록
@@ -28,10 +33,10 @@ export default async function CommuDetailView(props) {
           </button>
           <button className={cx("Btn1")}>
             <Link
-              href={`/Commu/Edit/${result._id}`}
+              href={`/commu/Edit/${data.id}`}
               style={{ textDecoration: "none", color: "white" }}
             >
-              수정
+              å 수정
             </Link>
           </button>
           {/* <SweetAlert onClick={()=>history.push(`/modify/${title}`)}/> */}
@@ -48,7 +53,7 @@ export default async function CommuDetailView(props) {
               </div>
               <div className={cx("Info")}>
                 <p style={{ marginTop: "15px", fontSize: "18px" }}>
-                  {result.title}
+                  {data.title}
                 </p>
               </div>
 
@@ -66,7 +71,7 @@ export default async function CommuDetailView(props) {
               <div
                 style={{ minHeight: "200px", border: "1px solid lightgray" }}
               >
-                <p style={{ padding: "10px" }}>{result.content}</p>
+                <p style={{ padding: "10px" }}>{data.content}</p>
               </div>
 
               <div
@@ -78,7 +83,7 @@ export default async function CommuDetailView(props) {
               >
                 <p>좋아요</p>
               </div>
-              <Comment _id={result._id.toString()} />
+              <Comment _id={data.id.toString()} />
             </div>
           </div>
         </div>

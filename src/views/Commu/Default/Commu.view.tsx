@@ -2,11 +2,12 @@
 import styles from "./Commu.view.module.scss";
 import cn from "classnames/bind";
 
-import PostListTable from "./components/Table";
+import PostListTable from "../components/Table";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { articleTableColumns } from "./components/Table.columns";
+import { articleTableColumns } from "../components/Table.columns";
 import useConditionalState from "@/hooks/useConditionalState";
+import { LINK_ROUTE } from "@/constants/link.constants";
 
 const cx = cn.bind(styles);
 
@@ -41,6 +42,9 @@ export default function CommuView(props: CommuViewProps) {
   const goRegister = () => {
     router.push("/commu/Register");
   };
+  const goDetail = (id: string) => {
+    router.push(LINK_ROUTE.ARTICLE.DETAIL.uri({ id }));
+  };
   return (
     <>
       <div className={cx("Wrapper")}>
@@ -48,7 +52,7 @@ export default function CommuView(props: CommuViewProps) {
         <button className={cx("RegisterButton")} onClick={goRegister}>
           글쓰기
         </button>
-        <PostListTable table={table} />
+        <PostListTable table={table} onClick={goDetail} />
       </div>
     </>
   );
