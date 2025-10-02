@@ -5,4 +5,37 @@
   border: 0;
 
   color: white;
+
+  &.small {
+    width: 80px;
+    height: 35px;
+  }
+  &.medium {
+    width: 100px;
+    height: 35px;
+  }
+  &.large {
+    width: 120px;
+    height: 35px;
+  }
+  &.primary.contained {
+    background-color: rgb(101, 167, 101);
+    color: white;
+  }
+  &.primary.outlined {
+    color: black;
+    border-color: rgb(101, 167, 101);
+  }
+
+  &.inherit.contained {
+    color: black;
+    background-color: lightgray;
+    border-color: none;
+  }
+
+  &.inherit.outlined {
+    color: black;
+
+    border-color: lightgray;
+  }
 }

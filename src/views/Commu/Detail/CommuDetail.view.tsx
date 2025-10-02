@@ -1,9 +1,13 @@
-// import { connectDB } from "@/util/database";
-// import { ObjectId } from "mongodb";
+"use client";
 import Link from "next/link";
 import Comment from "../../../components/Comment/Comment";
 import styles from "./CommuDetail.view.module.scss";
 import cn from "classnames/bind";
+import Divider from "@/components/Divider/Divider";
+import Button from "@/components/Button/Button";
+import { LINK_ROUTE } from "@/constants/link.constants";
+import { useParams, useRouter } from "next/navigation";
+
 const cx = cn.bind(styles);
 
 type CommuDetailViewProps = {
@@ -12,6 +16,9 @@ type CommuDetailViewProps = {
 export default async function CommuDetailView(props: CommuDetailViewProps) {
   const { data } = props;
   console.log("data", data);
+  const router = useRouter();
+  const params = useParams<{ id: string }>();
+  const { id } = params;
   // const db = (await connectDB).db("vegan");
   // let result = await db
   //   .collection("post")
@@ -21,66 +28,50 @@ export default async function CommuDetailView(props: CommuDetailViewProps) {
 
   return (
     <>
-      <div className={cx("ViewBoard")}>
-        <div className={cx("Btn")}>
-          <button className={cx("Btn1")}>
+      <div className={cx("Wrapper")}>
+        <div className={cx("BtnGroup")}>
+          {/* <button className={cx("Btn")}>
             <Link
               href={"/commu"}
               style={{ textDecoration: "none", color: "white" }}
             >
               목록
             </Link>
-          </button>
-          <button className={cx("Btn1")}>
-            <Link
-              href={`/commu/Edit/${data.id}`}
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              å 수정
-            </Link>
-          </button>
-          {/* <SweetAlert onClick={()=>history.push(`/modify/${title}`)}/> */}
+          </button> */}
+          <Button
+            size="small"
+            text="목록"
+            colorType="primary"
+            variant="contained"
+            onClick={() => router.push(LINK_ROUTE.ARTICLE.DEFAULT.uri)}
+          />
+          {/* <button className={cx("Btn")}>
+            <Link href={`/commu/Edit/${data.id}`}>수정</Link>
+          </button> */}
+          <Button
+            size="small"
+            text="수정"
+            colorType="primary"
+            variant="outlined"
+            onClick={() => router.push(LINK_ROUTE.ARTICLE.EDIT.uri({ id }))}
+          />
         </div>
-        <div className={cx("ViewBoards")}>
+        <div className={cx("Content")}>
           <div>
-            <div className={cx("Profile")}>
-              <div>
-                <img
-                  src="/user.png"
-                  style={{ width: "40px", paddingTop: "15px" }}
-                  alt="user"
-                />
+            <div className={cx("TitleWrapper")}>
+              <h2 className={cx("Title")}>{data.title}</h2>
+              <div className={cx("Profile")}>
+                <img src="/user.svg" alt="user" width={20} />
+                <p>{data.author} </p>
               </div>
-              <div className={cx("Info")}>
-                <p style={{ marginTop: "15px", fontSize: "18px" }}>
-                  {data.title}
-                </p>
-              </div>
-
-              <p
-                style={{
-                  padding: "29px 0 0 10px",
-                  fontSize: "12px",
-                  color: "gray",
-                }}
-              >
-                조회{" "}
-              </p>
             </div>
+
             <div>
-              <div
-                style={{ minHeight: "200px", border: "1px solid lightgray" }}
-              >
+              <div className={cx("Content")}>
                 <p style={{ padding: "10px" }}>{data.content}</p>
               </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  borderBottom: "1px solid lightgray",
-                  height: "50px",
-                }}
-              >
+              <Divider />
+              <div className={cx("CommentWrapper")}>
                 <p>좋아요</p>
               </div>
               <Comment _id={data.id.toString()} />

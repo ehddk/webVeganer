@@ -1,8 +1,11 @@
-.ViewBoard {
+.Wrapper {
   width: 80%;
   height: auto;
   padding: 80px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .Category {
@@ -10,36 +13,58 @@
   color: green;
 }
 
-.Profile {
-  height: auto;
+.TitleWrapper {
+  height: 100px;
+  padding: 10px;
   border-bottom: 1px solid lightgray;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .Title {
+    font-size: 30px;
+  }
+}
+.Profile {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: gray;
+}
+
+.BtnGroup {
+  display: flex;
+
+  gap: 10px;
+  justify-content: end;
 }
 
 .Btn {
-  margin-left: 88%;
+  font-size: 15px;
+  color: white;
+  background-color: green;
+  border-radius: 5px;
+  border: 0;
+  padding: 5px;
+  width: 60px;
+  margin-right: 7px;
+}
+
+.Content {
+  // border: 1px solid lightgray;
+  min-height: 200px;
   padding: 10px;
-  width: 1000px;
-}
-
-.Btn1 {
-  font-size: "15px";
-  color: "white";
-  background-color: "green";
-  border-radius: "5px";
-  border: "0";
-  padding: "5px";
-  width: "60px";
-  margin-right: "7px";
-}
-
-.ViewBoards {
-  border: "1px solid lightgray";
-  padding: "10px";
 }
 
 .Info {
-  padding: "0 0 0 10px";
+  padding: 0 0 0 10px;
   display: flex;
   flex-direction: column;
+}
+
+.CommentWrapper {
+  display: flex;
+  //  borderBottom:  1px solid lightgray ,
+  height: 50px;
+  padding: 10px;
 }
