@@ -5,5 +5,5 @@ import cn from "classnames/bind";
 const cx = cn.bind(styles);
 
 export default function Divider() {
-  return <div className="Wrapper" />;
+  return <div className={cx("Wrapper")} />;
 }
