@@ -20,6 +20,12 @@ declare global {
 
   type getArticleResponse = IArticle;
 
+  /**페이지네이션 */
+  type getArticlesPaginationParams = {
+    offset?: number;
+    limit?: number;
+    sort?: string;
+  };
   /**생성 */
 
   type createArticleRequestBody = {
@@ -51,11 +57,11 @@ declare global {
 
     namespace GetList {
       type Path = {};
-      type Params = {};
+      type Params = getArticlesPaginationParams;
       type Body = {};
       type Request = {
         path?: Path;
-        params?: Params;
+        params: Params;
         body?: Body;
       };
       type Response = getArticlesResponse;
