@@ -1,3 +1,4 @@
+"use server";
 import { ArticleQuery } from "@/\bapi/query";
 import CommuDetailView from "@/views/Commu/Detail/CommuDetail.view";
 type CommuDetailPageProps = PageProps<{

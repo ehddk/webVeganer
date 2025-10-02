@@ -1,3 +1,4 @@
+"use server";
 import { ArticleQuery } from "@/\bapi/query";
 import CommuEditView from "@/views/Commu/Edit/CommuEdit.view";
 
