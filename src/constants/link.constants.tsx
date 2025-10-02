@@ -13,11 +13,11 @@ export const LINK_ROUTE = {
 
     DETAIL: {
       [ROUTE_KEY.APP_DIR]: "/commu/detail/[id]",
-      [ROUTE_KEY.URI]: (params?: WithIdParams) => `/commu/${params?.id}`,
+      [ROUTE_KEY.URI]: (params?: WithIdParams) => `/commu/detail/${params?.id}`,
     },
     EDIT: {
       [ROUTE_KEY.APP_DIR]: "/commu/Edit/[id]",
-      [ROUTE_KEY.URI]: "/commu/:id",
+      [ROUTE_KEY.URI]: (params?: WithIdParams) => `/commu/edit/${params?.id}`,
     },
     REGISTER: {
       [ROUTE_KEY.APP_DIR]: "/commu/Register",
