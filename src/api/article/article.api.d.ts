@@ -1,3 +1,4 @@
+import { ErrorType } from "next/dist/client/components/react-dev-overlay/pages/pages-dev-overlay";
 import { IArticle } from "./article.type";
 
 interface IArticle {
@@ -35,7 +36,7 @@ declare global {
     author_id: string;
   };
 
-  type createArticleResponse = true;
+  type createArticleResponse = { statusCode: number; message: string };
 
   /**수정 */
   type updateArticleRequestPath = {
