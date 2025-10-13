@@ -1,3 +1,4 @@
+"use server";
 import { handleServerError } from "@/utils/serverError.util";
 import { articleService } from "../services";
 
@@ -10,7 +11,6 @@ export const put = async (req: Article.Put.Request) => {
     return data;
   }
 };
-
 export const post = async (req: Article.Post.Request) => {
   try {
     const data = await articleService.post(req);
@@ -20,6 +20,7 @@ export const post = async (req: Article.Post.Request) => {
     return data;
   }
 };
+
 export const deleteArticle = async (req: Article.Delete.Request) => {
   try {
     const data = await articleService.delete(req);

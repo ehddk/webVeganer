@@ -29,7 +29,7 @@ export class ArticleService {
   }
 
   async post(req: Article.Post.Request) {
-    const { data } = await this._ajax.put<Article.Post.Response>(
+    const { data } = await this._ajax.post<Article.Post.Response>(
       ARTICLE_ROUTES.POST,
       req.body
     );
