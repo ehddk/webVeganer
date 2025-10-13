@@ -11,6 +11,7 @@ type ButtonProps = {
   size?: "small" | "medium" | "large";
   colorType: "inherit" | "primary" | "error";
   variant: "contained" | "outlined" | "soft";
+  className?: string;
 };
 export default function Button(props: ButtonProps) {
   const {
@@ -20,11 +21,15 @@ export default function Button(props: ButtonProps) {
     size,
     colorType = "primary",
     variant,
+    className,
   } = props;
   let router = useRouter();
 
   return (
-    <button className={cx("Btn", size, colorType, variant)} onClick={onClick}>
+    <button
+      className={cx("Btn", size, colorType, variant, className)}
+      onClick={onClick}
+    >
       {text}
     </button>
   );
