@@ -33,7 +33,30 @@ export const articleTableColumns: ColumnDef<TableType>[] = [
     size: 150,
     cell: (props) => {
       const { row } = props;
-      return <div className={cx("ContentCell")}>{row.original.content}</div>;
+      const content = row.original.content;
+
+      let plainText = "";
+
+      if (typeof content === "object" && content !== null && "ops" in content) {
+        plainText = content.ops
+          .map((op: any) => op.insert)
+          .join("")
+          .trim();
+      } else if (typeof content === "string") {
+        try {
+          const deltaContent = JSON.parse(content);
+          plainText = deltaContent.ops
+            .map((op: any) => op.insert)
+            .join("")
+            .trim();
+        } catch {
+          plainText = content;
+        }
+      } else {
+        plainText = String(content);
+      }
+
+      return <div className={cx("ContentCell")}>{plainText}</div>;
     },
   },
   {

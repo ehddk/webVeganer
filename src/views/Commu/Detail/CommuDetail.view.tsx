@@ -1,24 +1,26 @@
 "use client";
-import Link from "next/link";
-import Comment from "../../../components/Comment/Comment";
+
 import styles from "./CommuDetail.view.module.scss";
 import cn from "classnames/bind";
 import Divider from "@/components/Divider/Divider";
 import Button from "@/components/Button/Button";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import { useParams, useRouter } from "next/navigation";
+import { useModal } from "@/hooks/modal/useModal";
+import { ArticleMutation } from "@/\bapi/mutation";
 
 const cx = cn.bind(styles);
 
 type CommuDetailViewProps = {
   data: Article.GetOne.Response;
 };
-export default async function CommuDetailView(props: CommuDetailViewProps) {
+export default function CommuDetailView(props: CommuDetailViewProps) {
   const { data } = props;
   console.log("data", data);
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  const { id } = params;
+
+  const { showModal, hideModal, ModalComponent } = useModal();
   // const db = (await connectDB).db("vegan");
   // let result = await db
   //   .collection("post")
@@ -26,59 +28,142 @@ export default async function CommuDetailView(props: CommuDetailViewProps) {
   // //const filteredList = commuData.category.filter(item => item.category === selectedMenu || selectedMenu === "");
   // console.log(result);
 
+  const getPlainText = () => {
+    const content = data.content;
+
+    // 이미 객체인 경우
+    if (typeof content === "object" && content !== null && "ops" in content) {
+      return content.ops
+        .map((op: any) => op.insert)
+        .join("")
+        .trim();
+    }
+
+    // 문자열인 경우 파싱
+    if (typeof content === "string") {
+      try {
+        const deltaContent = JSON.parse(content);
+        return deltaContent.ops
+          .map((op: any) => op.insert)
+          .join("")
+          .trim();
+      } catch {
+        // Delta 형식이 아닌 경우 일반 텍스트로 처리
+        return content;
+      }
+    }
+
+    return { ops: [] };
+  };
+
+  const handleDelete = () => {
+    showModal({
+      type: "default",
+      title: "삭제",
+      description: "정말 삭제하시겠습니까?\n삭제후 복구할 수 없습니다.",
+      positive: {
+        text: "취소",
+        onClick: () => {
+          hideModal();
+        },
+      },
+      negative: {
+        text: "삭제",
+
+        onClick: async () => {
+          const articleId = params?.id;
+
+          const res = await ArticleMutation.deleteArticle({ path: articleId });
+
+          if (res !== true) {
+            showModal({
+              type: "default",
+              dimmedColor: "transparent",
+              title: "삭제",
+              description: "삭제에 실패했습니다.\n다시 시도해주세요.",
+              positive: {
+                text: "확인",
+                onClick: () => {
+                  hideModal();
+                },
+              },
+            });
+          } else {
+            hideModal();
+            router.push(LINK_ROUTE.ARTICLE.DEFAULT.uri);
+          }
+        },
+      },
+    });
+  };
   return (
     <>
-      <div className={cx("Wrapper")}>
-        <div className={cx("BtnGroup")}>
-          {/* <button className={cx("Btn")}>
-            <Link
-              href={"/commu"}
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              목록
-            </Link>
-          </button> */}
-          <Button
-            size="small"
-            text="목록"
-            colorType="primary"
-            variant="contained"
-            onClick={() => router.push(LINK_ROUTE.ARTICLE.DEFAULT.uri)}
-          />
-          {/* <button className={cx("Btn")}>
-            <Link href={`/commu/Edit/${data.id}`}>수정</Link>
-          </button> */}
-          <Button
-            size="small"
-            text="수정"
-            colorType="primary"
-            variant="outlined"
-            onClick={() => router.push(LINK_ROUTE.ARTICLE.EDIT.uri({ id }))}
-          />
-        </div>
-        <div className={cx("Content")}>
-          <div>
-            <div className={cx("TitleWrapper")}>
-              <h2 className={cx("Title")}>{data.title}</h2>
-              <div className={cx("Profile")}>
-                <img src="/user.svg" alt="user" width={20} />
-                <p>{data.author} </p>
-              </div>
-            </div>
-
-            <div>
-              <div className={cx("Content")}>
-                <p style={{ padding: "10px" }}>{data.content}</p>
-              </div>
-              <Divider />
-              <div className={cx("CommentWrapper")}>
-                <p>좋아요</p>
-              </div>
-              <Comment _id={data.id.toString()} />
+      <section className={cx("Wrapper")}>
+        <div>
+          <div className={cx("TitleWrapper")}>
+            <h2 className={cx("Title")}>{data.title}</h2>
+            <div className={cx("Profile")}>
+              <img src="/user.svg" alt="user" width={20} />
+              <p>{data.author} </p>
             </div>
           </div>
+
+          <div className={cx("ContentWrapper")}>
+            <div className={cx("Content")}>
+              <p style={{ padding: "10px" }}>{getPlainText()}</p>
+            </div>
+            <Divider />
+            <div className={cx("BtnGroup")}>
+              <Button
+                size="small"
+                text="삭제"
+                colorType="primary"
+                variant="outlined"
+                onClick={handleDelete}
+              />
+              <Button
+                size="small"
+                text="목록"
+                colorType="primary"
+                variant="outlined"
+                onClick={() => router.push(LINK_ROUTE.ARTICLE.DEFAULT.uri)}
+              />
+              <Button
+                size="small"
+                text="수정"
+                colorType="primary"
+                variant="contained"
+                onClick={() =>
+                  router.push(LINK_ROUTE.ARTICLE.EDIT.uri({ id: data.id }))
+                }
+              />
+            </div>
+            <Divider />
+            <div className={cx("CommentWrapper")}>
+              <div className={cx("IconWrapper")}>
+                <img src="/like.svg" className={cx("Icon")} />
+                <p>1</p>
+              </div>
+              <div className={cx("IconWrapper")}>
+                <img src="/view.svg" className={cx("Icon")} />
+                <p>1</p>
+              </div>
+              <div className={cx("IconWrapper")}>
+                <img src="/comment.svg" className={cx("Icon")} />
+                <p>1</p>
+              </div>
+            </div>
+            <Divider />
+            <div className={cx("IconWrapper")}>
+              <img src="/comment.svg" className={cx("Icon")} />
+              <p>1</p>
+            </div>
+
+            {/* <Comment _id={data.id.toString()} /> */}
+          </div>
         </div>
-      </div>
+        <ModalComponent />
+      </section>
     </>
   );
 }

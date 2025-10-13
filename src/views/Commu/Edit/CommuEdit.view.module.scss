@@ -1,12 +1,32 @@
 .Wrapper {
-  width: 80%;
+  width: 100%;
   height: auto;
   padding: 80px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media screen and (max-width: 1200px) {
+    padding: 80px 20px;
+  }
 }
 .Category {
   font-size: 15px;
   color: green;
+}
+
+.TitleWrapper {
+  height: 80px;
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .Title {
+    font-size: 30px;
+  }
 }
 
 .Profile {
@@ -14,26 +34,37 @@
   border-bottom: 1px solid lightgray;
   display: flex;
 }
-.Btn {
-  margin-left: 88%;
-  padding: 10px;
-  width: 1000px;
+.BtnGroup {
   display: flex;
+
+  gap: 10px;
+  justify-content: end;
 }
 
-.Btn1 {
+.Btn {
   font-size: 15px;
   color: white;
   background-color: green;
   border-radius: 5px;
+  border: 0;
   padding: 5px;
   width: 60px;
   margin-right: 7px;
 }
 
-.Content {
+.ContentWrapper {
   border: 1px solid lightgray;
   padding: 10px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.Content {
+  padding: 10px;
+  width: 100%;
+  border: none;
+  min-height: 100px;
 }
 
 .Info {
@@ -55,4 +86,19 @@
 .Title {
   margin: 10px 0 0 10px;
   font-size: 15px;
+}
+
+.Input {
+  padding: 10px;
+  font-size: 20px;
+  border: none;
+}
+
+.ContentEditor {
+  width: 100%; // 너비 고정
+  min-height: 460px;
+
+  :global(.ql-container) {
+    min-height: 400px;
+  }
 }

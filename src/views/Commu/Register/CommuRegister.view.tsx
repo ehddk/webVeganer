@@ -5,11 +5,14 @@ import cn from "classnames/bind";
 import { Controller, Form, useForm } from "react-hook-form";
 import { useModal } from "@/hooks/modal/useModal";
 import { ArticleMutation } from "@/\bapi/mutation";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
+
 const cx = cn.bind(styles);
 
 type FormType = {
   title: string;
-  content: string;
+  content: any;
   file: FileList | null;
 };
 export default function CommuWRegisterView() {
@@ -18,7 +21,7 @@ export default function CommuWRegisterView() {
   const form = useForm<FormType>({
     defaultValues: {
       title: "",
-      content: "",
+      content: { ops: [] }, // Delta 초기값
       file: null,
     },
   });
@@ -39,7 +42,15 @@ export default function CommuWRegisterView() {
   //     //  router.push('/Commu')
   //   }
   // };
-  const handleSave = () => {
+
+  const DynamicQuillEditor = dynamic(() => import("react-quill-new"), {
+    ssr: false,
+    loading: () => (
+      <div style={{ minHeight: "350px" }}>에디터를 로딩 중...</div>
+    ),
+  });
+
+  const handleSave = form.handleSubmit((formData) => {
     showModal({
       type: "default",
       title: "등록 완료",
@@ -52,18 +63,20 @@ export default function CommuWRegisterView() {
             body: {
               author: "익명",
               author_id: "12",
-              title: form.getValues("title"),
-              content: form.getValues("content"),
+              title: formData.title,
+              content: JSON.stringify(formData.content),
             },
           });
+          console.log("bodu", res);
 
-          console.log(res);
-          if (!res) {
-            alert("등록에 실패했습니다.");
+          if (!res || res.statusCode >= 400) {
+            alert("등록에 실패했습니다. 서버 오류가 발생했습니다.");
             return;
           }
+
           alert("등록이 완료되었습니다.");
-          //router.push("/commu");
+
+          // router.push("/commu");
         },
       },
       negative: {
@@ -73,7 +86,8 @@ export default function CommuWRegisterView() {
         },
       },
     });
-  };
+  });
+
   const handleDelete = () => {
     router.push("/commu");
   };
@@ -90,7 +104,7 @@ export default function CommuWRegisterView() {
               render={({ field }) => {
                 return (
                   <input
-                    name="title"
+                    {...field}
                     className={cx("BoardBody")}
                     placeholder="제목을 입력해주세요"
                   ></input>
@@ -100,27 +114,19 @@ export default function CommuWRegisterView() {
           </div>
 
           <div className={cx("ContentWrapper")}>
-            <div className={cx("ListTop")}>
-              <div className={cx("FileWrapper")}>
-                <ul
-                  style={{
-                    listStyle: "none",
+            <Controller
+              name="content"
+              control={control}
+              render={({ field }) => (
+                <DynamicQuillEditor
+                  value={field.value}
+                  onChange={(content, value, delta, editor) => {
+                    field.onChange(editor.getContents());
                   }}
-                >
-                  <li>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      width={100}
-                      height={100}
-                    />
-                  </li>
-                </ul>
-              </div>
-
-              <textarea name="content" className={cx("BoardContent")} />
-            </div>
-
+                  className={cx("ContentEditor")}
+                />
+              )}
+            ></Controller>
             <div className={cx("Con")}>
               <button onClick={handleSave} className={cx("Btn")}>
                 등록하기
