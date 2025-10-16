@@ -5,7 +5,7 @@ import cn from "classnames/bind";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import Button from "@/components/Button/Button";
 import { LINK_ROUTE } from "@/constants/link.constants";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import "react-quill/dist/quill.snow.css";
 
@@ -13,6 +13,7 @@ import dynamic from "next/dynamic";
 
 import { useModal } from "@/hooks/modal/useModal";
 import Divider from "@/components/Divider/Divider";
+import { ArticleMutation } from "@/\bapi/mutation";
 
 const cx = cn.bind(styles);
 
@@ -24,11 +25,25 @@ export default function CommuEditView(props: CommuEditViewProps) {
   const { data } = props;
   const router = useRouter();
   const { showModal, hideModal, ModalComponent } = useModal();
-
+  const params = useParams<{ id: string }>();
+  const { id } = params;
+  const getDeltaContent = () => {
+    const content = data.content;
+    if (typeof content === "object" && content !== null && "ops" in content) {
+      return content;
+    }
+    if (typeof content === "string") {
+      try {
+        return JSON.parse(content);
+      } catch {
+        return { ops: [{ insert: content }] };
+      }
+    }
+  };
   const form = useForm<FormType>({
     defaultValues: {
       title: data.title,
-      content: data.content,
+      content: getDeltaContent(),
     },
   });
   const { control } = form;
@@ -61,12 +76,32 @@ export default function CommuEditView(props: CommuEditViewProps) {
           };
 
           const plainContent = removeHtmlTags(formData.content);
-          const body = {
-            title: formData.title,
-            content: plainContent,
-          };
-          console.log("bbbb", body);
+
+          const res = await ArticleMutation.put({
+            path: { id },
+            body: {
+              title: formData.title,
+              content: plainContent,
+            },
+          });
+          console.log("resss", res);
+
+          if (res.statusCode >= 400) {
+            showModal({
+              type: "default",
+              description: "수정에 실패했습니다.\n다시 시도해주세요.",
+              dimmedColor: "transparent",
+              positive: {
+                text: "확인",
+                onClick: () => {
+                  hideModal();
+                },
+              },
+            });
+            return;
+          }
           hideModal();
+          router.push(LINK_ROUTE.ARTICLE.DEFAULT.appDir);
         },
       },
       negative: {

@@ -7,6 +7,7 @@ import { useModal } from "@/hooks/modal/useModal";
 import { ArticleMutation } from "@/\bapi/mutation";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import { LINK_ROUTE } from "@/constants/link.constants";
 
 const cx = cn.bind(styles);
 
@@ -59,12 +60,17 @@ export default function CommuWRegisterView() {
       positive: {
         text: "확인",
         onClick: async () => {
+          const text = formData.content.ops
+            .map((op: any) => op.insert)
+            .join("")
+            .trim();
+
           const res = await ArticleMutation.post({
             body: {
               author: "익명",
               author_id: "12",
               title: formData.title,
-              content: JSON.stringify(formData.content),
+              content: text,
             },
           });
           console.log("bodu", res);
@@ -72,9 +78,20 @@ export default function CommuWRegisterView() {
           if (!res || res.statusCode >= 400) {
             alert("등록에 실패했습니다. 서버 오류가 발생했습니다.");
             return;
+          } else {
+            showModal({
+              type: "default",
+              description: "등록 완료했습니다",
+              dimmedColor: "transparent",
+              positive: {
+                text: "확인",
+                onClick: () => {
+                  hideModal();
+                  router.push(LINK_ROUTE.ARTICLE.DEFAULT.uri);
+                },
+              },
+            });
           }
-
-          alert("등록이 완료되었습니다.");
 
           // router.push("/commu");
         },
