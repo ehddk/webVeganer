@@ -11,9 +11,13 @@ interface IArticle {
   updatedAt?: Date;
 }
 
+interface PaginatedArticle {
+  items: IArticle[];
+  total: number;
+}
 declare global {
   /**목록 조회 */
-  type getArticlesResponse = IArticle[];
+  type getArticlesResponse = PaginatedArticle;
   /**상세 조회 */
   type getArticleRequestPath = {
     id: string;
@@ -44,11 +48,11 @@ declare global {
   };
   type updateArticleRequestBody = {
     title: string;
-    content: string;
+    content: any;
   };
-  type updateArticleResponse = true;
+  type updateArticleResponse = { statusCode: number; message: string };
 
-  type deleteArticleResponse = true;
+  type deleteArticleResponse = { statusCode: number; message: string };
 
   declare namespace Article {
     /**
