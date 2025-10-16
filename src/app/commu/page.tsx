@@ -6,14 +6,21 @@ type CommuPageProps = PageProps<"", Article.GetList.Params>;
 export default async function CommuViewPage(props: CommuPageProps) {
   const { searchParams } = props;
 
-  const { offset = 0, limit = 15 } = await searchParams;
+  // const { offset = 0, limit } = await searchParams;
+  const rawOffset = (await searchParams).offset;
+  const rawLimit = (await searchParams).limit;
+
+  const offsetValue = rawOffset ? parseInt(String(rawOffset), 10) : 0;
+  const limitValue = rawLimit ? parseInt(String(rawLimit), 10) : 20;
 
   const data = await ArticleQuery.getList({
     params: {
-      offset: offset ? +offset : 0,
-      limit: limit ? +limit : 15,
+      offset: offsetValue,
+      limit: limitValue,
     },
   });
+
   if ("message" in data) throw new Error("조회 중 실패");
-  return <CommuView data={data} offset={offset} />;
+  console.log("daata", data);
+  return <CommuView data={data} offset={offsetValue} />;
 }
