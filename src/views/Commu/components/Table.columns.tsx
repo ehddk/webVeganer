@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 const cx = classNames.bind({ ...styles });
 const AUTO_SIZE = "auto" as unknown as number;
 
-type TableType = Article.GetList.Response[number];
+type TableType = Article.GetList.Response["items"][number];
 
 export const articleTableColumns: ColumnDef<TableType>[] = [
   {
@@ -22,46 +22,46 @@ export const articleTableColumns: ColumnDef<TableType>[] = [
   },
   {
     header: "제목",
-    size: AUTO_SIZE,
+    size: 200,
     cell: (props) => {
       const { row } = props;
       return <div className={cx("TitleCell")}>{row.original.title}</div>;
     },
   },
-  {
-    header: "내용",
-    size: 150,
-    cell: (props) => {
-      const { row } = props;
-      const content = row.original.content;
+  // {
+  //   header: "내용",
+  //   size: AUTO_SIZE,
+  //   cell: (props) => {
+  //     const { row } = props;
+  //     const content = row.original.content;
 
-      let plainText = "";
+  //     let plainText = "";
 
-      if (typeof content === "object" && content !== null && "ops" in content) {
-        plainText = content.ops
-          .map((op: any) => op.insert)
-          .join("")
-          .trim();
-      } else if (typeof content === "string") {
-        try {
-          const deltaContent = JSON.parse(content);
-          plainText = deltaContent.ops
-            .map((op: any) => op.insert)
-            .join("")
-            .trim();
-        } catch {
-          plainText = content;
-        }
-      } else {
-        plainText = String(content);
-      }
+  //     if (typeof content === "object" && content !== null && "ops" in content) {
+  //       plainText = content.ops
+  //         .map((op: any) => op.insert)
+  //         .join("")
+  //         .trim();
+  //     } else if (typeof content === "string") {
+  //       try {
+  //         const deltaContent = JSON.parse(content);
+  //         plainText = deltaContent.ops
+  //           .map((op: any) => op.insert)
+  //           .join("")
+  //           .trim();
+  //       } catch {
+  //         plainText = content;
+  //       }
+  //     } else {
+  //       plainText = String(content);
+  //     }
 
-      return <div className={cx("ContentCell")}>{plainText}</div>;
-    },
-  },
+  //     return <div className={cx("ContentCell")}>{plainText}</div>;
+  //   },
+  // },
   {
     header: "작성자",
-    size: 120,
+    size: 90,
     cell: (props) => {
       const { row } = props;
       return <div className={cx("WriterCell")}>{row.original.author}</div>;
@@ -69,7 +69,7 @@ export const articleTableColumns: ColumnDef<TableType>[] = [
   },
   {
     header: "작성일",
-    size: 120,
+    size: 90,
     cell: (props) => {
       const { row } = props;
       return (

@@ -13,3 +13,15 @@
   overflow-x: auto;
   width: 100%;
 }
+
+.TableWrapper {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.Pagination {
+  justify-content: center;
+  padding-bottom: 20px;
+}

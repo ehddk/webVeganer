@@ -5,6 +5,7 @@ import styles from "./Table.module.scss";
 import Tables from "@/components/Tables/Table";
 import { useRouter } from "next/navigation";
 import { LINK_ROUTE } from "@/constants/link.constants";
+import NumberPagination from "@/components/NumberPagination/NumberPagination";
 
 const cx = cn.bind(styles);
 
@@ -18,16 +19,19 @@ type PostListResponse = {
   category: string;
 };
 
-type IArticle = Article.GetList.Response[number];
+type IArticle = Article.GetList.Response["items"][number];
 
 type CommunityTableProps = {
   table: TableType<IArticle>;
   onClick?: (id: string) => void;
+  total: any;
+  onPageChange: (newPage: number) => void;
+
   // TableType<Article.GetList.Response> | null;
 };
 
 const PostListTable = (props: CommunityTableProps) => {
-  const { table, onClick: handleRowClick } = props;
+  const { table, onClick: handleRowClick, total, onPageChange } = props;
   const router = useRouter();
   // Add a check to make sure table exists before trying to use it
   if (!table) {
@@ -56,46 +60,57 @@ const PostListTable = (props: CommunityTableProps) => {
   };
   return (
     <div className={cx("Wrapper")}>
-      <Tables.Root>
-        {rowsExist && (
-          <Tables.Header className={cx("Header")}>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tables.Row key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <Tables.HeaderCell
-                    key={header.id}
-                    size={header.column.getSize()}
-                    className={cx("HeaderCell")}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </Tables.HeaderCell>
-                ))}
-              </Tables.Row>
-            ))}
-          </Tables.Header>
-        )}
-        {rowsExist && (
-          <Tables.Body>
-            {table.getRowModel().rows.map((row) => (
-              <Tables.Row key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <Tables.Cell
-                    key={cell.id}
-                    size={cell.column.getSize()}
-                    className={cx("Cell")}
-                    onClick={handleRowClick?.bind(null, row.original.id)}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Tables.Cell>
-                ))}
-              </Tables.Row>
-            ))}
-          </Tables.Body>
-        )}
-      </Tables.Root>
+      {rowsExist && (
+        <div className={cx("TableWrapper")}>
+          <Tables.Root>
+            <Tables.Header className={cx("Header")}>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <Tables.Row key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <Tables.HeaderCell
+                      key={header.id}
+                      size={header.column.getSize()}
+                      className={cx("HeaderCell")}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </Tables.HeaderCell>
+                  ))}
+                </Tables.Row>
+              ))}
+            </Tables.Header>
+            <Tables.Body>
+              {table.getRowModel().rows.map((row) => (
+                <Tables.Row key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <Tables.Cell
+                      key={cell.id}
+                      size={cell.column.getSize()}
+                      className={cx("Cell")}
+                      onClick={handleRowClick?.bind(null, row.original.id)}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </Tables.Cell>
+                  ))}
+                </Tables.Row>
+              ))}
+            </Tables.Body>
+          </Tables.Root>
+          <NumberPagination
+            limit={15}
+            total={total}
+            pageCount={5}
+            className={cx("Pagination")}
+            onChange={onPageChange}
+          />
+        </div>
+      )}
+
       {!rowsExist && (
         <div className={cx("EmptyTable")}>
           <p
