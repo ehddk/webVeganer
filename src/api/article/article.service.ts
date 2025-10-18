@@ -12,11 +12,12 @@ export class ArticleService {
   constructor(private _ajax: AxiosInstance) {}
 
   async getList(req: Article.GetList.Request) {
-    console.log("getList 함수 시작");
-    const { data } = await this._ajax.get<Article.GetList.Response>(
-      ARTICLE_ROUTES.GET_LIST
-    );
-    console.log("getList Service data", data);
+    const { limit, offset } = req.params;
+    const queryString = `?limit=${limit}&offset=${offset}`;
+    const fullUrl = `${ARTICLE_ROUTES.GET_LIST}${queryString}`;
+
+    const { data } = await this._ajax.get<Article.GetList.Response>(fullUrl);
+
     return data;
   }
 
@@ -33,7 +34,7 @@ export class ArticleService {
       ARTICLE_ROUTES.POST,
       req.body
     );
-    console.log("body", req.body);
+
     return data;
   }
 
