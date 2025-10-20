@@ -24,4 +24,20 @@ export const LINK_ROUTE = {
       [ROUTE_KEY.URI]: "/commu/register",
     },
   },
+  RESTAURANT: {
+    DEFAULT: {
+      [ROUTE_KEY.APP_DIR]: "/restaurant",
+      [ROUTE_KEY.URI]: "/restaurant",
+    },
+
+    DETAIL: {
+      [ROUTE_KEY.APP_DIR]: "/restaurant/[id]",
+      [ROUTE_KEY.URI]: (params?: WithIdParams) => `/restaurant/${params?.id}`,
+    },
+
+    REGISTER: {
+      [ROUTE_KEY.APP_DIR]: "/restaurant/Register",
+      [ROUTE_KEY.URI]: "/restaurant/register",
+    },
+  },
 };
