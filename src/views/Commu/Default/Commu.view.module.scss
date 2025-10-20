@@ -1,18 +1,21 @@
 .Wrapper {
   display: flex;
   flex-direction: column;
-  margin-top: 30px;
+  // margin-top: 30px;
   gap: 20px;
   height: auto;
+  max-width: 1250px;
+  margin: 0 auto;
+  padding-top: 40px;
+
+  @media screen and (max-width: 1200px) {
+    max-width: none;
+    width: 100%;
+  }
 }
 
-.RegisterButton {
-  width: 100px;
-  margin-left: auto;
-  // align-self: flex-start;
-}
-
-.ButtonWrapper {
+.TopSection {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
+  align-items: center;
 }

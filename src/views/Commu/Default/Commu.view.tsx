@@ -15,17 +15,15 @@ const cx = cn.bind(styles);
 interface CommuViewProps {
   data: Article.GetList.Response;
   offset?: number;
-  //sort:SortOreder;
 }
 
 export default function CommuView(props: CommuViewProps) {
   const { data, offset } = props;
   const { items, total } = data;
-  console.log("데이터 몇ㅐ", data);
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentOffset = parseInt(searchParams?.get("offset") || "0", 10);
+
   const currentLimit = 15; // 하드코딩된 limit 값
   const handlePageChange = (newPage: number) => {
     // 새 offset 계산: (페이지 번호 - 1) * limit
@@ -53,12 +51,9 @@ export default function CommuView(props: CommuViewProps) {
     state: {
       rowSelection,
     },
-
     getCoreRowModel: getCoreRowModel(),
   });
-  // const db = (await connectDB).db("vegan");
-  // const result = await db.collection("post").find().toArray();
-  // console.log(result);
+
   const goRegister = () => {
     router.push("/commu/register");
   };
@@ -68,17 +63,20 @@ export default function CommuView(props: CommuViewProps) {
   return (
     <>
       <div className={cx("Wrapper")}>
-        <h2>커뮤니티</h2>
-        <div className={cx("ButtonWrapper")}>
-          <Button
-            colorType="primary"
-            variant="contained"
-            text="글쓰기"
-            size="small"
-            className={cx("Btn")}
-            onClick={goRegister}
-          />
+        <div className={cx("TopSection")}>
+          <h2>커뮤니티</h2>
+          <div className={cx("ButtonWrapper")}>
+            <Button
+              colorType="primary"
+              variant="contained"
+              text="글쓰기"
+              size="small"
+              className={cx("Btn")}
+              onClick={goRegister}
+            />
+          </div>
         </div>
+
         <PostListTable
           table={table}
           onClick={goDetail}

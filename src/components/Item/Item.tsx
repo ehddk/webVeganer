@@ -15,7 +15,7 @@ export default function Item(props: ItemProps) {
   const { title, location, tel, detail, style, className } = props;
 
   return (
-    <div>
+    <div className={cx("Wrapper")}>
       <h2>{title}</h2>
       <div className={cx("MenuItem")}>
         <label>위치 </label>
@@ -25,9 +25,7 @@ export default function Item(props: ItemProps) {
         <label>문의 전화 </label>
         <p>{tel}</p>
       </div>
-      <div className={cx("MenuItem")}>
-        <label>홈페이지 </label>
-      </div>
+
       <div className={cx("MenuItem")}>
         <label>기타 </label>
         <p>{detail}</p>
