@@ -1,22 +1,36 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import styles from "./Food.view.module.scss";
+import styles from "./Restaurant.view.module.scss";
 import cn from "classnames/bind";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import Modal from "../../components/Modal/Modal";
 import seoulList from "@/app/services/seoulData";
 import { useRouter } from "next/navigation";
 import InfoModal from "@/components/Modal/InfoModal/InfoModal";
+import { LINK_ROUTE } from "@/constants/link.constants";
+import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
 
 const cx = cn.bind(styles);
 
-function FoodView() {
+type RestaurantViewProps = {
+  data: Array<
+    Restaurant.GetList.Response[number] & { initialBlogImages: string[] }
+  >;
+};
+
+function RestaurantView(props: RestaurantViewProps) {
+  const { data } = props;
+  console.log("dataaaa00", data);
   let router = useRouter();
   const [selectedLocation, setSelectedLocation] = useState("");
   const [searchFood, setSearchFood] = useState("");
-  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState(data);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const goDetail = (id: string) => {
+    console.log("hi");
+    router.push(LINK_ROUTE.RESTAURANT.DETAIL.uri({ id }));
+  };
   const handleModal = () => {
     setIsModalOpen(true);
   };
@@ -25,9 +39,9 @@ function FoodView() {
     setIsModalOpen(false);
   };
 
-  const handleSelectedLocation = (selectedCodeNm) => {
-    setSelectedLocation(selectedCodeNm);
-  };
+  // const handleSelectedLocation = (selectedCodeNm) => {
+  //   setSelectedLocation(selectedCodeNm);
+  // };
 
   // 검색어 변경 핸들러
   const handleSearch = (e) => {
@@ -38,17 +52,13 @@ function FoodView() {
   useEffect(() => {
     const filterRestaurants = () => {
       const filteredByLocation = selectedLocation
-        ? seoulList.data.filter(
-            (item) =>
-              item.crtfc_gbn_nm === "채식음식점" &&
-              item.cgg_code_nm === selectedLocation
-          )
-        : seoulList.data.filter((item) => item.crtfc_gbn_nm === "채식음식점");
+        ? data.filter((item) => item.cgg_code_name === selectedLocation)
+        : data;
 
       // 검색 결과에 따라 데이터 필터링
       const filteredBySearch = searchFood
         ? filteredByLocation.filter((item) =>
-            item.upso_nm.toLowerCase().includes(searchFood.toLowerCase())
+            item.upso_name.toLowerCase().includes(searchFood.toLowerCase())
           )
         : filteredByLocation;
 
@@ -74,25 +84,24 @@ function FoodView() {
       </div>
 
       <div className={cx("Grid")}>
-        {filteredRestaurants.map((restaurant, index) => (
-          <div
-            className={cx("Item")}
-            key={index}
-            onClick={() =>
-              router.push(
-                `/food/info?name=${restaurant.upso_nm}&loca=${restaurant.cgg_code_nm}`
-              )
-            }
-          >
-            <div className={cx("Thumbnail")}>
-              <img src="https://picsum.photos/200/200" />
+        {filteredRestaurants.map((restaurant, index) => {
+          const imageUrl = restaurant.initialBlogImages?.[0];
+          return (
+            <div
+              className={cx("Item")}
+              key={index}
+              onClick={() => goDetail(restaurant.id)}
+            >
+              <div className={cx("Thumbnail")}>
+                <RestaurantImage src={imageUrl} alt={restaurant.upso_name} />
+              </div>
+              <div className={cx("RestaurantInfo")}>
+                <p>{restaurant.upso_name}</p>
+                <p>{restaurant.cgg_code_name}</p>
+              </div>
             </div>
-            <div className={cx("RestaurantInfo")}>
-              <p>{restaurant.upso_nm}</p>
-              <p>{restaurant.cgg_code_nm}</p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       {isModalOpen && (
         <InfoModal onClose={closeModal} responsive={true}>
@@ -107,4 +116,4 @@ function FoodView() {
   );
 }
 
-export default FoodView;
+export default RestaurantView;
