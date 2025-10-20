@@ -1,6 +1,6 @@
 import axios from "axios";
 import qs from "qs";
-import { STORAGE_KEY } from "@/constants/storage.constant";
+
 import { API_BASE_URL } from "./api.constant";
 
 export const baseAjax = axios.create({
