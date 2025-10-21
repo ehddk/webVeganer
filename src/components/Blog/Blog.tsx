@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import styled from "styled-components";
-
+import styles from "./Blog.module.scss";
+import cn from "classnames/bind";
+const cx = cn.bind(styles);
 interface BlogItem {
   title: string;
   link: string;
@@ -17,32 +18,6 @@ export default function Blog({ query }) {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
-  const Btn = styled.button`
-    color: white;
-    background: green;
-    border: 0;
-    padding: 5px;
-    margin: 0 5px;
-    cursor: pointer;
-    border-radius: 4px;
-
-    &:hover {
-      background: darkgreen;
-    }
-  `;
-
-  const BlogItem = styled.div`
-    margin-bottom: 20px;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-  `;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,56 +80,55 @@ export default function Blog({ query }) {
   if (error) return <div>오류가 발생했습니다: {error}</div>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <div style={{ marginTop: "20px" }}>
-        {items.length > 0 ? (
-          currentItems.map((item, index) => (
-            <BlogItem key={index}>
-              <Link
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <h3
-                  style={{ margin: "0 0 10px 0" }}
-                  dangerouslySetInnerHTML={{ __html: item.title }}
-                />
-              </Link>
-              <p
-                style={{ color: "#555", margin: "0 0 10px 0" }}
-                dangerouslySetInnerHTML={{ __html: item.description }}
-              />
-              <div style={{ fontSize: "12px", color: "#888" }}>
-                {item.bloggername} |
-                {item.postdate &&
-                  ` ${new Date(
-                    item.postdate.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3")
-                  ).toLocaleDateString()}`}
-              </div>
-            </BlogItem>
-          ))
-        ) : (
-          <p>검색 결과가 없습니다.</p>
-        )}
-      </div>
+    <div>
+      {items.length > 0 ? (
+        currentItems.map((item, index) => (
+          <div className={cx("Item")} key={index}>
+            <Link
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cx("TitleLink")}
+            >
+              <h3 dangerouslySetInnerHTML={{ __html: item.title }} />
+            </Link>
+            <p
+              className={cx("Description")}
+              dangerouslySetInnerHTML={{ __html: item.description }}
+            />
+            <div className={cx("Detail")}>
+              {item.bloggername} |
+              {item.postdate &&
+                ` ${new Date(
+                  item.postdate.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3")
+                ).toLocaleDateString()}`}
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>검색 결과가 없습니다.</p>
+      )}
 
       {totalPages > 1 && (
-        <div
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        <div className={cx("Pagination")}>
           {currentPage > 1 && (
-            <Btn onClick={() => setCurrentPage(currentPage - 1)}>이전</Btn>
+            <button
+              className={cx("Btn")}
+              onClick={() => setCurrentPage(currentPage - 1)}
+            >
+              이전
+            </button>
           )}
-          <span style={{ margin: "0 10px", lineHeight: "30px" }}>
+          <span>
             {currentPage} / {totalPages}
           </span>
           {currentPage < totalPages && (
-            <Btn onClick={() => setCurrentPage(currentPage + 1)}>다음</Btn>
+            <button
+              className={cx("Btn")}
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
+              다음
+            </button>
           )}
         </div>
       )}
