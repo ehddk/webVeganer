@@ -5,7 +5,7 @@ import seoulList from "@/app/services/seoulData";
 import styles from "./RestaurantDetail.view.module.scss";
 import cn from "classnames/bind";
 import KakaoMap from "@/app/services/kakaoMap";
-import Blog from "../../../components/Blog/blog";
+import Blog from "../../../components/Blog/Blog";
 import { Suspense, useEffect, useState } from "react";
 import Item from "@/components/Item/Item";
 import Divider from "@/components/Divider/Divider";
@@ -33,21 +33,26 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
   //     console.error(error);
   //   }
   // };
-  const imageUrl = data.initialBlogImages?.[0];
+  const firstImageUrl = data.initialBlogImages?.[0]; // 첫 번째 이미지 (인덱스 0)
+  const secondImageUrl = data.initialBlogImages?.[1];
   return (
     <>
       <div className={cx("Banner")}>
-        <RestaurantImage src={imageUrl} alt={data.upso_name} />
-        {/* <img
-          src={blogImages[0] || "/defaultBanner.jpg"}
-          alt={data.upso_name}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            borderRadius: "8px",
-          }}
-        /> */}
+        {/* 첫 번째 이미지 (메인) */}
+        <RestaurantImage
+          src={firstImageUrl}
+          alt={`${data.upso_name} 이미지 1`}
+          className={cx("RestaurantImage")}
+        />
+
+        {/* 🚀 두 번째 이미지가 있을 경우에만 표시 */}
+        {secondImageUrl && (
+          <RestaurantImage
+            src={secondImageUrl}
+            alt={`${data.upso_name} 이미지 2`}
+            className={cx("RestaurantImage")}
+          />
+        )}
       </div>
       <div>
         <div className={cx("Item")}>
