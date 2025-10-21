@@ -20,7 +20,7 @@ type RestaurantViewProps = {
 
 function RestaurantView(props: RestaurantViewProps) {
   const { data } = props;
-  console.log("dataaaa00", data);
+
   let router = useRouter();
   const [selectedLocation, setSelectedLocation] = useState("");
   const [searchFood, setSearchFood] = useState("");
@@ -28,7 +28,6 @@ function RestaurantView(props: RestaurantViewProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const goDetail = (id: string) => {
-    console.log("hi");
     router.push(LINK_ROUTE.RESTAURANT.DETAIL.uri({ id }));
   };
   const handleModal = () => {
@@ -39,9 +38,12 @@ function RestaurantView(props: RestaurantViewProps) {
     setIsModalOpen(false);
   };
 
-  // const handleSelectedLocation = (selectedCodeNm) => {
-  //   setSelectedLocation(selectedCodeNm);
-  // };
+  const handleSelectedLocation = (selectedCityName: string) => {
+    // 2. 상태 업데이트
+    setSelectedLocation(selectedCityName);
+    // 3. 모달 닫기
+    closeModal();
+  };
 
   // 검색어 변경 핸들러
   const handleSearch = (e) => {
@@ -78,7 +80,7 @@ function RestaurantView(props: RestaurantViewProps) {
         <div className={cx("Content")}>
           <h2>원하는 지역을 선택하세요</h2>
           <button onClick={handleModal} className={cx("Button")}>
-            지역 찾기
+            {selectedLocation || "지역 찾기"}
           </button>
         </div>
       </div>
@@ -106,9 +108,9 @@ function RestaurantView(props: RestaurantViewProps) {
       {isModalOpen && (
         <InfoModal onClose={closeModal} responsive={true}>
           <Modal
-            onCheck={undefined}
-            onClose={undefined}
-            onSelectedLocation={undefined}
+            onClose={closeModal}
+            onSelectLocation={handleSelectedLocation}
+            currentSelectedCity={selectedLocation}
           />
         </InfoModal>
       )}
