@@ -1,9 +1,9 @@
 "use client";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import { useRouter } from "next/navigation";
-import commuData from "../services/commuData";
-import seoulList from "../services/seoulData";
-import styles from "./Main.module.scss";
+import commuData from "../../app/services/commuData";
+import seoulList from "../../app/services/seoulData";
+import styles from "./Home.view.module.scss";
 import cn from "classnames/bind";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button/Button";
@@ -26,7 +26,7 @@ const CafeList = [
     date: "2025-02-04",
   },
 ];
-export default function MainPage() {
+export default function HomeView() {
   let router = useRouter();
   const [showItems, setShowItems] = useState(6);
 
@@ -61,8 +61,10 @@ export default function MainPage() {
           <div className={cx("SubT")}>
             <h2>요즘 뜨는 인기 식당</h2>
             <Button
+              colorType="primary"
+              variant="contained"
               text={"비건식당 구경하러가기"}
-              onClick={() => router.push("/food")}
+              onClick={() => router.push("/restaurant")}
               backgroundColor="rgb(70, 144, 70)"
             ></Button>
           </div>

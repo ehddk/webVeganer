@@ -1,7 +1,7 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-import MainPage from "./Main/Main";
+import HomeView from "@/views/Home/Home.view";
 
-export default function Home() {
-  return <MainPage />;
-}
+const HomePage = () => {
+  return <HomeView />;
+};
+
+export default HomePage;
