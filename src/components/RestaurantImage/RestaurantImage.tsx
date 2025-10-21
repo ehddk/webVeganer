@@ -1,24 +1,22 @@
-import { useEffect, useState } from "react";
+import cn from "classnames/bind";
+import styles from "./RestaurantImage.view.module.scss";
 
+const cx = cn.bind(styles);
 type RestaurantImageProps = {
   src?: string;
   alt: string;
+  className?: string;
 };
 
 export const RestaurantImage = (props: RestaurantImageProps) => {
-  const { src, alt } = props;
-  const finalSrc = src || "/defaultBanner.jpg";
-
+  const { src, alt, className } = props;
+  const finalSrc = src || "/image.svg";
+  const isDefault = !src;
   return (
     <img
       src={finalSrc}
       alt={alt}
-      style={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        borderRadius: "8px",
-      }}
+      className={cx("RestaurantImage", { isDefault: isDefault }, className)}
     />
   );
 };
