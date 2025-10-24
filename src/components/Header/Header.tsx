@@ -57,9 +57,7 @@ export default function Header({ session }) {
             <li>
               <a onClick={() => router.push("/brand")}>브랜드</a>
             </li>
-            <li>
-              <Link href={"/cafe"}>카페</Link>
-            </li>
+
             <li>
               <Link href={"/restaurant"}>음식점</Link>
             </li>
