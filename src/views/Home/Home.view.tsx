@@ -9,45 +9,33 @@ import { useEffect, useState } from "react";
 import Button from "@/components/Button/Button";
 const cx = cn.bind(styles);
 
-const CafeList = [
-  {
-    id: 1,
-    title: "여기 좋음",
-    content:
-      "왜 좋은지??좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지좋은지",
-    cafeName: "써니보울",
-    date: "2025-02-04",
-  },
-  {
-    id: 2,
-    title: "여기 좋음",
-    content: "왜 좋은지??",
-    cafeName: "휘게라이프",
-    date: "2025-02-04",
-  },
-];
-export default function HomeView() {
+type HomeViewProps = {
+  data: Restaurant.GetList.Response[number][];
+};
+
+export default function HomeView(props: HomeViewProps) {
+  const { data } = props;
+
   let router = useRouter();
   const [showItems, setShowItems] = useState(6);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setShowItems(window.innerWidth <= 930 ? 4 : 6);
-    };
-    window.addEventListener("resize", handleResize);
-    handleResize();
-  }, []);
-  function randomItem(arr, num) {
+  //   useEffect(() => {
+  //     const handleResize = () => {
+  //       setShowItems(window.innerWidth <= 930 ? 4 : 6);
+  //     };
+  //     window.addEventListener("resize", handleResize);
+  //     handleResize();
+  //   }, []);
+  function randomItem(arr: any, num: any) {
     const mix = arr.sort(() => 0.5 - Math.random());
     return mix.slice(0, num);
   }
 
-  const ResList = seoulList.data.filter(
-    (item) => item.crtfc_gbn_nm === "채식음식점"
-  );
-  const randomList = randomItem(ResList, showItems);
+  const randomResList = randomItem(data, showItems);
 
-  const commuList = commuData.category.filter((item) => item.category);
+  const cafeList = data.filter((item) => item.category === "과자점");
+  const randomCafeList = randomItem(cafeList, showItems);
+  console.log("data:", data);
   return (
     <div className={cx("Wrapper")}>
       <div className={cx("Banner")} />
@@ -58,67 +46,47 @@ export default function HomeView() {
       />
       <section className={cx("Content")}>
         <div className={cx("Popular")}>
-          <div className={cx("SubT")}>
+          <div className={cx("Header")}>
             <h2>요즘 뜨는 인기 식당</h2>
-            <Button
-              colorType="primary"
-              variant="contained"
-              text={"비건식당 구경하러가기"}
+            <p
+              className={cx("More")}
               onClick={() => router.push("/restaurant")}
-              backgroundColor="rgb(70, 144, 70)"
-            ></Button>
-          </div>
-          <div className={cx("Cont")}>
-            {randomList.map((data: any, index: number) => (
+            >
+              &gt; 더보기
+            </p>
+          </div>{" "}
+          <div className={cx("RestauantContent")}>
+            {randomResList.map((data: any, index: number) => (
               <ul>
                 <li key={index}>
-                  <div className={cx("Items")}>
-                    <div
-                      style={{
-                        backgroundColor: "#fdf5e6",
-                        boxShadow: "5px 7px 2px lightgray",
-                        height: "150px",
-                      }}
-                    ></div>
-                    <p>{data.upso_nm}</p>
-                  </div>
+                  <div className={cx("Image")}></div>
+                  <p>{data.upso_name}</p>
                 </li>
               </ul>
-            ))}
+            ))}{" "}
           </div>
         </div>
 
-        <div className={cx("Cafe")}>
-          <div className={cx("Left")}>
-            <h1>요즘 뜨는 비건 카페</h1>
-            <Button
-              text={"비건카페 구경하러가기"}
-              onClick={() => router.push("/cafe")}
-              backgroundColor="rgb(70,144,70)"
-            ></Button>
+        <div className={cx("CafeWrapper")}>
+          <div className={cx("Header")}>
+            <h2>요즘 뜨는 비건 카페</h2>
+            <p className={cx("More")} onClick={() => router.push("/cafe")}>
+              &gt; 더보기
+            </p>
           </div>
 
-          <div className={cx("BoardWrapper")}>
-            <div className={cx("Inner")}>
-              {CafeList.map((item, index) => (
-                <>
-                  <ul key={item.id}>
-                    <li>
-                      <div className={cx("BoardList")}>
-                        <div className={cx("Left")}>
-                          <h3>{item.cafeName}</h3>
-                          <p className={cx("ItemContent")}>{item.content}</p>
-                          <p className={cx("Date")}>{item.date}</p>
-                        </div>
-                        <div className={cx("Right")}>
-                          <div className={cx("Image")} />
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </>
-              ))}
-            </div>
+          <div className={cx("CafeContent")}>
+            {randomCafeList?.map((item: any, index: any) => (
+              <ul key={index}>
+                <li>
+                  <div className={cx("Image")} />
+
+                  <button className={cx("Name")}>
+                    <p>{item.upso_name}</p>
+                  </button>
+                </li>
+              </ul>
+            ))}
           </div>
         </div>
       </section>
