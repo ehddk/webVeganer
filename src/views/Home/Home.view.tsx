@@ -7,6 +7,7 @@ import styles from "./Home.view.module.scss";
 import cn from "classnames/bind";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button/Button";
+import { LINK_ROUTE } from "@/constants/link.constants";
 const cx = cn.bind(styles);
 
 type HomeViewProps = {
@@ -19,13 +20,6 @@ export default function HomeView(props: HomeViewProps) {
   let router = useRouter();
   const [showItems, setShowItems] = useState(6);
 
-  //   useEffect(() => {
-  //     const handleResize = () => {
-  //       setShowItems(window.innerWidth <= 930 ? 4 : 6);
-  //     };
-  //     window.addEventListener("resize", handleResize);
-  //     handleResize();
-  //   }, []);
   function randomItem(arr: any, num: any) {
     const mix = arr.sort(() => 0.5 - Math.random());
     return mix.slice(0, num);
@@ -35,7 +29,9 @@ export default function HomeView(props: HomeViewProps) {
 
   const cafeList = data.filter((item) => item.category === "과자점");
   const randomCafeList = randomItem(cafeList, showItems);
-  console.log("data:", data);
+  const goDetail = (id: string) => {
+    router.push(LINK_ROUTE.RESTAURANT.DETAIL.uri({ id }));
+  };
   return (
     <div className={cx("Wrapper")}>
       <div className={cx("Banner")} />
@@ -78,7 +74,7 @@ export default function HomeView(props: HomeViewProps) {
           <div className={cx("CafeContent")}>
             {randomCafeList?.map((item: any, index: any) => (
               <ul key={index}>
-                <li>
+                <li onClick={() => goDetail(item.id)}>
                   <div className={cx("Image")} />
 
                   <button className={cx("Name")}>
