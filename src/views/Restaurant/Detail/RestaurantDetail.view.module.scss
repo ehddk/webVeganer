@@ -56,3 +56,18 @@
 .RestaurantImage {
   object-fit: cover;
 }
+
+.ProfileWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .Profile {
+    border-radius: 20px;
+    border: 1px solid black;
+  }
+
+  .User {
+    font-size: 12px;
+  }
+}

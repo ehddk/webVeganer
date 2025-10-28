@@ -1,18 +1,37 @@
-import { RestaurantQuery } from "@/\bapi/query";
+import { RestaurantQuery, ReviewQuery } from "@/\bapi/query";
 import { fetchImagesForRestaurant } from "@/utils/imageCrawl";
 import RestaurantInfoView from "@/views/Restaurant/Detail/RestauranDetail.view";
 
-type RestaurantInfoPageProps = PageProps<{
-  id: string;
-}>;
+type RestaurantInfoPageProps = PageProps<
+  {
+    id: string;
+    // restaurant_id:string;
+  },
+  Review.GetList.Params
+>;
 
 export default async function RestaurantInfoPage(
   props: RestaurantInfoPageProps
 ) {
-  const { params } = props;
+  const { params, searchParams } = props;
   const { id } = await params;
+  const restaurant_id = id;
+
+  console.log("restau_id", restaurant_id);
+  const rawOffset = (await searchParams).offset;
+  const rawLimit = (await searchParams).limit;
+  const offsetValue = rawOffset ? parseInt(String(rawOffset), 10) : 0;
+  const limitValue = rawLimit ? parseInt(String(rawLimit), 10) : 20;
+
   const response = await RestaurantQuery.getOne({ path: { id } });
   const restaurantData = response as Restaurant.GetOne.Response;
+  const reviewData = await ReviewQuery.getList({
+    params: {
+      offset: offsetValue,
+      limit: limitValue,
+    },
+    path: { restaurant_id },
+  });
 
   const initialImages = await fetchImagesForRestaurant(
     restaurantData.upso_name
@@ -23,6 +42,7 @@ export default async function RestaurantInfoPage(
     initialBlogImages: initialImages,
   };
 
-  if ("message" in response) throw new Error("상세 데이터 조회 중 실패");
-  return <RestaurantInfoView data={dataForView} />;
+  if ("message" in response || "message" in reviewData)
+    throw new Error("데이터 조회 중 실패");
+  return <RestaurantInfoView data={dataForView} reviewData={reviewData.data} />;
 }

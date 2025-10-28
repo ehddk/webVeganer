@@ -10,15 +10,22 @@ import { Suspense, useEffect, useState } from "react";
 import Item from "@/components/Item/Item";
 import Divider from "@/components/Divider/Divider";
 import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 
 const cx = cn.bind(styles);
 
+type FormType =
+  | Review.GetList.Response
+  | Review.Post.Request["body"]
+  | Review.Put.Request["body"];
 type RestaurantInfoViewProps = {
   data: Restaurant.GetOne.Response & { initialBlogImages: string[] };
+  reviewData: Review.GetList.Response;
 };
 export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
-  const { data } = props;
+  const { data, reviewData } = props;
 
+  console.log("리뷰 뭐?", reviewData);
   const [blogImages, setBlogImages] = useState<string[]>([]);
   const [menu, setMenu] = useState([]);
 
@@ -33,6 +40,10 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
   //     console.error(error);
   //   }
   // };
+
+  const form = useForm<FormType>({
+    defaultValues: {},
+  });
   const firstImageUrl = data.initialBlogImages?.[0]; // 첫 번째 이미지 (인덱스 0)
   const secondImageUrl = data.initialBlogImages?.[1];
   return (
@@ -61,11 +72,12 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
             <p>[{data.cgg_code_name}]</p>
           </div>
 
-          <p>별점</p>
+          <p>별점!!!!</p>
+
           <ul className={cx("Ul")}>
             <li className={cx("Util")}>
               <img src="/like.svg" width={15} />
-              좋아요
+              좋아요!!!
             </li>
 
             <li className={cx("Util")}>
@@ -98,20 +110,27 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
         </div> */}
         <div className={cx("Item")}>
           <h2>방문자 후기</h2>
+
           <div className={cx("Items")}>
             <div style={{ padding: "10px" }}>
-              <p>작성자</p>
-              <ul>
-                <li>별점</li>
-                <li>날짜</li>
-                <li>좋아요</li>
-              </ul>
-              <p>여기...맛집...</p>
-              {/* Add images with valid src */}
-              <img src="/path/to/image.jpg" alt="사진" />
-              <img src="/path/to/image.jpg" alt="사진" />
-              <img src="/path/to/image.jpg" alt="사진" />
-              <img src="/path/to/image.jpg" alt="사진" />
+              <div className={cx("ProfileWrapper")}>
+                <img src="/user.svg" width={20} className={cx("Profile")} />
+                <p className={cx("User")}>작성자</p>
+              </div>
+              {/* <FormProvider {...form}>
+
+
+                  
+                 </FormProvider>
+              <Controller control={control} render={(field)}>  */}
+
+              {reviewData.items.map((item) => (
+                <ul key={item.id}>
+                  <li>
+                    <p>{item.content}</p>
+                  </li>
+                </ul>
+              ))}
             </div>
           </div>
         </div>
