@@ -11,6 +11,7 @@ import Item from "@/components/Item/Item";
 import Divider from "@/components/Divider/Divider";
 import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
 import { Controller, FormProvider, useForm } from "react-hook-form";
+import dayjs from "dayjs";
 
 const cx = cn.bind(styles);
 
@@ -46,6 +47,8 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
   });
   const firstImageUrl = data.initialBlogImages?.[0]; // 첫 번째 이미지 (인덱스 0)
   const secondImageUrl = data.initialBlogImages?.[1];
+
+  const { control } = form;
   return (
     <>
       <div className={cx("Banner")}>
@@ -96,42 +99,44 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
             detail={"예약, 포장, 반려동물 동반 가능"}
           ></Item>
         </div>
-        {/* <div className={cx("Item")}>
-          <h2>메뉴 소개</h2>
-          <button onClick={() => handleMenu(cafeName)}>더보기</button>
 
-          {menu && (
-            <div>
-              {menu.map((item, index) => (
-                <p key={index}>{item.name}</p>
-              ))}
-            </div>
-          )}
-        </div> */}
         <div className={cx("Item")}>
           <h2>방문자 후기</h2>
 
-          <div className={cx("Items")}>
-            <div style={{ padding: "10px" }}>
-              <div className={cx("ProfileWrapper")}>
-                <img src="/user.svg" width={20} className={cx("Profile")} />
-                <p className={cx("User")}>작성자</p>
-              </div>
-              {/* <FormProvider {...form}>
-
-
-                  
-                 </FormProvider>
-              <Controller control={control} render={(field)}>  */}
-
-              {reviewData.items.map((item) => (
+          <div className={cx("ReviewWrapper")}>
+            {reviewData.items.map((item) => (
+              <>
                 <ul key={item.id}>
                   <li>
-                    <p>{item.content}</p>
+                    <div className={cx("ProfileWrapper")}>
+                      <img src="/user.svg" className={cx("Profile")} />{" "}
+                      <div className={cx("ProfileContent")}>
+                        <div>
+                          <p className={cx("User")}>{item.user_id}</p>
+                          <p className={cx("Date")}>
+                            {dayjs(item.createdAt.slice(0, 10)).format(
+                              "YYYY.MM.DD"
+                            )}
+                          </p>
+                        </div>
+
+                        <p className={cx("ReviewContent")}>{item.content}</p>
+                      </div>
+                    </div>
                   </li>
                 </ul>
-              ))}
-            </div>
+              </>
+            ))}
+
+            {/* <FormProvider {...form}>
+            <Controller name="content" control={control} render={({field})=>(
+              <
+            )}> 
+
+</Controller>
+
+                  
+                 </FormProvider> */}
           </div>
         </div>
         <div className={cx("Item")}>
