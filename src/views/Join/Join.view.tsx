@@ -1,50 +1,195 @@
 "use client";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
-import { STRING_LITERAL_DROP_BUNDLE } from "next/dist/shared/lib/constants";
-import { signUp } from "../../utils/signUp";
+import { Controller, FormProvider, useForm } from "react-hook-form";
+
 import styles from "./Join.view.module.scss";
 import cn from "classnames/bind";
+import Button from "@/components/Button/Button";
+import { useModal } from "@/hooks/modal/useModal";
+import { AuthMutation } from "@/\bapi/mutation";
+import { LINK_ROUTE } from "@/constants/link.constants";
+import { useRouter } from "next/navigation";
 const cx = cn.bind(styles);
 
-type JoinFormType = {
-  email: string;
-  id: string;
-  password: string;
-  passwordConfirm: string;
-  terms: string[];
-};
+type FormType = Auth.Post.Request["body"] & { passwordConfirm: string };
 export default function JoinView() {
-  const [success, setSuccess] = React.useState("");
-  const [error, setError] = React.useState("");
-  const form = useForm<JoinFormType>({
+  const { showModal, hideModal, ModalComponent } = useModal();
+  const router = useRouter();
+  const form = useForm<FormType>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
     defaultValues: {
       email: "",
+      name: "",
       password: "",
       passwordConfirm: "",
-      terms: [],
     },
   });
 
-  const handleSubmit = async (data: JoinFormType) => {
-    const { email, password } = data;
-    // console.log('data',data)
-    try {
-      const result = await signUp(email, password);
-      // console.log('resu',result)
-      setSuccess(result.message);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+  // const handleSubmit = async (data: FormType) => {
+  //   const { email, password } = data;
+  //   // console.log('data',data)
+  //   try {
+  //     const result = await signUp(email, password);
+  //     // console.log('resu',result)
+  //     setSuccess(result.message);
+  //   } catch (err) {
+  //     setError(err.message);
+  //   }
+  // };
+
+  const goRegister = form.handleSubmit((formData) => {
+    showModal({
+      type: "default",
+      dimmedColor: "transparent",
+      title: "저장",
+      description: "입력하신 정보로 가입 신청하시겠습니까?",
+      positive: {
+        text: "확인",
+        onClick: async () => {
+          const body = {
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          };
+          const res = await AuthMutation.post({
+            body: body,
+          });
+
+          if ("message" in res) {
+            showModal({
+              type: "default",
+              title: "저장 실패",
+              description: "저장에 실패했습니다.\n다시 시도해주세요",
+              positive: {
+                text: "확인",
+                onClick: hideModal,
+              },
+              negative: undefined,
+            });
+          } else {
+            hideModal();
+            router.push(LINK_ROUTE.MAIN.appDir);
+          }
+        },
+      },
+      negative: {
+        text: "취소",
+      },
+    });
+  });
+
   return (
     <>
       <div className={cx("Wrapper")}>
         <h2>회원가입</h2>
-        <form className={cx("Form")} onSubmit={form.handleSubmit(handleSubmit)}>
+
+        <FormProvider {...form}>
           <div className={cx("FormContainer")}>
+            <Controller
+              control={form.control}
+              name={"email"}
+              render={({ field }) => {
+                return (
+                  <div className={cx("Item")}>
+                    <label className={cx("Label")} htmlFor={field.name}>
+                      이메일
+                    </label>
+                    <input
+                      className={cx("Input")}
+                      name={field.name}
+                      type={"text"}
+                      placeholder={"이메일을 입력해 주세요"}
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </div>
+                );
+              }}
+            ></Controller>
+            <Controller
+              control={form.control}
+              name={"name"}
+              render={({ field }) => {
+                return (
+                  <div className={cx("Item")}>
+                    <label className={cx("Label")} htmlFor={field.name}>
+                      닉네임
+                    </label>
+                    <input
+                      className={cx("Input")}
+                      name={field.name}
+                      type={"text"}
+                      placeholder={"이메일을 입력해 주세요"}
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </div>
+                );
+              }}
+            ></Controller>
+            <Controller
+              control={form.control}
+              name={"password"}
+              render={({ field }) => {
+                return (
+                  <div className={cx("Item")}>
+                    <label className={cx("Label")} htmlFor={field.name}>
+                      비밀번호
+                    </label>
+                    <input
+                      className={cx("Input")}
+                      name={field.name}
+                      type={"password"}
+                      placeholder={"비밀번호를 입력해 주세요"}
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </div>
+                );
+              }}
+            ></Controller>
+            <Controller
+              control={form.control}
+              name={"passwordConfirm"}
+              render={({ field }) => {
+                return (
+                  <div className={cx("Item")}>
+                    <label className={cx("Label")} htmlFor={field.name}>
+                      비밀번호확인
+                    </label>
+                    <input
+                      className={cx("Input")}
+                      name={field.name}
+                      type={"password"}
+                      placeholder={"비밀번호를 한번 더 입력해 주세요"}
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </div>
+                );
+              }}
+            ></Controller>
+          </div>
+
+          <div className={cx("BottomBtns")}>
+            <Button
+              text="취소"
+              colorType="inherit"
+              variant="contained"
+              size="medium"
+            ></Button>
+            <Button
+              text="완료"
+              colorType="primary"
+              variant="contained"
+              size="medium"
+              onClick={goRegister}
+            ></Button>
+          </div>
+        </FormProvider>
+
+        {/* <div className={cx("FormContainer")}>
             <Controller
               control={form.control}
               name={"email"}
@@ -117,8 +262,8 @@ export default function JoinView() {
             <button className={cx("Button")} type="submit">
               완료
             </button>
-          </div>
-        </form>
+          </div> */}
+        <ModalComponent />
       </div>
     </>
   );

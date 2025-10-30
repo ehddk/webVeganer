@@ -1,7 +1,8 @@
 .Wrapper {
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
   gap: 50px;
   padding: 30px;
   h2 {
@@ -23,17 +24,27 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-width: 500px;
   width: 100%;
 }
 .Item {
   display: flex;
   flex-direction: column;
+
+  @media screen and (max-width: 1200px) {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+  }
 }
 .Input {
   height: 40px;
   font-size: 12px;
   padding: 10px;
   border: 0;
+  width: 100%;
   background-color: #919eab14;
 }
 
@@ -41,6 +52,10 @@
   padding-block: 5px;
   font-weight: 500;
   font-size: 14px;
+  flex-shrink: 0;
+  @media screen and (max-width: 1200px) {
+    flex-basis: 100px;
+  }
 }
 .Button {
   min-width: 110px;

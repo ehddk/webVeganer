@@ -5,8 +5,17 @@ import { useRouter } from "next/navigation";
 // import { signIn } from "next-auth/react";
 import styles from "./Login.view.module.scss";
 import cn from "classnames/bind";
-import { Controller, useForm, UseFormReturn } from "react-hook-form";
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  UseFormReturn,
+} from "react-hook-form";
 import React from "react";
+import Button from "@/components/Button/Button";
+import { useModal } from "@/hooks/modal/useModal";
+import { AuthMutation } from "@/\bapi/mutation";
+import { LINK_ROUTE } from "@/constants/link.constants";
 const cx = cn.bind(styles);
 
 type LoginInFormRef = {
@@ -16,20 +25,19 @@ type LoginInFormRef = {
 interface LoginInfoProps {
   ref?: React.Ref<LoginInFormRef> | null;
 }
-interface LogInFormType {
-  id: string;
-  pwd: string;
-}
+type LogInFormType = Auth.Post.Request["body"];
 
 function LoginView() {
   // let session= await getServerSession(authOptions)
-  let router = useRouter();
+
+  const { showModal, hideModal, ModalComponent } = useModal();
+  const router = useRouter();
 
   const form = useForm<LogInFormType>({
     mode: "all",
     defaultValues: {
-      id: "",
-      pwd: "",
+      email: "",
+      password: "",
     },
   });
   const {
@@ -40,15 +48,6 @@ function LoginView() {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
 
-  const onSubmit = (data: LogInFormType) => {
-    if (data.id === "" || data.pwd === "") {
-      alert("아이디,비밀번호를 확인해주세요");
-    } else {
-      alert("로그인 성공");
-      router.push("/");
-    }
-  };
-
   const handleId = (e) => {
     setId(e.target.value);
   };
@@ -57,57 +56,100 @@ function LoginView() {
     setPwd(e.target.value);
   };
 
+  const goRegister = form.handleSubmit((formData) => {
+    showModal({
+      type: "default",
+      dimmedColor: "transparent",
+      title: "저장",
+      description: "입력하신 정보로 가입 신청하시겠습니까?",
+      positive: {
+        text: "확인",
+        onClick: async () => {
+          const body = {
+            email: formData.email,
+            password: formData.password,
+          };
+          const res = await AuthMutation.login({
+            body: body,
+          });
+
+          if ("message" in res) {
+            showModal({
+              type: "default",
+              title: "저장 실패",
+              description: "저장에 실패했습니다.\n다시 시도해주세요",
+              positive: {
+                text: "확인",
+                onClick: hideModal,
+              },
+              negative: undefined,
+            });
+          } else {
+            hideModal();
+            router.push(LINK_ROUTE.MAIN.appDir);
+          }
+        },
+      },
+      negative: {
+        text: "취소",
+      },
+    });
+  });
+
   return (
-    <>
+    <FormProvider {...form}>
       {/* {session ? <p>{session.user.name}님</p> : <p>no</p>} */}
       <div className={cx("Wrapper")}>
         <h2>로그인</h2>
-        <form className={cx("FormWrapper")} onSubmit={handleSubmit(onSubmit)}>
-          <div className={cx("InputWrapper")}>
-            <Controller
-              control={form.control}
-              name="id"
-              render={({ field }) => (
-                <input
-                  type="text"
-                  value={id}
-                  onChange={handleId}
-                  placeholder="아이디를 입력해주세요"
-                  className={cx("Input")}
-                ></input>
-              )}
-            ></Controller>
 
-            <Controller
-              control={form.control}
-              name="pwd"
-              render={({ field }) => (
-                <input
-                  type="password"
-                  value={pwd}
-                  onChange={handlePwd}
-                  placeholder="비밀번호를 입력해주세요"
-                  className={cx("Input")}
-                ></input>
-              )}
-            />
-          </div>
+        <div className={cx("InputWrapper")}>
+          <Controller
+            control={control}
+            name="email"
+            render={({ field }) => (
+              <input
+                type="text"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="아이디를 입력해주세요"
+                className={cx("Input")}
+              ></input>
+            )}
+          ></Controller>
 
-          <div className={cx("BtnWrapper")}>
-            <button className={cx("Btn1")}>로그인</button>
-            {/* <button className={cx("Btn1")}>소셜로그인</button> */}
-            <button className={cx("Btn2")}>
-              <Link
-                href="/join"
-                style={{ color: "black", textDecoration: "none" }}
-              >
-                회원가입
-              </Link>
-            </button>
-          </div>
-        </form>
+          <Controller
+            control={control}
+            name="password"
+            render={({ field }) => (
+              <input
+                type="password"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="비밀번호를 입력해주세요"
+                className={cx("Input")}
+              ></input>
+            )}
+          />
+        </div>
+
+        <div className={cx("BtnWrapper")}>
+          <Button
+            colorType="primary"
+            variant="contained"
+            text="       로그인"
+            onClick={goRegister}
+          ></Button>
+          {/* <button className={cx("Btn1")}>소셜로그인</button> */}
+
+          <Button
+            colorType="primary"
+            variant="outlined"
+            text="     회원가입"
+          ></Button>
+        </div>
       </div>
-    </>
+      <ModalComponent />
+    </FormProvider>
   );
 }
 export default LoginView;
