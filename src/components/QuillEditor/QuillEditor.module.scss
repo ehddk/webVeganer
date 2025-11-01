@@ -1,0 +1,8 @@
+.ContentEditor {
+  width: 100%; // 너비 고정
+  min-height: 460px;
+
+  :global(.ql-container) {
+    min-height: 400px;
+  }
+}
