@@ -44,12 +44,15 @@ export default function CommuWRegisterView() {
   //   }
   // };
 
-  const DynamicQuillEditor = dynamic(() => import("react-quill-new"), {
-    ssr: false,
-    loading: () => (
-      <div style={{ minHeight: "350px" }}>에디터를 로딩 중...</div>
-    ),
-  });
+  const DynamicQuillEditor = dynamic(
+    () => import("../../../components/QuillEditor/QuillEditor"),
+    {
+      ssr: false,
+      loading: () => (
+        <div style={{ minHeight: "350px" }}>에디터를 로딩 중...</div>
+      ),
+    }
+  );
 
   const handleSave = form.handleSubmit((formData) => {
     showModal({
@@ -137,9 +140,7 @@ export default function CommuWRegisterView() {
               render={({ field }) => (
                 <DynamicQuillEditor
                   value={field.value}
-                  onChange={(content, value, delta, editor) => {
-                    field.onChange(editor.getContents());
-                  }}
+                  onChange={field.onChange}
                   className={cx("ContentEditor")}
                 />
               )}

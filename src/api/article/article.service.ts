@@ -32,7 +32,8 @@ export class ArticleService {
   async post(req: Article.Post.Request) {
     const { data } = await this._ajax.post<Article.Post.Response>(
       ARTICLE_ROUTES.POST,
-      req.body
+      req.body,
+      { withCredentials: true }
     );
 
     return data;

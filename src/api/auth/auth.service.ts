@@ -48,7 +48,8 @@ export class AuthService {
   async login(req: Auth.Login.Request) {
     const data = await this._ajax.post<Auth.Login.Response>(
       AUTH_ROUTES.LOGIN,
-      req.body
+      req.body,
+      { withCredentials: true }
     );
 
     return data;

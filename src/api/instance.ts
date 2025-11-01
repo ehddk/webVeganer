@@ -2,10 +2,12 @@ import axios from "axios";
 import qs from "qs";
 
 import { API_BASE_URL } from "./api.constant";
+import Cookies from "js-cookie";
 
 export const baseAjax = axios.create({
   baseURL: API_BASE_URL,
   timeout: 3000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -18,8 +20,6 @@ export const baseAjax = axios.create({
   },
 });
 
-// baseAjax.interceptors.request.use(
-//   async function (config) {
 //     try {
 //       let token;
 
@@ -58,7 +58,22 @@ export const baseAjax = axios.create({
 //     return Promise.reject(err);
 //   }
 // );
+baseAjax.interceptors.request.use(
+  function (config) {
+    // 브라우저 환경에서만 실행
+    if (typeof window !== "undefined") {
+      const token = Cookies.get("accessToken");
 
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`; // Bearer 추가!
+      }
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
 baseAjax.interceptors.response.use(
   async function (config) {
     return config;
@@ -68,3 +83,13 @@ baseAjax.interceptors.response.use(
     throw new Error(err?.response?.data?.detail);
   }
 );
+
+export const createServerAjax = (accessToken: string) => {
+  return axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${accessToken}`,
+    },
+  });
+};
