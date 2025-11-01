@@ -1,17 +1,24 @@
 .Wrapper {
-  padding: 30px;
+  padding: 120px 30px;
 
   display: flex;
   flex-direction: column;
-
+  flex: 1;
   gap: 30px;
-  // margin-bottom: 80px;
+
   max-width: 500px;
   width: 100%;
   text-align: center;
-  // align-items: center;
-  // justify-content: center;
+
   margin: 0 auto;
+
+  @media screen and (max-width: 450px) {
+    padding: 140px 30px;
+  }
+
+  @media screen and (max-width: 380px) {
+    padding: 50px 30px;
+  }
 }
 
 .InputWrapper {

@@ -22,14 +22,9 @@ type LoginInFormRef = {
   form: UseFormReturn<LogInFormType, any, undefined>;
 };
 
-interface LoginInfoProps {
-  ref?: React.Ref<LoginInFormRef> | null;
-}
 type LogInFormType = Auth.Post.Request["body"];
 
 function LoginView() {
-  // let session= await getServerSession(authOptions)
-
   const { showModal, hideModal, ModalComponent } = useModal();
   const router = useRouter();
 
@@ -42,44 +37,30 @@ function LoginView() {
   });
   const { control } = form;
 
-  const goRegister = form.handleSubmit((formData) => {
-    showModal({
-      type: "default",
-      dimmedColor: "transparent",
-      title: "저장",
-      description: "입력하신 정보로 가입 신청하시겠습니까?",
-      positive: {
-        text: "확인",
-        onClick: async () => {
-          const body = {
-            email: formData.email,
-            password: formData.password,
-          };
-          const res = await AuthMutation.login({
-            body: body,
-          });
-
-          if ("message" in res) {
-            showModal({
-              type: "default",
-              title: "저장 실패",
-              description: "저장에 실패했습니다.\n다시 시도해주세요",
-              positive: {
-                text: "확인",
-                onClick: hideModal,
-              },
-              negative: undefined,
-            });
-          } else {
-            hideModal();
-            router.push(LINK_ROUTE.MAIN.appDir);
-          }
-        },
-      },
-      negative: {
-        text: "취소",
-      },
+  const goRegister = form.handleSubmit(async (formData) => {
+    const body = {
+      email: formData.email,
+      password: formData.password,
+    };
+    const res = await AuthMutation.login({
+      body: body,
     });
+    if ("message" in res) {
+      showModal({
+        type: "default",
+        title: "로그인 실패",
+        description: "로그인에 실패했습니다.\n다시 시도해주세요",
+        positive: {
+          text: "확인",
+          onClick: hideModal,
+        },
+        negative: undefined,
+      });
+    } else {
+      hideModal();
+      router.push(LINK_ROUTE.MAIN.appDir);
+      router.refresh();
+    }
   });
 
   return (
@@ -124,7 +105,6 @@ function LoginView() {
             text="       로그인"
             onClick={goRegister}
           ></Button>
-          {/* <button className={cx("Btn1")}>소셜로그인</button> */}
 
           <Button
             colorType="primary"
