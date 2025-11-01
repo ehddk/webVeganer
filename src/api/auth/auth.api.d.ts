@@ -45,6 +45,17 @@ declare global {
       };
       type Response = true;
     }
+    namespace Logout {
+      type Path = {};
+      type Params = {};
+      type Body = {};
+      type Request = {
+        path?: Path;
+        params?: Params;
+        body?: Body;
+      };
+      type Response = true;
+    }
     namespace GetOne {
       type Path = getAuthRequestPath;
       type Params = getAuthParams;

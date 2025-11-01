@@ -7,6 +7,7 @@ const AUTH_ROUTES = {
   POST: "/api/auth",
   DELETE: "/api/auth/:id",
   LOGIN: "/api/auth/login",
+  LOGOUT: "/api/auth/logout",
 };
 
 export class AuthService {
@@ -49,6 +50,15 @@ export class AuthService {
     const data = await this._ajax.post<Auth.Login.Response>(
       AUTH_ROUTES.LOGIN,
       req.body,
+      { withCredentials: true }
+    );
+
+    return data;
+  }
+  async logout(req: Auth.Logout.Request) {
+    const data = await this._ajax.post<Auth.Logout.Response>(
+      AUTH_ROUTES.LOGOUT,
+
       { withCredentials: true }
     );
 

@@ -9,9 +9,13 @@ import styles from "./Header.module.scss";
 import cn from "classnames/bind";
 import Link from "next/link";
 import Dropdown from "../Dropdown/Dropdown";
+import { AuthMutation } from "@/\bapi/mutation";
 const cx = cn.bind(styles);
 
-export default function Header({ session }) {
+type SessionProps = {
+  isAuthenticated: boolean;
+};
+export default function Header({ session }: { session: SessionProps }) {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
@@ -19,36 +23,46 @@ export default function Header({ session }) {
     setDropdownOpen(!isDropdownOpen);
   };
 
-  const handleMenuItemClick = (path) => {
+  const handleMenuItemClick = (path: any) => {
     router.push(path);
     setDropdownOpen(false);
   };
+  const loggedInOptions = [
+    {
+      label: "로그아웃",
+      value: "/logout",
+    },
+  ];
+
   const option = [
     { label: "로그인", value: "/login" },
     { label: "회원가입", value: "/join" },
   ];
 
+  const options = session.isAuthenticated ? loggedInOptions : option;
+
   // 상태 관리를 위한 추가 코드
   const [selectedOption, setSelectedOption] = useState("");
 
   // 드롭다운용 handleChange 함수
-  const handleOptionChange = (value) => {
-    setSelectedOption(value);
-    handleMenuItemClick(value);
+  const handleOptionChange = async (value: string | string[]) => {
+    const selectedValue = Array.isArray(value) ? value[0] : value;
+    setSelectedOption(selectedValue);
+
+    if (selectedValue === "/logout") {
+      const res = await AuthMutation.logout({});
+      if (res) {
+        router.push("/");
+        router.refresh();
+      }
+    } else {
+      handleMenuItemClick(selectedValue);
+    }
   };
 
   return (
     <div className={cx("Wrapper")}>
-      <div
-        className={cx("Header")}
-        style={{
-          //  width: "calc(100%-160px)",
-          display: "flex",
-          // flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className={cx("Header")}>
         <a href="/">
           <h1>Veganer</h1>
         </a>
@@ -79,7 +93,7 @@ export default function Header({ session }) {
               )}
             ></Dropdown.Trigger>
             <Dropdown.Menu size="medium" className={cx("DropdownMenu")}>
-              {option.map((item) => (
+              {options.map((item) => (
                 <Dropdown.Item key={item.value} value={item.value}>
                   {item.label}
                 </Dropdown.Item>
@@ -88,18 +102,6 @@ export default function Header({ session }) {
           </Dropdown.Root>
         </nav>
       </div>
-
-      {/* {isDropdownOpen && (
-        <Dropdown.Root value={selectedOption} onChange={handleOptionChange}>
-          <Dropdown.Menu>
-            {option.map((item) => (
-              <Dropdown.Item key={item.value} value={item.value}>
-                {item.label}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown.Root>
-      )} */}
     </div>
   );
 }

@@ -20,6 +20,16 @@ export const login = async (req: Auth.Login.Request) => {
     return data;
   }
 };
+
+export const logout = async (req: Auth.Logout.Request) => {
+  try {
+    const data = await authService.logout(req);
+    return data;
+  } catch (error) {
+    const data = await handleServerError(error);
+    return data;
+  }
+};
 export const put = async (req: Auth.Put.Request) => {
   try {
     const data = await authService.put(req);
