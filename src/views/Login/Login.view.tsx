@@ -40,21 +40,7 @@ function LoginView() {
       password: "",
     },
   });
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = form;
-  const [id, setId] = useState("");
-  const [pwd, setPwd] = useState("");
-
-  const handleId = (e) => {
-    setId(e.target.value);
-  };
-
-  const handlePwd = (e) => {
-    setPwd(e.target.value);
-  };
+  const { control } = form;
 
   const goRegister = form.handleSubmit((formData) => {
     showModal({
@@ -98,7 +84,6 @@ function LoginView() {
 
   return (
     <FormProvider {...form}>
-      {/* {session ? <p>{session.user.name}님</p> : <p>no</p>} */}
       <div className={cx("Wrapper")}>
         <h2>로그인</h2>
 
