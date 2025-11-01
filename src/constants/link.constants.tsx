@@ -8,6 +8,10 @@ interface WithIdParams {
 }
 
 export const LINK_ROUTE = {
+  MAIN: {
+    [ROUTE_KEY.APP_DIR]: "/",
+    [ROUTE_KEY.URI]: "/",
+  },
   ARTICLE: {
     DEFAULT: { [ROUTE_KEY.APP_DIR]: "/commu", [ROUTE_KEY.URI]: "/commu" },
 
