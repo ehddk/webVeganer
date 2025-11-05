@@ -25,24 +25,11 @@ export default function JoinView() {
       passwordConfirm: "",
     },
   });
-
-  // const handleSubmit = async (data: FormType) => {
-  //   const { email, password } = data;
-  //   // console.log('data',data)
-  //   try {
-  //     const result = await signUp(email, password);
-  //     // console.log('resu',result)
-  //     setSuccess(result.message);
-  //   } catch (err) {
-  //     setError(err.message);
-  //   }
-  // };
-
   const goRegister = form.handleSubmit((formData) => {
     showModal({
       type: "default",
       dimmedColor: "transparent",
-      title: "저장",
+      title: "가입 신청",
       description: "입력하신 정보로 가입 신청하시겠습니까?",
       positive: {
         text: "확인",
@@ -52,24 +39,48 @@ export default function JoinView() {
             email: formData.email,
             password: formData.password,
           };
-          const res = await AuthMutation.post({
+
+          const res: any = await AuthMutation.post({
             body: body,
           });
 
-          if ("message" in res) {
+          if (res && (res.details || res.message)) {
+            hideModal();
+
+            const errorMessage =
+              res.details ||
+              res.message ||
+              "알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+
+            // 가입 실패 모달 표시
             showModal({
               type: "default",
-              title: "저장 실패",
-              description: "저장에 실패했습니다.\n다시 시도해주세요",
+              title: "가입 실패",
+              description: `${errorMessage}`,
               positive: {
                 text: "확인",
-                onClick: hideModal,
+                onClick: () => {
+                  hideModal();
+                },
               },
               negative: undefined,
             });
           } else {
-            hideModal();
-            router.push(LINK_ROUTE.MAIN.appDir);
+            // 2. 성공 응답 확인 및 모달 표시
+            showModal({
+              type: "default",
+              title: "회원가입 완료 ",
+              dimmedColor: "transparent",
+              description: "회원가입이 되었습니다. 로그인 해주세요",
+              positive: {
+                text: "확인",
+                onClick: () => {
+                  router.push(LINK_ROUTE.MAIN.appDir);
+                  hideModal();
+                },
+              },
+              negative: undefined,
+            });
           }
         },
       },
@@ -189,80 +200,6 @@ export default function JoinView() {
           </div>
         </FormProvider>
 
-        {/* <div className={cx("FormContainer")}>
-            <Controller
-              control={form.control}
-              name={"email"}
-              render={({ field }) => {
-                return (
-                  <div className={cx("Item")}>
-                    <label className={cx("Label")} htmlFor={field.name}>
-                      이메일
-                    </label>
-                    <input
-                      className={cx("Input")}
-                      name={field.name}
-                      type={"text"}
-                      placeholder={"이메일"}
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </div>
-                );
-              }}
-            ></Controller>
-            <Controller
-              control={form.control}
-              name={"password"}
-              render={({ field }) => {
-                return (
-                  <div className={cx("Item")}>
-                    <label className={cx("Label")} htmlFor={field.name}>
-                      비밀번호
-                    </label>
-                    <input
-                      className={cx("Input")}
-                      name={field.name}
-                      type={"password"}
-                      placeholder={"비밀번호"}
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </div>
-                );
-              }}
-            ></Controller>
-            <Controller
-              control={form.control}
-              name={"passwordConfirm"}
-              render={({ field }) => {
-                return (
-                  <div className={cx("Item")}>
-                    <label className={cx("Label")} htmlFor={field.name}>
-                      비밀번호확인
-                    </label>
-                    <input
-                      className={cx("Input")}
-                      name={field.name}
-                      type={"password"}
-                      placeholder={"비밀번호확인"}
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </div>
-                );
-              }}
-            ></Controller>
-          </div>
-
-          <div className={cx("BottomBtns")}>
-            <button className={cx("CancelButton")} type="submit">
-              취소
-            </button>
-            <button className={cx("Button")} type="submit">
-              완료
-            </button>
-          </div> */}
         <ModalComponent />
       </div>
     </>
