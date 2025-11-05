@@ -24,10 +24,9 @@ export class ReviewService {
 
   async post(req: Review.Post.Request) {
     const data = await this._ajax.post<Review.Post.Response>(
-      REVIEW_ROUTES.POST,
+      pathToUrl(REVIEW_ROUTES.POST, req.path),
       req.body
     );
-
     return data;
   }
 

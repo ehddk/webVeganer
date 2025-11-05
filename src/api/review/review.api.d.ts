@@ -3,8 +3,8 @@ type IReview = {
   user_id: string;
   content: string;
   rating: number;
-  createdAt: Date;
-  updatedAt?: Date;
+  createdAt: string;
+  updatedAt?: string;
 };
 
 interface PaginatedReview {
