@@ -36,7 +36,7 @@
   border-radius: 5px;
 
   height: auto;
-  border: 1px solid rgb(133, 133, 133);
+  border: 1px solid rgb(183, 183, 183);
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -83,4 +83,27 @@
     flex-direction: column;
     gap: 6px;
   }
+}
+
+.ReviewText {
+  resize: none;
+  min-height: 70px;
+  height: auto;
+  padding: 10px;
+  border: 1px solid rgb(183, 183, 183);
+}
+.Btn {
+  width: 100px;
+  margin-left: auto;
+}
+
+.LoginRequired {
+  font-size: 15px;
+  color: gray;
+}
+
+.StarWrapper {
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
