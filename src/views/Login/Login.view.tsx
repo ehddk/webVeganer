@@ -109,7 +109,10 @@ function LoginView() {
           <Button
             colorType="primary"
             variant="outlined"
-            text="     회원가입"
+            text="회원가입"
+            onClick={() => {
+              router.push(LINK_ROUTE.JOIN.appDir);
+            }}
           ></Button>
         </div>
       </div>
