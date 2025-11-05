@@ -12,6 +12,14 @@ export const LINK_ROUTE = {
     [ROUTE_KEY.APP_DIR]: "/",
     [ROUTE_KEY.URI]: "/",
   },
+  JOIN: {
+    [ROUTE_KEY.APP_DIR]: "/join",
+    [ROUTE_KEY.URI]: "/join",
+  },
+  LOGIN: {
+    [ROUTE_KEY.APP_DIR]: "/login",
+    [ROUTE_KEY.URI]: "/login",
+  },
   ARTICLE: {
     DEFAULT: { [ROUTE_KEY.APP_DIR]: "/commu", [ROUTE_KEY.URI]: "/commu" },
 
