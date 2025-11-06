@@ -17,6 +17,7 @@ import { useModal } from "@/hooks/modal/useModal";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import Link from "next/link";
 import { ReviewMutation } from "@/\bapi/mutation";
+import ReviewForm from "@/components/Form/ReviewForm";
 
 const cx = cn.bind(styles);
 
@@ -27,28 +28,16 @@ type FormType =
 type RestaurantInfoViewProps = {
   data: Restaurant.GetOne.Response & { initialBlogImages: string[] };
   reviewData: Review.GetList.Response;
-  isAuthenticated?: boolean;
+  isAuthenticated: boolean;
 };
 export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
   const { data, reviewData, isAuthenticated } = props;
   const { showModal, hideModal, ModalComponent } = useModal();
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  const [blogImages, setBlogImages] = useState<string[]>([]);
-  const [menu, setMenu] = useState([]);
 
-  // const handleMenu = async (name) => {
-  //   try {
-  //     const res = await fetch(`/api/menu?name=${encodeURIComponent(name)}`);
-  //     const data = await res.json();
-  //     if (data.menu) {
-  //       setMenu(data.menu);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null); // 열린 메뉴의 ID를 저장
+  const [isEdit, setIsEdit] = useState<string | null>(null);
   const form = useForm<FormType>({
     defaultValues: {
       content: "",
@@ -92,7 +81,6 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
     const body = {
       ...(formData as Review.Post.Request["body"]),
     };
-
     const res = await ReviewMutation.post({
       body,
       path: {
@@ -112,8 +100,37 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
         negative: undefined,
       });
     }
+    router.refresh();
   });
 
+  const renderStars = (rating: number) => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(
+        <img
+          key={`review-star-${i}`}
+          src={i < rating ? "/fillStar.svg" : "/emptyStar.svg"}
+          alt={`${rating}`}
+          width={15}
+        />
+      );
+    }
+    return (
+      <div
+        style={{ display: "flex", alignItems: "center", marginBottom: "4px" }}
+      >
+        {stars}
+      </div>
+    );
+  };
+
+  const toggleMenu = (item: string) => {
+    setOpenMenuId(openMenuId === item ? null : item);
+  };
+
+  const goEdit = (item: string) => {
+    setIsEdit(isEdit === item ? null : item);
+  };
   return (
     <>
       <div className={cx("Banner")}>
@@ -167,27 +184,65 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
 
         <div className={cx("Item")}>
           <h2>{`리뷰 및 평가 (${reviewData.total})`}</h2>
-
-          <div className={cx("ReviewWrapper")}>
+          <ReviewForm
+            isAuthenticated={!!isAuthenticated}
+            reviewData={reviewData}
+          />
+          {/* <div className={cx("ReviewWrapper")}>
             {reviewData.items && reviewData.items.length > 0 ? (
               reviewData.items.map((item) => (
                 <ul key={item.id}>
                   <li>
                     <div className={cx("ProfileWrapper")}>
                       <img src="/user.svg" className={cx("Profile")} />{" "}
-                      <div className={cx("ProfileContent")}>
-                        <div>
-                          <p className={cx("User")}>{item.user_id}</p>
-                          <p className={cx("User")}>{item.rating}점</p>
+                      <div className={cx("Content")}>
+                        <div className={cx("ProfileContent")}>
+                          <div>
+                            <p className={cx("User")}>{item.user_id}</p>
+                            {renderStars(item.rating)}
 
-                          <p className={cx("Date")}>
-                            {dayjs(item.createdAt.slice(0, 10)).format(
-                              "YYYY.MM.DD"
+                            <p className={cx("Date")}>
+                              {dayjs(item.createdAt.slice(0, 10)).format(
+                                "YYYY.MM.DD"
+                              )}
+                            </p>
+                          </div>
+
+                          <p className={cx("ReviewContent")}>
+                            {isEdit ? (
+                              <div>
+                                <textarea
+                                  {...field}
+                                  control={control}
+                                  value={field.value}
+                                ></textarea>
+                              </div>
+                            ) : (
+                              item.content
                             )}
                           </p>
                         </div>
-
-                        <p className={cx("ReviewContent")}>{item.content}</p>
+                        <img
+                          src="/dot.svg"
+                          width={20}
+                          onClick={() => toggleMenu(item.id)}
+                        />
+                        {openMenuId === item.id && (
+                          <div className={cx("EditMenu")}>
+                            <div className={cx("MenuIcon")}>
+                              <img
+                                src="/edit.svg"
+                                width={15}
+                                onClick={() => goEdit(item.id)}
+                              />
+                              <span>수정</span>
+                            </div>
+                            <div className={cx("MenuIcon")}>
+                              <img src="/trash.svg" width={15} />
+                              <span>삭제</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </li>
@@ -257,7 +312,7 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
                 해주세요.
               </p>
             )}
-          </FormProvider>
+          </FormProvider> */}
         </div>
         <div className={cx("Item")}>
           <h2>지도</h2>
