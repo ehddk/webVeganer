@@ -33,7 +33,7 @@ declare global {
   /*수정 */
   type updateReviewRequestPath = { restaurant_id: string; id: string };
 
-  type updateReviewRequestBody = { content: string; rating: number };
+  type updateReviewRequestBody = { content: string; rating?: number };
   type updateReviewResponse = IReview;
 
   /* 삭제 */

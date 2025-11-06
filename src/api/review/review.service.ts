@@ -32,7 +32,7 @@ export class ReviewService {
 
   async put(req: Review.Put.Request) {
     const data = await this._ajax.put<Review.Put.Response>(
-      REVIEW_ROUTES.PUT,
+      pathToUrl(REVIEW_ROUTES.PUT, req.path),
       req.body
     );
     return data;
