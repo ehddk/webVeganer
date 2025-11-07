@@ -113,6 +113,9 @@ export default function ReviewForm(props: ReviewFormProps) {
       });
     }
     // 성공 시 리뷰 목록 새로고침
+    setValue("content", "");
+    setValue("rating", 0);
+    setIsClicked([false, false, false, false, false]);
     router.refresh();
   });
 
