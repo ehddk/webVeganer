@@ -17,7 +17,7 @@
   width: 85%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   border-bottom: 1px solid lightgray;
   margin: 0 auto;
 
@@ -32,26 +32,6 @@
   align-items: center;
   gap: 6px;
 }
-.ReviewWrapper {
-  border-radius: 5px;
-  position: relative;
-
-  height: auto;
-  border: 1px solid rgb(183, 183, 183);
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  ul {
-    list-style: none;
-  }
-
-  .Date {
-    font-size: 14px;
-    color: gray;
-  }
-}
 
 .Util {
   font-size: 15px;
@@ -63,80 +43,7 @@
   object-fit: cover;
 }
 
-.ProfileWrapper {
-  display: flex;
-
-  gap: 10px;
-
-  .Profile {
-    border-radius: 20px;
-    border: 1px solid black;
-    width: 30px;
-    height: 30px;
-  }
-
-  .User {
-    font-size: 12px;
-  }
-
-  .ProfileContent {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    position: relative;
-  }
-}
-
-.Content {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  position: relative;
-}
-.ReviewText {
-  resize: none;
-  min-height: 70px;
-  height: auto;
-  padding: 10px;
-  border: 1px solid rgb(183, 183, 183);
-}
 .Btn {
   width: 100px;
   margin-left: auto;
-}
-
-.LoginRequired {
-  font-size: 15px;
-  color: gray;
-}
-
-.StarWrapper {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.EditMenu {
-  width: 100px;
-
-  align-items: center;
-  border: 1px solid #dfdfdf;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  position: absolute;
-  top: 40px;
-  right: 0;
-  z-index: 10;
-
-  .MenuIcon {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-  }
 }

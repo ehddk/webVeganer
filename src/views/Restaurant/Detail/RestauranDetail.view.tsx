@@ -33,103 +33,25 @@ type RestaurantInfoViewProps = {
 export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
   const { data, reviewData, isAuthenticated } = props;
   const { showModal, hideModal, ModalComponent } = useModal();
-  const router = useRouter();
-  const params = useParams<{ id: string }>();
-
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null); // 열린 메뉴의 ID를 저장
-  const [isEdit, setIsEdit] = useState<string | null>(null);
-  const form = useForm<FormType>({
-    defaultValues: {
-      content: "",
-      rating: 0,
-    },
-  });
   const firstImageUrl = data.initialBlogImages?.[0]; // 첫 번째 이미지 (인덱스 0)
   const secondImageUrl = data.initialBlogImages?.[1];
+  const params = useParams<{ id: string }>();
 
-  const { control } = form;
-
-  const [isClicked, setIsClicked] = React.useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
-  const array = [0, 1, 2, 3, 4];
-
-  //화면에 표시할 별점 갯수
-  let clickedStarNum = isClicked.filter((ele) => true === ele).length;
-
-  //별점 반영
-  const score = (index: number, field: any) => {
-    let star = [...isClicked];
-    for (let i of array) {
-      star[i] = i <= index ? true : false;
-    }
-    setIsClicked(star);
-    field.onChange(index + 1);
-  };
-
-  const goRegister = form.handleSubmit(async (formData) => {
-    const restaurant_id = params?.id ?? "";
-
-    if (!restaurant_id) {
-      console.error("Restaurant ID is missing");
-      return;
-    }
-    const body = {
-      ...(formData as Review.Post.Request["body"]),
-    };
-    const res = await ReviewMutation.post({
-      body,
-      path: {
-        restaurant_id,
+  const id = params;
+  const handleCopy = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    showModal({
+      type: "default",
+      description: "링크가 복사되었습니다.",
+      dimmedColor: "transparent",
+      title: "복사",
+      positive: {
+        text: "확인",
+        onClick: () => {
+          hideModal();
+        },
       },
     });
-    if ("message" in res) {
-      showModal({
-        type: "default",
-        dimmedColor: "transparent",
-        description: "등록에 실패했습니다",
-        positive: {
-          text: "확인",
-          onClick: hideModal,
-        },
-
-        negative: undefined,
-      });
-    }
-    router.refresh();
-  });
-
-  const renderStars = (rating: number) => {
-    const stars = [];
-    for (let i = 0; i < 5; i++) {
-      stars.push(
-        <img
-          key={`review-star-${i}`}
-          src={i < rating ? "/fillStar.svg" : "/emptyStar.svg"}
-          alt={`${rating}`}
-          width={15}
-        />
-      );
-    }
-    return (
-      <div
-        style={{ display: "flex", alignItems: "center", marginBottom: "4px" }}
-      >
-        {stars}
-      </div>
-    );
-  };
-
-  const toggleMenu = (item: string) => {
-    setOpenMenuId(openMenuId === item ? null : item);
-  };
-
-  const goEdit = (item: string) => {
-    setIsEdit(isEdit === item ? null : item);
   };
   return (
     <>
@@ -167,7 +89,13 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
 
             <li className={cx("Util")}>
               {" "}
-              <img src="/share.svg" width={15} />
+              <img
+                src="/share.svg"
+                width={15}
+                onClick={() =>
+                  handleCopy(`http://localhost:3000/restaurant/${id}`)
+                }
+              />
               공유
             </li>
           </ul>
@@ -188,131 +116,6 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
             isAuthenticated={!!isAuthenticated}
             reviewData={reviewData}
           />
-          {/* <div className={cx("ReviewWrapper")}>
-            {reviewData.items && reviewData.items.length > 0 ? (
-              reviewData.items.map((item) => (
-                <ul key={item.id}>
-                  <li>
-                    <div className={cx("ProfileWrapper")}>
-                      <img src="/user.svg" className={cx("Profile")} />{" "}
-                      <div className={cx("Content")}>
-                        <div className={cx("ProfileContent")}>
-                          <div>
-                            <p className={cx("User")}>{item.user_id}</p>
-                            {renderStars(item.rating)}
-
-                            <p className={cx("Date")}>
-                              {dayjs(item.createdAt.slice(0, 10)).format(
-                                "YYYY.MM.DD"
-                              )}
-                            </p>
-                          </div>
-
-                          <p className={cx("ReviewContent")}>
-                            {isEdit ? (
-                              <div>
-                                <textarea
-                                  {...field}
-                                  control={control}
-                                  value={field.value}
-                                ></textarea>
-                              </div>
-                            ) : (
-                              item.content
-                            )}
-                          </p>
-                        </div>
-                        <img
-                          src="/dot.svg"
-                          width={20}
-                          onClick={() => toggleMenu(item.id)}
-                        />
-                        {openMenuId === item.id && (
-                          <div className={cx("EditMenu")}>
-                            <div className={cx("MenuIcon")}>
-                              <img
-                                src="/edit.svg"
-                                width={15}
-                                onClick={() => goEdit(item.id)}
-                              />
-                              <span>수정</span>
-                            </div>
-                            <div className={cx("MenuIcon")}>
-                              <img src="/trash.svg" width={15} />
-                              <span>삭제</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              ))
-            ) : (
-              // 2. 후기가 없을 경우
-              <p>등록된 후기가 없습니다. 첫 후기를 남겨주세요!</p>
-            )}
-          </div>
-          <FormProvider {...form}>
-            {isAuthenticated ? (
-              <>
-                <Controller
-                  name="rating"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <div className={cx("StarWrapper")}>
-                        {array.map((index) => (
-                          <img
-                            key={index}
-                            onClick={() => score(index, field)}
-                            width={20}
-                            src={
-                              isClicked[index]
-                                ? "/fillStar.svg"
-                                : "/emptyStar.svg"
-                            }
-                            alt="starIcon"
-                          />
-                        ))}
-                        <p> {clickedStarNum}/5</p>
-                      </div>
-                    );
-                  }}
-                ></Controller>
-                <Controller
-                  name="content"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <textarea
-                        className={cx("ReviewText")}
-                        {...field}
-                        value={field.value}
-                        placeholder="내용을 입력해주세요"
-                      ></textarea>
-                    );
-                  }}
-                ></Controller>
-                <Button
-                  size="small"
-                  colorType="primary"
-                  variant="contained"
-                  text="등록"
-                  onClick={goRegister}
-                  className={cx("Btn")}
-                ></Button>
-              </>
-            ) : (
-              <p className={cx("LoginRequired")}>
-                후기 작성을 하려면 먼저{" "}
-                <Link href="/login" style={{ color: "#288CD2" }}>
-                  로그인
-                </Link>{" "}
-                해주세요.
-              </p>
-            )}
-          </FormProvider> */}
         </div>
         <div className={cx("Item")}>
           <h2>지도</h2>
@@ -320,7 +123,6 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
           <Suspense fallback={<div>지도를 불러오는 중...</div>}>
             <KakaoMap address={data.rdn_code} />
           </Suspense>
-          {/* <div id='myMap' style={{ width: '100%', height: '500px' }}></div> */}
         </div>
         <div className={cx("Item")}>
           <h2>블로그 후기</h2>
@@ -328,6 +130,7 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
             <Blog query={data.upso_name} />
           </div>
         </div>
+        <ModalComponent />
       </div>
     </>
   );
