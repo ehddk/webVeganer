@@ -22,7 +22,7 @@ type ReviewFormProps = {
 
 export default function ReviewForm(props: ReviewFormProps) {
   const { isAuthenticated, reviewData } = props;
-
+  console.log("rev", reviewData);
   const { showModal, hideModal } = useModal();
   const router = useRouter();
   const params = useParams<{ id: string }>();
@@ -173,7 +173,7 @@ export default function ReviewForm(props: ReviewFormProps) {
       },
       path: {
         restaurant_id,
-        id: "13",
+        id: "15",
       },
     });
 
@@ -196,7 +196,7 @@ export default function ReviewForm(props: ReviewFormProps) {
                     <div className={cx("Content")}>
                       <div className={cx("ProfileContent")}>
                         <div>
-                          <p className={cx("User")}>{item.user_id}</p>
+                          <p className={cx("User")}>{item.user}</p>
                           {renderStars(item.rating)}
 
                           <p className={cx("Date")}>
