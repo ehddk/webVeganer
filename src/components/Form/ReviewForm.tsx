@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import Button from "@/components/Button/Button";
 import Link from "next/link";
@@ -12,18 +12,19 @@ import cn from "classnames/bind";
 import dayjs from "dayjs";
 const cx = cn.bind(styles);
 
-type FormType = Review.Post.Request["body"];
+type FormType = Review.Post.Request["body"] | Review.Put.Request["body"];
 type ReviewItemType = Review.GetList.Response["items"][number];
 
 type ReviewFormProps = {
   isAuthenticated: boolean;
   reviewData: Review.GetList.Response;
+  currentUserId?: string | null;
 };
 
 export default function ReviewForm(props: ReviewFormProps) {
-  const { isAuthenticated, reviewData } = props;
-  console.log("rev", reviewData);
-  const { showModal, hideModal } = useModal();
+  const { isAuthenticated, reviewData, currentUserId } = props;
+
+  const { showModal, hideModal, ModalComponent } = useModal();
   const router = useRouter();
   const params = useParams<{ id: string }>();
 
@@ -35,12 +36,13 @@ export default function ReviewForm(props: ReviewFormProps) {
       rating: 0,
     },
   });
+
   // 처음에 useFormContext를 사용하여 상위 RestaurantInfoView의 form 인스턴스에 접근하려했으나
   // useFormContext를 사용하면 'is Null'이라는 에러가 났음.
   // 난 직접 이 컴포넌트 안에서 useForm을 생성하고 상위 컴포넌트의 도움없이 독립적인 폼이니까
   // 현재 폼 내부에서 생성한 form(지역 변수) 변수를 사용해야 에러 해결!!
 
-  const { control, handleSubmit, setValue } = form;
+  const { control, handleSubmit, setValue, getValues } = form;
 
   // 별점 관련 로직
   const [isClicked, setIsClicked] = useState([
@@ -90,7 +92,7 @@ export default function ReviewForm(props: ReviewFormProps) {
 
     const body: Review.Post.Request["body"] = {
       content: formData.content,
-      rating: formData.rating,
+      rating: formData.rating ?? 0,
     };
 
     const res = await ReviewMutation.post({
@@ -100,7 +102,7 @@ export default function ReviewForm(props: ReviewFormProps) {
       },
     });
 
-    if ("message" in res) {
+    if (res && typeof res === "object" && "statusCode" in res) {
       showModal({
         type: "default",
         dimmedColor: "transparent",
@@ -165,29 +167,183 @@ export default function ReviewForm(props: ReviewFormProps) {
     }
   };
 
-  const handleReviewUpdate = form.handleSubmit(async (formData) => {
-    const res = await ReviewMutation.put({
-      body: {
-        content: formData.content,
-        rating: formData.rating,
-      },
-      path: {
-        restaurant_id,
-        id: "15",
-      },
-    });
+  const goDelete = (id: string) => {
+    showModal({
+      type: "default",
+      dimmedColor: "transparent",
+      description: "정말 삭제하시겠습니까?\n삭제된 댓글은 복구할 수 없습니다.",
+      positive: {
+        text: "확인",
+        onClick: async () => {
+          hideModal();
 
-    if ("message" in res) {
-      alert("실패");
-    }
-    router.refresh();
-  });
+          const res = await ReviewMutation.deleteReview({
+            path: {
+              restaurant_id,
+              id: String(id),
+            },
+          });
+          console.log("resss", res);
+          const isErrorObject =
+            typeof res === "object" && res !== null && "statusCode" in res;
+
+          if (
+            isErrorObject &&
+            (res as Review.DeleteReview.Response).statusCode >= 400
+          ) {
+            showModal({
+              type: "default",
+              dimmedColor: "transparent",
+              description: "리뷰 삭제에 실패했습니다",
+              positive: {
+                text: "확인",
+                onClick: hideModal,
+              },
+              negative: undefined,
+            });
+            return;
+          }
+          showModal({
+            type: "default",
+            dimmedColor: "transparent",
+            description: "삭제되었습니다",
+            positive: {
+              text: "확인",
+              onClick: () => {
+                hideModal();
+                router.refresh();
+              },
+            },
+            negative: undefined,
+          });
+        },
+      },
+      negative: undefined,
+    });
+  };
+
+  const handleUpdate = useCallback(
+    async (id: string) => {
+      if (!currentUserId || !isAuthenticated) {
+        showModal({
+          type: "default",
+          dimmedColor: "transparent",
+          description: "로그인 후 리뷰를 수정할 수 있습니다.",
+          positive: { text: "확인", onClick: hideModal },
+        });
+        return;
+      }
+      // 폼에서 현재 입력된 값을 직접 가져옵니다.
+      const formData = getValues();
+      const currentRating = formData.rating;
+      const currentContent = formData.content;
+
+      // 별점 체크
+      if (currentRating === 0) {
+        showModal({
+          type: "default",
+          dimmedColor: "transparent",
+          description: "별점을 선택해 주세요.",
+          positive: {
+            text: "확인",
+            onClick: hideModal,
+          },
+          negative: undefined,
+        });
+        return;
+      }
+
+      try {
+        // API 호출
+        const res = await ReviewMutation.put({
+          body: {
+            content: currentContent,
+            rating: currentRating,
+          },
+          path: {
+            restaurant_id,
+            id: String(id),
+          },
+        });
+
+        const isErrorObject =
+          typeof res === "object" && res !== null && "statusCode" in res;
+        // 응답 처리 (204 No Content는 data: ""로 오므로 res가 객체인지 확인)
+        if (isErrorObject && (res as Review.Put.Response).statusCode >= 400) {
+          // ... 오류 처리
+          // 204가 아닌 다른 에러 응답일 경우
+          showModal({
+            type: "default",
+            dimmedColor: "transparent",
+            description: "리뷰 수정에 실패했습니다 (서버 오류)",
+            positive: {
+              text: "확인",
+              onClick: hideModal,
+            },
+            negative: undefined,
+          });
+          return;
+        }
+
+        // 성공 모달
+        showModal({
+          type: "default",
+          dimmedColor: "transparent",
+          description: "수정되었습니다",
+          positive: {
+            text: "확인",
+            onClick: () => {
+              // 수정 모드 종료 및 폼 초기화
+              setIsEdit(null);
+              setValue("content", "");
+              setValue("rating", 0);
+              setIsClicked([false, false, false, false, false]);
+              hideModal();
+            },
+          },
+          negative: undefined,
+        });
+
+        // 데이터 새로고침 (이 부분이 렌더링을 유발하지만, 이번에는 안전하게 처리됨)
+        router.refresh();
+      } catch (error) {
+        console.error("리뷰 수정 중 오류:", error);
+        showModal({
+          type: "default",
+          dimmedColor: "transparent",
+          description: "리뷰 수정 중 오류가 발생했습니다",
+          positive: {
+            text: "확인",
+            onClick: hideModal,
+          },
+          negative: undefined,
+        });
+      }
+    },
+    [
+      getValues,
+      restaurant_id,
+      showModal,
+      hideModal,
+      setIsEdit,
+      setValue,
+      setIsClicked,
+      router,
+    ]
+  );
+
   return (
     <FormProvider {...form}>
       <div className={cx("ReviewWrapper")}>
         {reviewData.items && reviewData.items.length > 0 ? (
           reviewData.items.map((item) => {
             const isCurrentlyEditing = isEdit === item.id;
+
+            const isAuthor =
+              isAuthenticated &&
+              currentUserId &&
+              String(item.user_id) === currentUserId;
+
             return (
               <ul key={item.id}>
                 <li>
@@ -233,7 +389,7 @@ export default function ReviewForm(props: ReviewFormProps) {
                                   colorType="primary"
                                   variant="contained"
                                   text="저장"
-                                  onClick={handleReviewUpdate} // 수정 저장 함수 호출
+                                  onClick={() => handleUpdate(item.id)}
                                   className={cx("SaveBtn")}
                                 />
                                 <Button
@@ -252,11 +408,14 @@ export default function ReviewForm(props: ReviewFormProps) {
                           )}
                         </div>
                       </div>
-                      <img
-                        src="/dot.svg"
-                        width={20}
-                        onClick={() => toggleMenu(item.id)}
-                      />
+                      {isAuthor && (
+                        <img
+                          src="/dot.svg"
+                          width={20}
+                          onClick={() => toggleMenu(item.id)}
+                        />
+                      )}
+
                       {isAuthenticated && openMenuId === item.id && (
                         <div className={cx("EditMenu")}>
                           <div className={cx("MenuIcon")}>
@@ -268,7 +427,11 @@ export default function ReviewForm(props: ReviewFormProps) {
                             <span>수정</span>
                           </div>
                           <div className={cx("MenuIcon")}>
-                            <img src="/trash.svg" width={15} />
+                            <img
+                              src="/trash.svg"
+                              width={15}
+                              onClick={() => goDelete(item.id)}
+                            />
                             <span>삭제</span>
                           </div>
                         </div>
@@ -345,6 +508,7 @@ export default function ReviewForm(props: ReviewFormProps) {
           </p>
         )
       )}
+      <ModalComponent />
     </FormProvider>
   );
 }
