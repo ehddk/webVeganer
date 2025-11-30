@@ -1,6 +1,7 @@
 type IReview = {
   id: string;
   user_id: string;
+  user: string;
   content: string;
   rating: number;
   createdAt: string;
@@ -38,7 +39,7 @@ declare global {
 
   /* 삭제 */
   type deleteReviewRequestPath = { restaurant_id: string; id: string };
-  type deleteReviewResponse = true;
+  type deleteReviewResponse = { statusCode: number; message: string };
 
   declare namespace Review {
     namespace GetList {
@@ -77,7 +78,7 @@ declare global {
         params?: Params;
         body: Body;
       };
-      type Response = updateReviewResponse;
+      type Response = { statusCode: number; message: string };
     }
 
     namespace DeleteReview {
