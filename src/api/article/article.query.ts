@@ -5,7 +5,7 @@ import { articleService } from "../services";
 export const getList = async (req: Article.GetList.Request) => {
   try {
     const data = await articleService.getList(req);
-    console.log("getList data", data);
+
     return data;
   } catch (error) {
     const data = await handleServerError(error);

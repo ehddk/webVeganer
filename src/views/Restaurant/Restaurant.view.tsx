@@ -4,7 +4,6 @@ import styles from "./Restaurant.view.module.scss";
 import cn from "classnames/bind";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import Modal from "../../components/Modal/Modal";
-import seoulList from "@/app/services/seoulData";
 import { useRouter } from "next/navigation";
 import InfoModal from "@/components/Modal/InfoModal/InfoModal";
 import { LINK_ROUTE } from "@/constants/link.constants";
@@ -46,7 +45,7 @@ function RestaurantView(props: RestaurantViewProps) {
   };
 
   // 검색어 변경 핸들러
-  const handleSearch = (e) => {
+  const handleSearch = (e: any) => {
     setSearchFood(e.target.value);
   };
 

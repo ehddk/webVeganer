@@ -1,12 +1,9 @@
 "use client";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import { useRouter } from "next/navigation";
-import commuData from "../../app/services/commuData";
-import seoulList from "../../app/services/seoulData";
 import styles from "./Home.view.module.scss";
 import cn from "classnames/bind";
-import { useEffect, useState } from "react";
-import Button from "@/components/Button/Button";
+import { useState } from "react";
 import { LINK_ROUTE } from "@/constants/link.constants";
 const cx = cn.bind(styles);
 
@@ -53,8 +50,8 @@ export default function HomeView(props: HomeViewProps) {
           </div>{" "}
           <div className={cx("RestauantContent")}>
             {randomResList.map((data: any, index: number) => (
-              <ul>
-                <li key={index}>
+              <ul key={index}>
+                <li>
                   <div className={cx("Image")}></div>
                   <p>{data.upso_name}</p>
                 </li>

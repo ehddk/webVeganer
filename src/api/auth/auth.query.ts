@@ -4,7 +4,7 @@ import { reviewService } from "../services";
 export const getList = async (req: Review.GetList.Request) => {
   try {
     const data = await reviewService.getList(req);
-    console.log("쿼리에서", data);
+
     return data;
   } catch (error) {
     const data = await handleServerError(error);
