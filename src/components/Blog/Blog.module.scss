@@ -11,6 +11,18 @@
     background: darkgreen;
   }
 }
+
+.Wrapper {
+  &:hover {
+    .Item {
+      filter: brightness(0.9);
+
+      &:hover {
+        filter: brightness(1);
+      }
+    }
+  }
+}
 .Item {
   margin-bottom: 20px;
   padding: 15px;
@@ -18,15 +30,20 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgb(242, 242, 242);
   transition: transform 0.2s;
   gap: 15px;
+  cursor: pointer;
   &:hover {
     transform: translateY(-2px);
   }
+
+  transition: filter 0.3s ease-in-out;
 }
 
 .TitleLink {
   text-decoration: none;
+
   color: inherit;
 }
 .Description {

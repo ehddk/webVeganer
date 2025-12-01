@@ -12,7 +12,11 @@ interface BlogItem {
   bloggername: string;
   postdate: string;
 }
-export default function Blog({ query }) {
+type BlogProps = {
+  query: string;
+};
+export default function Blog(props: BlogProps) {
+  const { query } = props;
   const [items, setItems] = useState<BlogItem[]>([]); // 빈 배열로 초기화
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -57,7 +61,7 @@ export default function Blog({ query }) {
           }
           setItems(itemsArray);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("데이터 가져오기 오류:", err);
         setError(err.message);
         setItems([]); // 오류 발생 시 빈 배열로 설정
@@ -80,7 +84,7 @@ export default function Blog({ query }) {
   if (error) return <div>오류가 발생했습니다: {error}</div>;
 
   return (
-    <div>
+    <div className={cx("Wrapper")}>
       {items.length > 0 ? (
         currentItems.map((item, index) => (
           <div className={cx("Item")} key={index}>
