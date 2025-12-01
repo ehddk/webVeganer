@@ -1,43 +1,35 @@
 "use client";
 import React from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import seoulList from "@/app/services/seoulData";
+import { useParams } from "next/navigation";
+
 import styles from "./RestaurantDetail.view.module.scss";
 import cn from "classnames/bind";
 import KakaoMap from "@/app/services/kakaoMap";
 import Blog from "../../../components/Blog/Blog";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import Item from "@/components/Item/Item";
-import Divider from "@/components/Divider/Divider";
 import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
-import { Controller, FormProvider, useForm } from "react-hook-form";
-import dayjs from "dayjs";
-import Button from "@/components/Button/Button";
 import { useModal } from "@/hooks/modal/useModal";
-import { LINK_ROUTE } from "@/constants/link.constants";
-import Link from "next/link";
-import { ReviewMutation } from "@/\bapi/mutation";
+
 import ReviewForm from "@/components/Form/ReviewForm";
 
 const cx = cn.bind(styles);
 
-type FormType =
-  | Review.GetList.Response
-  | Review.Post.Request["body"]
-  | Review.Put.Request["body"];
 type RestaurantInfoViewProps = {
   data: Restaurant.GetOne.Response & { initialBlogImages: string[] };
   reviewData: Review.GetList.Response;
   isAuthenticated: boolean;
+  currentUserId?: string | null;
 };
 export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
-  const { data, reviewData, isAuthenticated } = props;
+  const { data, reviewData, isAuthenticated, currentUserId } = props;
   const { showModal, hideModal, ModalComponent } = useModal();
   const firstImageUrl = data.initialBlogImages?.[0]; // 첫 번째 이미지 (인덱스 0)
   const secondImageUrl = data.initialBlogImages?.[1];
   const params = useParams<{ id: string }>();
 
-  const id = params;
+  const id = params?.id;
+
   const handleCopy = async (text: string) => {
     await navigator.clipboard.writeText(text);
     showModal({
@@ -72,19 +64,17 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
           />
         )}
       </div>
-      <div>
+      <section className={cx("Content")}>
         <div className={cx("Item")}>
           <div className={cx("Header")}>
             <h3>{data.upso_name}</h3>
             <p>[{data.cgg_code_name}]</p>
           </div>
 
-          <p>별점!!!!</p>
-
           <ul className={cx("Ul")}>
             <li className={cx("Util")}>
               <img src="/like.svg" width={15} />
-              좋아요!!!
+              좋아요
             </li>
 
             <li className={cx("Util")}>
@@ -115,6 +105,7 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
           <ReviewForm
             isAuthenticated={!!isAuthenticated}
             reviewData={reviewData}
+            currentUserId={currentUserId}
           />
         </div>
         <div className={cx("Item")}>
@@ -131,7 +122,7 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
           </div>
         </div>
         <ModalComponent />
-      </div>
+      </section>
     </>
   );
 }
