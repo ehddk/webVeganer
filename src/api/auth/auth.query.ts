@@ -1,10 +1,9 @@
 import { handleServerError } from "@/utils/serverError.util";
-import { reviewService } from "../services";
+import { authService, reviewService } from "../services";
 
-export const getList = async (req: Review.GetList.Request) => {
+export const getOne = async (req: Auth.GetOne.Request) => {
   try {
-    const data = await reviewService.getList(req);
-
+    const data = await authService.getOne(req);
     return data;
   } catch (error) {
     const data = await handleServerError(error);

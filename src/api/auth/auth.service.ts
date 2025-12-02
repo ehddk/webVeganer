@@ -2,7 +2,7 @@ import { pathToUrl } from "@/utils/path.util";
 import { AxiosInstance } from "axios";
 
 const AUTH_ROUTES = {
-  GET_ONE: "/api/auth",
+  GET_ONE: "/api/auth/:id",
   PUT: "/api/auth/:id",
   POST: "/api/auth",
   DELETE: "/api/auth/:id",
@@ -13,8 +13,8 @@ const AUTH_ROUTES = {
 export class AuthService {
   constructor(private _ajax: AxiosInstance) {}
 
-  async getList(req: Auth.GetOne.Request) {
-    const data = await this._ajax.get<Auth.GetOne.Response>(
+  async getOne(req: Auth.GetOne.Request) {
+    const { data } = await this._ajax.get<Auth.GetOne.Response>(
       pathToUrl(AUTH_ROUTES.GET_ONE, req.path)
     );
 
