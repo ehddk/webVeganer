@@ -1,5 +1,5 @@
 "use server";
-import { ArticleQuery, CommentQuery } from "@/\bapi/query";
+import { ArticleQuery, AuthQuery, CommentQuery } from "@/\bapi/query";
 import CommuDetailView from "@/views/Commu/Detail/CommuDetail.view";
 import { cookies } from "next/headers";
 type CommuDetailPageProps = PageProps<
@@ -53,10 +53,24 @@ export default async function CommuDetailPage(props: CommuDetailPageProps) {
   const accessToken = (await cookieStore).get("accessToken")?.value;
 
   let currentUserId: string | null = null;
+  let currentUserName: string | null = null;
 
   if (accessToken) {
     // 추출된 accessToken 변수를 디코딩 함수에 전달합니다.
     currentUserId = getUserIdFromToken(accessToken);
+  }
+
+  if (currentUserId) {
+    const userData = await AuthQuery.getOne({
+      path: { id: currentUserId },
+    });
+
+    if (!("message" in userData)) {
+      // userData가 { name: '홍길동', ... } 형태라고 가정
+      currentUserName = userData.name;
+    } else {
+      console.error("사용자 정보 조회 실패:", userData.message);
+    }
   }
 
   const [response, commentData] = await Promise.all([
@@ -70,8 +84,15 @@ export default async function CommuDetailPage(props: CommuDetailPageProps) {
     }),
   ]);
 
-  console.log("댓글데이터", commentData);
   if ("message" in response || "message" in commentData)
     throw new Error("데이터 조회 중 실패");
-  return <CommuDetailView data={response} commentData={commentData.data} />;
+  return (
+    <CommuDetailView
+      data={response}
+      isAuthenticated={isAuthenticated}
+      commentData={commentData.data}
+      currentUserId={currentUserId}
+      currentUserName={currentUserName}
+    />
+  );
 }

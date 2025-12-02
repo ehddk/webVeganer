@@ -8,15 +8,21 @@ import { LINK_ROUTE } from "@/constants/link.constants";
 import { useParams, useRouter } from "next/navigation";
 import { useModal } from "@/hooks/modal/useModal";
 import { ArticleMutation } from "@/\bapi/mutation";
+import Comment from "@/components/Comment/Comment";
 
 const cx = cn.bind(styles);
 
 type CommuDetailViewProps = {
   data: Article.GetOne.Response;
+  commentData: Comment.GetList.Response;
+  isAuthenticated: boolean;
+  currentUserId?: string | null;
+  currentUserName?: string | null;
 };
 export default function CommuDetailView(props: CommuDetailViewProps) {
-  const { data } = props;
-  console.log("data", data);
+  const { data, commentData, isAuthenticated, currentUserId, currentUserName } =
+    props;
+
   const router = useRouter();
   const params = useParams<{ id: string }>();
 
@@ -75,7 +81,7 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
 
           const res = await ArticleMutation.deleteArticle({ path: articleId });
 
-          if (res !== true) {
+          if (res.statusCode !== 200) {
             showModal({
               type: "default",
               dimmedColor: "transparent",
@@ -150,16 +156,17 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
               </div>
               <div className={cx("IconWrapper")}>
                 <img src="/comment.svg" className={cx("Icon")} />
-                <p>1</p>
+                <p>{commentData.total}</p>
               </div>
             </div>
             <Divider />
-            <div className={cx("IconWrapper")}>
-              <img src="/comment.svg" className={cx("Icon")} />
-              <p>1</p>
-            </div>
 
-            {/* <Comment _id={data.id.toString()} /> */}
+            <Comment
+              commentData={commentData.items}
+              isAuthenticated={!!isAuthenticated}
+              currentUserId={currentUserId}
+              currentUserName={currentUserName}
+            />
           </div>
         </div>
         <ModalComponent />
