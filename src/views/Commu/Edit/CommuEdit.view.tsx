@@ -148,7 +148,7 @@ export default function CommuEditView(props: CommuEditViewProps) {
 
         <div className={cx("BtnGroup")}>
           <Button
-            size="small"
+            size="large"
             text="취소"
             colorType="primary"
             variant="contained"
@@ -157,7 +157,7 @@ export default function CommuEditView(props: CommuEditViewProps) {
             }
           />
           <Button
-            size="small"
+            size="large"
             text="저장"
             colorType="primary"
             variant="outlined"
