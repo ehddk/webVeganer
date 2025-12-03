@@ -1,3 +1,9 @@
+@property --animation-duration {
+  syntax: "<time>";
+  initial-value: 0.25s;
+  inherits: false;
+}
+
 .Wrapper {
   height: 70px;
   padding: 20px;
@@ -61,11 +67,97 @@
 }
 
 @media screen and (max-width: 496px) {
-  /* max-width 사용 */
   .MenuList {
     display: none;
   }
   .Hamburger {
-    display: block; /* 430px 이하에서 나타남 */
+    display: block;
   }
+}
+
+.Content {
+  position: fixed;
+  z-index: 9999;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+
+  animation: slideIn var(--animation-duration) ease-out;
+
+  &.closing {
+    animation: slideOut var(--animation-duration) ease-out;
+  }
+}
+
+.MobileMenuList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+
+  position: absolute;
+
+  right: 0;
+  max-width: 320px;
+  width: 100%;
+  height: 100vh;
+  z-index: 999;
+  top: 0;
+  background-color: white;
+  padding: 50px 0;
+}
+
+.HeaderLine {
+  height: 46px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Item {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--backgroundSecond, #919eab14);
+    font-weight: 800;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.Label {
+  &:hover {
+    color: var(--backgroundSecond, #42424214);
+    font-weight: 800;
+  }
+}
+
+.UserInfoStrong {
+  color: #338d58;
+  font-weight: 900;
+  cursor: pointer;
 }

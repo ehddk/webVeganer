@@ -3,13 +3,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoMenu } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
 
-import Logout from "@/views/Logout/Logout";
 import styles from "./Header.module.scss";
 import cn from "classnames/bind";
 import Link from "next/link";
 import Dropdown from "../Dropdown/Dropdown";
 import { AuthMutation } from "@/\bapi/mutation";
+
+import React from "react";
+import { LINK_ROUTE } from "@/constants/link.constants";
 const cx = cn.bind(styles);
 
 type SessionProps = {
@@ -17,6 +20,9 @@ type SessionProps = {
 };
 export default function Header({ session }: { session: SessionProps }) {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
   const router = useRouter();
 
   const handleMenuClick = () => {
@@ -60,29 +66,86 @@ export default function Header({ session }: { session: SessionProps }) {
     }
   };
 
+  const handleMenuOpen = () => {
+    if (isClosing) return;
+    setMenuOpen(!isMenuOpen);
+  };
+
+  const navgationList = React.useMemo(
+    () => [
+      {
+        label: "브랜드",
+        href: LINK_ROUTE.BRNAD.uri,
+      },
+      {
+        label: "음식점",
+        href: LINK_ROUTE.RESTAURANT.DEFAULT.uri,
+      },
+      {
+        label: "이벤트",
+        href: LINK_ROUTE.EVENT.uri,
+      },
+      {
+        label: "커뮤니티",
+        href: LINK_ROUTE.ARTICLE.DEFAULT.uri,
+      },
+    ],
+    []
+  );
+  const goLogin = React.useCallback(() => {
+    router.replace(LINK_ROUTE.LOGIN.uri);
+    setMenuOpen(false);
+  }, []);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setMenuOpen(false);
+      setIsClosing(false);
+    }, 250);
+  };
   return (
-    <div className={cx("Wrapper")}>
+    <div className={cx("Wrapper", { closing: !isMenuOpen })}>
       <div className={cx("Header")}>
         <a href="/">
           <h1>Veganer</h1>
         </a>
         <nav className={cx("Menu")}>
-          <ul className={cx("MenuList")}>
-            <li>
-              <a onClick={() => router.push("/brand")}>브랜드</a>
-            </li>
-
-            <li>
-              <Link href={"/restaurant"}>음식점</Link>
-            </li>
-            <li>
-              <Link href={"/event/menu1"}>이벤트</Link>
-            </li>
-            <li>
-              <Link href={"/commu"}>커뮤니티</Link>
-            </li>
+          <ul className={cx("MenuList", { closing: !isMenuOpen })}>
+            {navgationList.map((item) => (
+              <Link className={cx("Item")} href={item.href} key={item.label}>
+                {" "}
+                <span className={cx("Label")}>{item.label}</span>
+              </Link>
+            ))}
           </ul>
-          <IoMenu className={cx("Hamburger")} />
+          <IoMenu className={cx("Hamburger")} onClick={handleMenuOpen} />
+          {(isMenuOpen || isClosing) && (
+            <div className={cx("Content", { closing: isClosing })}>
+              <ul className={cx("MobileMenuList")}>
+                <div className={cx("HeaderLine")}>
+                  <div className={cx("UserInfo")}>
+                    <strong className={cx("UserInfoStrong")} onClick={goLogin}>
+                      로그인
+                    </strong>
+                    <span className={cx("UserInfoSpan")}>해 주세요.</span>
+                  </div>
+                  <IoClose size={30} onClick={handleClose} />
+                </div>
+                {navgationList.map((item) => (
+                  <Link
+                    className={cx("Item")}
+                    href={item.href}
+                    key={item.label}
+                    onClick={handleClose}
+                  >
+                    {" "}
+                    <span className={cx("Label")}>{item.label}</span>
+                  </Link>
+                ))}
+              </ul>
+            </div>
+          )}
           <Dropdown.Root value={selectedOption} onChange={handleOptionChange}>
             <Dropdown.Trigger
               as={(props) => (

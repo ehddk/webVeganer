@@ -12,6 +12,10 @@ export const LINK_ROUTE = {
     [ROUTE_KEY.APP_DIR]: "/",
     [ROUTE_KEY.URI]: "/",
   },
+  BRNAD: {
+    [ROUTE_KEY.APP_DIR]: "/brand",
+    [ROUTE_KEY.URI]: "/brand",
+  },
   JOIN: {
     [ROUTE_KEY.APP_DIR]: "/join",
     [ROUTE_KEY.URI]: "/join",
@@ -51,5 +55,9 @@ export const LINK_ROUTE = {
       [ROUTE_KEY.APP_DIR]: "/restaurant/Register",
       [ROUTE_KEY.URI]: "/restaurant/register",
     },
+  },
+  EVENT: {
+    [ROUTE_KEY.APP_DIR]: "/event/tab1",
+    [ROUTE_KEY.URI]: "/event/tab1",
   },
 };
