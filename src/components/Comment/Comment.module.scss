@@ -1,0 +1,122 @@
+.Wrapper {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media screen and (max-width: 1200px) {
+    padding: 0;
+  }
+}
+
+.CommentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.Content {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgb(230, 230, 230);
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.Profile {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid gray;
+}
+.InputArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+
+  .ButtonArea {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+  }
+}
+
+.Input {
+  width: 100%;
+  min-height: 50px;
+  border: none;
+  border-bottom: 1px solid rgb(205, 205, 205);
+}
+
+.Btn {
+  width: 50px;
+}
+
+.CommentList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.CommentItem {
+  padding: 10px;
+  position: relative;
+}
+
+.CommentBox {
+  height: auto;
+
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid rgb(205, 205, 205);
+  padding-block: 10px;
+}
+
+.UserBox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 6px;
+
+  .User {
+    font-weight: bold;
+  }
+
+  .Date {
+    font-size: 12px;
+    color: gray;
+  }
+}
+.EditMenu {
+  width: 100px;
+
+  align-items: center;
+  border: 1px solid #dfdfdf;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  z-index: 10;
+
+  .MenuIcon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+}
+
+.EditInput {
+  resize: none;
+}
+
+.EditButtonArea {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}

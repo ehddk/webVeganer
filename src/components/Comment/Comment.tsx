@@ -2,13 +2,14 @@
 
 import styles from "./Comment.module.scss";
 import cn from "classnames/bind";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Button from "../Button/Button";
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import dayjs from "dayjs";
 import { CommentMutation } from "@/\bapi/mutation";
 import { useParams, useRouter } from "next/navigation";
 import { useModal } from "@/hooks/modal/useModal";
+import Link from "next/link";
 const cx = cn.bind(styles);
 type CommentProps = {
   commentData: Comment.GetList.Response["items"];
@@ -25,8 +26,6 @@ export default function Comment(props: CommentProps) {
 
   const params = useParams<{ id: string }>();
 
-  let [comment, setComment] = useState("");
-  let [data, setData] = useState([]);
   const article_id = params?.id ?? "";
 
   const [openMenuId, setOpenMenuId] = useState<string | null>(null); // 열린 메뉴의 ID를 저장
@@ -40,7 +39,7 @@ export default function Comment(props: CommentProps) {
     },
   });
 
-  const { control, setValue, handleSubmit } = form;
+  const { control, setValue, handleSubmit, getValues } = form;
 
   const toggleMenu = (item: string) => {
     setOpenMenuId(openMenuId === item ? null : item);
@@ -80,7 +79,7 @@ export default function Comment(props: CommentProps) {
     setIsEdit(nextEditId);
     setOpenMenuId(null);
 
-    // null이 아니면 수정모드 진입, 그래서 현재 폼 값에 내가 입력하고 있는 값이 들어가야함.
+    // // null이 아니면 수정모드 진입, 그래서 현재 폼 값에 내가 입력하고 있는 값이 들어가야함.
     if (nextEditId) {
       setValue("content", item.content);
     } else {
@@ -154,6 +153,90 @@ export default function Comment(props: CommentProps) {
     setValue("content", "");
   };
 
+  const handleUpdate = useCallback(
+    async (id: string) => {
+      if (!currentUserId || !isAuthenticated) {
+        showModal({
+          type: "default",
+          dimmedColor: "transparent",
+          description: "로그인 후 리뷰를 수정할 수 있습니다.",
+          positive: { text: "확인", onClick: hideModal },
+        });
+        return;
+      }
+      // 폼에서 현재 입력된 값을 직접 가져옵니다.
+      const formData = getValues();
+
+      const currentContent = formData.content;
+
+      try {
+        // API 호출
+        const res = await CommentMutation.put({
+          body: {
+            content: currentContent,
+          },
+          path: {
+            article_id,
+            id: String(id),
+          },
+        });
+
+        const isErrorObject =
+          typeof res === "object" && res !== null && "statusCode" in res;
+        // 응답 처리 (204 No Content는 data: ""로 오므로 res가 객체인지 확인)
+        if (isErrorObject && (res as Comment.Put.Response).statusCode >= 400) {
+          // ... 오류 처리
+          // 204가 아닌 다른 에러 응답일 경우
+          showModal({
+            type: "default",
+            dimmedColor: "transparent",
+            description: "댓글 수정에 실패했습니다 (서버 오류)",
+            positive: {
+              text: "확인",
+              onClick: hideModal,
+            },
+            negative: undefined,
+          });
+          return;
+        }
+
+        // 성공 모달
+        showModal({
+          type: "default",
+          dimmedColor: "transparent",
+          description: "수정되었습니다",
+          positive: {
+            text: "확인",
+            onClick: () => {
+              // 수정 모드 종료 및 폼 초기화
+              setIsEdit(null);
+              setValue("content", "");
+
+              hideModal();
+            },
+          },
+          negative: undefined,
+        });
+
+        // 데이터 새로고침 (이 부분이 렌더링을 유발하지만, 이번에는 안전하게 처리됨)
+        router.refresh();
+      } catch (error) {
+        console.error("댓글 수정 중 오류:", error);
+        showModal({
+          type: "default",
+          dimmedColor: "transparent",
+          description: "댓글 수정 중 오류가 발생했습니다",
+          positive: {
+            text: "확인",
+            onClick: hideModal,
+          },
+          negative: undefined,
+        });
+      }
+    },
+    [showModal, hideModal, setIsEdit, setValue, router]
+  );
+
   return (
     <FormProvider {...form}>
       <div className={cx("Wrapper")}>
@@ -162,27 +245,50 @@ export default function Comment(props: CommentProps) {
           <div className={cx("Content")}>
             <div className={cx("InputArea")}>
               {isUser ? (
-                <h4>{currentUserName}</h4>
+                <p>{currentUserName}</p> // ⭐️ 유저 이름 표시 (후기 컴포넌트에서는 h4였음)
               ) : (
-                <p>로그인 후 이용 가능합니다.</p>
+                <p className={cx("LoginRequired")}>
+                  댓글 작성을 하려면 먼저{" "}
+                  <Link href="/login" style={{ color: "#288CD2" }}>
+                    로그인
+                  </Link>{" "}
+                  해주세요.
+                </p>
               )}
-              <Controller
+              {/* 2. 등록 폼 Controller (isUser이고 isEdit이 아닐 때만 렌더링) */}
+              {isUser && isEdit === null && (
+                <div className={cx("WriteReviewForm")}>
+                  <Controller
+                    name="content"
+                    control={control}
+                    render={({ field }) => {
+                      return (
+                        <textarea
+                          className={cx("Input")}
+                          {...field}
+                          // value={field.value}
+                          placeholder="댓글을 입력해주세요"
+                        ></textarea>
+                      );
+                    }}
+                  ></Controller>
+                </div>
+              )}
+              {/* 3. 버튼 영역: inputValue가 있고 isEdit이 아닐 때만 렌더링 */}
+
+              {/* <Controller
                 name="content"
                 control={control}
                 render={({ field }) => (
-                  <input
+                  <textarea
                     className={cx("Input")}
                     placeholder="댓글을 입력하세요."
                     {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      setComment(e.target.value);
-                    }}
                     value={field.value}
                   />
                 )}
-              ></Controller>
-              {inputValue && (
+              ></Controller> */}
+              {inputValue && isEdit === null && (
                 <div className={cx("ButtonArea")}>
                   <Button
                     colorType="primary"
@@ -205,53 +311,91 @@ export default function Comment(props: CommentProps) {
 
           <ul className={cx("CommentList")}>
             {commentData.length > 0
-              ? commentData.map((a, i) => (
-                  <li key={i} className={cx("CommentItem")}>
-                    <div className={cx("CommentBox")}>
-                      <img
-                        src="/user.svg"
-                        alt="user"
-                        className={cx("Profile")}
-                      />
-                      <div className={cx("UserBox")}>
-                        <p className={cx("User")}>{a.user}</p>
-                        <p className={cx("Date")}>
-                          {dayjs(a.createdAt).format("YYYY.MM.DD HH:mm")}
-                        </p>
-                        <p>{a.content}</p>
-                      </div>
-                      {isUser && (
+              ? commentData.map((a, i) => {
+                  const isCurrentlyEditing = isEdit === a.id;
+                  return (
+                    <li key={i} className={cx("CommentItem")}>
+                      <div className={cx("CommentBox")}>
                         <img
-                          src="/dot.svg"
-                          width={20}
-                          onClick={() => toggleMenu(a.id)}
+                          src="/user.svg"
+                          alt="user"
+                          className={cx("Profile")}
                         />
-                      )}
-                      {isAuthenticated && openMenuId === a.id && (
-                        <div className={cx("EditMenu")}>
-                          <div className={cx("MenuIcon")}>
-                            <img
-                              src="/edit.svg"
-                              width={15}
-                              onClick={() => goEdit(a)}
-                            />
-                            <span>수정</span>
-                          </div>
-                          <div className={cx("MenuIcon")}>
-                            <img
-                              src="/trash.svg"
-                              width={15}
-                              onClick={() => goDelete(a.id)}
-                            />
-                            <span>삭제</span>
-                          </div>
+                        <div className={cx("UserBox")}>
+                          <p className={cx("User")}>{a.user}</p>
+                          <p className={cx("Date")}>
+                            {dayjs(a.createdAt).format("YYYY.MM.DD HH:mm")}
+                          </p>
+                          {isCurrentlyEditing ? (
+                            <>
+                              <Controller
+                                name="content"
+                                control={control}
+                                render={({ field }) => (
+                                  <textarea
+                                    className={cx("EditInput")}
+                                    {...field}
+                                    value={field.value}
+                                  />
+                                )}
+                              ></Controller>
+                              <div className={cx("EditButtonArea")}>
+                                <Button
+                                  size="small"
+                                  colorType="primary"
+                                  variant="contained"
+                                  text="저장"
+                                  onClick={() => handleUpdate(a.id)}
+                                  className={cx("SaveBtn")}
+                                />
+                                <Button
+                                  size="small"
+                                  colorType="primary"
+                                  variant="outlined"
+                                  text="취소"
+                                  // goEdit 함수에 item 전체를 전달하여 수정 취소 로직도 처리
+                                  onClick={() => goEdit(a)}
+                                  className={cx("CancelBtn")}
+                                />
+                              </div>
+                            </>
+                          ) : (
+                            <p>{a.content}</p>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </li>
-                ))
+                        {isUser && (
+                          <img
+                            src="/dot.svg"
+                            width={20}
+                            onClick={() => toggleMenu(a.id)}
+                          />
+                        )}
+                        {isAuthenticated && openMenuId === a.id && (
+                          <div className={cx("EditMenu")}>
+                            <div
+                              className={cx("MenuIcon")}
+                              onClick={() => goEdit(a)}
+                            >
+                              <img src="/edit.svg" width={15} />
+                              <span>수정</span>
+                            </div>
+                            <div className={cx("MenuIcon")}>
+                              <img
+                                src="/trash.svg"
+                                width={15}
+                                onClick={() => goDelete(a.id)}
+                              />
+                              <span>삭제</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })
               : "댓글 없음"}
           </ul>
+          <ModalComponent />
         </div>
       </div>
     </FormProvider>
