@@ -5,7 +5,13 @@ import cn from "classnames/bind";
 
 const cx = cn.bind(styles);
 
-export default function searchBox({ value, onChange, placeholder }) {
+type SearchBoxProps = {
+  value: string;
+  onChange: (e: any) => void;
+  placeholder?: string;
+};
+export default function searchBox(props: SearchBoxProps) {
+  const { value, onChange, placeholder } = props;
   return (
     <>
       <div className={cx("SearchBox")}>
