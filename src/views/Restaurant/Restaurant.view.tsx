@@ -84,26 +84,33 @@ function RestaurantView(props: RestaurantViewProps) {
         </div>
       </div>
 
-      <div className={cx("Grid")}>
-        {filteredRestaurants.map((restaurant, index) => {
-          const imageUrl = restaurant.initialBlogImages?.[0];
-          return (
-            <div
-              className={cx("Item")}
-              key={index}
-              onClick={() => goDetail(restaurant.id)}
-            >
-              <div className={cx("Thumbnail")}>
-                <RestaurantImage src={imageUrl} alt={restaurant.upso_name} />
+      {filteredRestaurants.length > 0 ? (
+        <div className={cx("Grid")}>
+          {filteredRestaurants.map((restaurant, index) => {
+            const imageUrl = restaurant.initialBlogImages?.[0];
+            return (
+              <div
+                className={cx("Item")}
+                key={index}
+                onClick={() => goDetail(restaurant.id)}
+              >
+                <div className={cx("Thumbnail")}>
+                  <RestaurantImage src={imageUrl} alt={restaurant.upso_name} />
+                </div>
+                <div className={cx("RestaurantInfo")}>
+                  <p>{restaurant.upso_name}</p>
+                  <p>{restaurant.cgg_code_name}</p>
+                </div>
               </div>
-              <div className={cx("RestaurantInfo")}>
-                <p>{restaurant.upso_name}</p>
-                <p>{restaurant.cgg_code_name}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className={cx("EmptyPage")}>
+          <p>해당 데이터가 없습니다.</p>
+        </div>
+      )}
+
       {isModalOpen && (
         <InfoModal onClose={closeModal} responsive={true}>
           <Modal
