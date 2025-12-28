@@ -33,6 +33,7 @@ function Modal(props: ModalProps) {
   return (
     <div className={cx("Wrapper")}>
       <h2>서울 지역 선택</h2>
+      <p>현재 선택된 지역: {selectedCity || "선택 안됨"}</p>
       <div className={cx("Content")}>
         {CITIES.map((city) => (
           <button
