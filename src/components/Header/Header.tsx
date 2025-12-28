@@ -75,7 +75,7 @@ export default function Header({ session }: { session: SessionProps }) {
     () => [
       {
         label: "브랜드",
-        href: LINK_ROUTE.BRNAD.uri,
+        href: LINK_ROUTE.BRAND.uri,
       },
       {
         label: "음식점",

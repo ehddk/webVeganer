@@ -12,7 +12,7 @@ export const LINK_ROUTE = {
     [ROUTE_KEY.APP_DIR]: "/",
     [ROUTE_KEY.URI]: "/",
   },
-  BRNAD: {
+  BRAND: {
     [ROUTE_KEY.APP_DIR]: "/brand",
     [ROUTE_KEY.URI]: "/brand",
   },
