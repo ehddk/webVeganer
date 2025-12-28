@@ -21,7 +21,6 @@ function getUserIdFromToken(token: string): string | null {
     if (parts.length !== 3) return null;
 
     // Payload 부분 (두 번째) Base64 디코딩
-    // ⚠️ 실제 환경에서는 signature 검증 로직이 반드시 필요합니다.
     const base64Payload = parts[1];
     const decodedPayload = Buffer.from(base64Payload, "base64").toString(
       "utf8"

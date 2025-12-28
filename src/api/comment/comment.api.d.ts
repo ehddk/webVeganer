@@ -35,7 +35,7 @@ declare global {
   /**수정 */
   type updateCommentRequestPath = { article_id: string; id: string };
   type updateCommentRequestBody = { content: string };
-  type updateCommentResponse = IComment;
+  type updateCommentResponse = { statusCode: number; message: string };
 
   /**삭제 */
   type deleteCommentRequestPath = { article_id: string; id: string };

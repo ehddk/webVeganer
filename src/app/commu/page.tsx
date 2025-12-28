@@ -21,6 +21,6 @@ export default async function CommuViewPage(props: CommuPageProps) {
   });
 
   if ("message" in data) throw new Error("조회 중 실패");
-  console.log("daata", data);
+
   return <CommuView data={data} offset={offsetValue} />;
 }
