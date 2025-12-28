@@ -46,6 +46,7 @@
   min-height: 50px;
   border: none;
   border-bottom: 1px solid rgb(205, 205, 205);
+  padding: 10px;
 }
 
 .Btn {
@@ -113,6 +114,8 @@
 
 .EditInput {
   resize: none;
+  border: none;
+  border-bottom: 1px solid rgb(205, 205, 205);
 }
 
 .EditButtonArea {

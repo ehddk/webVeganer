@@ -245,7 +245,7 @@ export default function Comment(props: CommentProps) {
           <div className={cx("Content")}>
             <div className={cx("InputArea")}>
               {isUser ? (
-                <p>{currentUserName}</p> // ⭐️ 유저 이름 표시 (후기 컴포넌트에서는 h4였음)
+                <h4>{currentUserName}</h4>
               ) : (
                 <p className={cx("LoginRequired")}>
                   댓글 작성을 하려면 먼저{" "}
