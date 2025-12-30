@@ -123,3 +123,23 @@
   gap: 8px;
   justify-content: flex-end;
 }
+
+.Icon {
+  width: 20px;
+  height: 20px;
+  color: gray;
+}
+
+.CommentWrapper {
+  gap: 10px;
+}
+.IconWrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.IconBox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

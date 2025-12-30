@@ -101,7 +101,7 @@ export default function Comment(props: CommentProps) {
           const res = await CommentMutation.deleteComment({
             path: {
               article_id: article_id,
-              id: id,
+              id: String(id),
             },
           });
           console.log("resss", res);
@@ -240,7 +240,14 @@ export default function Comment(props: CommentProps) {
   return (
     <FormProvider {...form}>
       <div className={cx("Wrapper")}>
-        <h3>댓글</h3>
+        <div className={cx("IconWrapper")}>
+          <h3>댓글</h3>
+          <div className={cx("IconBox")}>
+            <img src="/comment.svg" className={cx("Icon")} />
+            <p>{commentData.length}</p>
+          </div>
+        </div>
+
         <div className={cx("CommentWrapper")}>
           <div className={cx("Content")}>
             <div className={cx("InputArea")}>
@@ -310,90 +317,84 @@ export default function Comment(props: CommentProps) {
           </div>
 
           <ul className={cx("CommentList")}>
-            {commentData.length > 0
-              ? commentData.map((a, i) => {
-                  const isCurrentlyEditing = isEdit === a.id;
-                  return (
-                    <li key={i} className={cx("CommentItem")}>
-                      <div className={cx("CommentBox")}>
-                        <img
-                          src="/user.svg"
-                          alt="user"
-                          className={cx("Profile")}
-                        />
-                        <div className={cx("UserBox")}>
-                          <p className={cx("User")}>{a.user}</p>
-                          <p className={cx("Date")}>
-                            {dayjs(a.createdAt).format("YYYY.MM.DD HH:mm")}
-                          </p>
-                          {isCurrentlyEditing ? (
-                            <>
-                              <Controller
-                                name="content"
-                                control={control}
-                                render={({ field }) => (
-                                  <textarea
-                                    className={cx("EditInput")}
-                                    {...field}
-                                    value={field.value}
-                                  />
-                                )}
-                              ></Controller>
-                              <div className={cx("EditButtonArea")}>
-                                <Button
-                                  size="small"
-                                  colorType="primary"
-                                  variant="contained"
-                                  text="저장"
-                                  onClick={() => handleUpdate(a.id)}
-                                  className={cx("SaveBtn")}
-                                />
-                                <Button
-                                  size="small"
-                                  colorType="primary"
-                                  variant="outlined"
-                                  text="취소"
-                                  // goEdit 함수에 item 전체를 전달하여 수정 취소 로직도 처리
-                                  onClick={() => goEdit(a)}
-                                  className={cx("CancelBtn")}
-                                />
-                              </div>
-                            </>
-                          ) : (
-                            <p>{a.content}</p>
-                          )}
-                        </div>
-                        {isUser && (
-                          <img
-                            src="/dot.svg"
-                            width={20}
-                            onClick={() => toggleMenu(a.id)}
-                          />
-                        )}
-                        {isAuthenticated && openMenuId === a.id && (
-                          <div className={cx("EditMenu")}>
-                            <div
-                              className={cx("MenuIcon")}
-                              onClick={() => goEdit(a)}
-                            >
-                              <img src="/edit.svg" width={15} />
-                              <span>수정</span>
-                            </div>
-                            <div className={cx("MenuIcon")}>
-                              <img
-                                src="/trash.svg"
-                                width={15}
-                                onClick={() => goDelete(a.id)}
+            {commentData.map((a, i) => {
+              const isCurrentlyEditing = isEdit === a.id;
+              return (
+                <li key={i} className={cx("CommentItem")}>
+                  <div className={cx("CommentBox")}>
+                    <img src="/user.svg" alt="user" className={cx("Profile")} />
+                    <div className={cx("UserBox")}>
+                      <p className={cx("User")}>{a.user}</p>
+                      <p className={cx("Date")}>
+                        {dayjs(a.createdAt).format("YYYY.MM.DD HH:mm")}
+                      </p>
+                      {isCurrentlyEditing ? (
+                        <>
+                          <Controller
+                            name="content"
+                            control={control}
+                            render={({ field }) => (
+                              <textarea
+                                className={cx("EditInput")}
+                                {...field}
+                                value={field.value}
                               />
-                              <span>삭제</span>
-                            </div>
+                            )}
+                          ></Controller>
+                          <div className={cx("EditButtonArea")}>
+                            <Button
+                              size="small"
+                              colorType="primary"
+                              variant="contained"
+                              text="저장"
+                              onClick={() => handleUpdate(a.id)}
+                              className={cx("SaveBtn")}
+                            />
+                            <Button
+                              size="small"
+                              colorType="primary"
+                              variant="outlined"
+                              text="취소"
+                              // goEdit 함수에 item 전체를 전달하여 수정 취소 로직도 처리
+                              onClick={() => goEdit(a)}
+                              className={cx("CancelBtn")}
+                            />
                           </div>
-                        )}
+                        </>
+                      ) : (
+                        <p>{a.content}</p>
+                      )}
+                    </div>
+                    {isUser && (
+                      <img
+                        src="/dot.svg"
+                        width={20}
+                        onClick={() => toggleMenu(a.id)}
+                      />
+                    )}
+                    {isAuthenticated && openMenuId === a.id && (
+                      <div className={cx("EditMenu")}>
+                        <div
+                          className={cx("MenuIcon")}
+                          onClick={() => goEdit(a)}
+                        >
+                          <img src="/edit.svg" width={15} />
+                          <span>수정</span>
+                        </div>
+                        <div className={cx("MenuIcon")}>
+                          <img
+                            src="/trash.svg"
+                            width={15}
+                            onClick={() => goDelete(a.id)}
+                          />
+                          <span>삭제</span>
+                        </div>
                       </div>
-                    </li>
-                  );
-                })
-              : "댓글 없음"}
+                    )}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
           <ModalComponent />
         </div>
