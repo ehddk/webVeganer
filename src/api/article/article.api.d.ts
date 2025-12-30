@@ -9,6 +9,7 @@ interface IArticle {
   content: string;
   createdAt: Date;
   updatedAt?: Date;
+  viewCount: number;
 }
 
 interface PaginatedArticle {
