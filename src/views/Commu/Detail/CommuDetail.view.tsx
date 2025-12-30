@@ -111,6 +111,10 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
             <div className={cx("Profile")}>
               <img src="/user.svg" alt="user" width={20} />
               <p>{data.author} </p>
+              <div className={cx("IconWrapper")}>
+                <img src="/view.svg" className={cx("Icon")} color="gray" />
+                <p className={cx("Icon")}>{data.viewCount}</p>
+              </div>
             </div>
           </div>
 
@@ -143,21 +147,6 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
                   router.push(LINK_ROUTE.ARTICLE.EDIT.uri({ id: data.id }))
                 }
               />
-            </div>
-            <Divider />
-            <div className={cx("CommentWrapper")}>
-              <div className={cx("IconWrapper")}>
-                <img src="/like.svg" className={cx("Icon")} />
-                <p>1</p>
-              </div>
-              <div className={cx("IconWrapper")}>
-                <img src="/view.svg" className={cx("Icon")} />
-                <p>1</p>
-              </div>
-              <div className={cx("IconWrapper")}>
-                <img src="/comment.svg" className={cx("Icon")} />
-                <p>{commentData.total}</p>
-              </div>
             </div>
             <Divider />
 
