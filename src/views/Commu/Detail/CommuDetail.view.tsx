@@ -38,12 +38,12 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
     const content = data.content;
 
     // 이미 객체인 경우
-    if (typeof content === "object" && content !== null && "ops" in content) {
-      return content.ops
-        .map((op: any) => op.insert)
-        .join("")
-        .trim();
-    }
+    // if (typeof content === "object" && content !== null && "ops" in content) {
+    //   return content.ops
+    //     .map((op: any) => op.insert)
+    //     .join("")
+    //     .trim();
+    // }
 
     // 문자열인 경우 파싱
     if (typeof content === "string") {
