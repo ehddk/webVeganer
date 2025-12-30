@@ -189,6 +189,7 @@ export default function JoinView() {
               colorType="inherit"
               variant="contained"
               size="medium"
+              onClick={() => router.push(LINK_ROUTE.MAIN.appDir)}
             ></Button>
             <Button
               text="완료"
