@@ -125,10 +125,19 @@ export default function Header({ session }: { session: SessionProps }) {
               <ul className={cx("MobileMenuList")}>
                 <div className={cx("HeaderLine")}>
                   <div className={cx("UserInfo")}>
-                    <strong className={cx("UserInfoStrong")} onClick={goLogin}>
-                      로그인
-                    </strong>
-                    <span className={cx("UserInfoSpan")}>해 주세요.</span>
+                    {!session.isAuthenticated ? (
+                      <>
+                        <strong
+                          className={cx("UserInfoStrong")}
+                          onClick={goLogin}
+                        >
+                          로그인
+                        </strong>
+                        <span className={cx("UserInfoSpan")}>해 주세요.</span>
+                      </>
+                    ) : (
+                      <span className={cx("UserInfoStrong")}>환영합니다!</span>
+                    )}
                   </div>
                   <IoClose size={30} onClick={handleClose} />
                 </div>
