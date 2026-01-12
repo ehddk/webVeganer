@@ -2,12 +2,13 @@
   border-radius: 5px;
   max-width: 500px;
   width: 100%;
-
+  border: 2px solid rgb(198, 198, 198);
   margin: 0 auto;
+  padding: 0 10px;
 
   @media screen and (max-width: 1200px) {
     width: 100%;
-    padding: 0 16px;
+    //    padding: 0 16px;
   }
 }
 .Line {
@@ -27,6 +28,6 @@
   padding: 15px;
   margin-left: 20px;
   font-size: 12px;
-  background-color: #e2e6e9cc;
+  // background-color: #e2e6e9cc;
   border-radius: 5px;
 }

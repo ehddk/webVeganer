@@ -6,8 +6,8 @@ import cn from "classnames/bind";
 const cx = cn.bind(styles);
 
 type SearchBoxProps = {
-  value: string;
-  onChange: (e: any) => void;
+  value?: string;
+  onChange?: (e: any) => void;
   placeholder?: string;
 };
 export default function searchBox(props: SearchBoxProps) {
