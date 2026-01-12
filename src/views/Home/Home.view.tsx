@@ -12,6 +12,7 @@ import "swiper/css/pagination";
 
 import Link from "next/link";
 import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
+import useIsMobile from "@/hooks/useIsMobile";
 
 const cx = cn.bind(styles);
 
@@ -26,7 +27,7 @@ export default function HomeView(props: HomeViewProps) {
 
   let router = useRouter();
   const [showItems, setShowItems] = useState(6);
-
+  const isMobile = useIsMobile();
   function randomItem(arr: any, num: any) {
     const mix = arr.sort(() => 0.5 - Math.random());
     return mix.slice(0, num);
@@ -64,20 +65,33 @@ export default function HomeView(props: HomeViewProps) {
             </p>
           </div>{" "}
           <div className={cx("RestauantContent")}>
-            {randomResList.map((data: any, index: number) => (
-              <ul key={index}>
-                <li>
-                  <div className={cx("Image")}></div>
-                  <p>{data.upso_name}</p>
-                </li>
-              </ul>
-            ))}{" "}
+            {randomResList.map((data: any, index: number) => {
+              const imageUrl = data.initialBlogImages?.[0];
+              return (
+                <ul key={index}>
+                  <li>
+                    <Link
+                      className={cx("Link")}
+                      href={LINK_ROUTE.RESTAURANT.DETAIL.uri({ id: data.id })}
+                    >
+                      <div className={cx("Thumbnail")}>
+                        <RestaurantImage src={imageUrl} alt={data.upso_name} />
+                      </div>
+                      <button className={cx("Name")}>
+                        <p>{data.upso_name} </p>
+                        <p>[{data.cgg_code_name}]</p>
+                      </button>
+                    </Link>
+                  </li>
+                </ul>
+              );
+            })}{" "}
           </div>
         </div>
 
         <div className={cx("CafeWrapper")}>
           <div className={cx("Header")}>
-            <h2>요즘 뜨는 비건 카페</h2>
+            <h2>비건 카페</h2>
             <p className={cx("More")} onClick={() => router.push("/cafe")}>
               &gt; 더보기
             </p>
@@ -88,12 +102,12 @@ export default function HomeView(props: HomeViewProps) {
               className={cx("Swiper")}
               wrapperClass={cx("SwipperWrapper")}
               spaceBetween={50}
-              slidesPerView={3}
+              slidesPerView={isMobile ? 2 : 3}
               onSwiper={(swiper) => console.log(swiper)}
-              pagination={{ clickable: true }}
+              pagination={{ clickable: true, dynamicBullets: true }}
               modules={[Autoplay, Pagination]}
             >
-              {cafeList?.map((item, index: number) => {
+              {cafeList?.map((item) => {
                 const imageUrl = item.initialBlogImages?.[0];
                 return (
                   <SwiperSlide key={item.id} className={cx("Slide")}>
@@ -105,7 +119,8 @@ export default function HomeView(props: HomeViewProps) {
                         <RestaurantImage src={imageUrl} alt={item.upso_name} />
                       </div>
                       <button className={cx("Name")}>
-                        <p>{item.upso_name}</p>
+                        <p>{item.upso_name} </p>
+                        <p>[{item.cgg_code_name}]</p>
                       </button>
                     </Link>
                   </SwiperSlide>
