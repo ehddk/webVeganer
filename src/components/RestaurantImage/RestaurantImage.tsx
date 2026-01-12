@@ -10,7 +10,7 @@ type RestaurantImageProps = {
 
 export const RestaurantImage = (props: RestaurantImageProps) => {
   const { src, alt, className } = props;
-  const finalSrc = src || "/image.svg";
+  const finalSrc = src || "/cafe.png";
   const isDefault = !src;
   return (
     <img
