@@ -5,10 +5,20 @@ import styles from "./Home.view.module.scss";
 import cn from "classnames/bind";
 import { useState } from "react";
 import { LINK_ROUTE } from "@/constants/link.constants";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+
+import Link from "next/link";
+import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
+
 const cx = cn.bind(styles);
 
 type HomeViewProps = {
-  data: Restaurant.GetList.Response[number][];
+  data: Array<
+    Restaurant.GetList.Response[number] & { initialBlogImages: string[] }
+  >;
 };
 
 export default function HomeView(props: HomeViewProps) {
@@ -31,7 +41,12 @@ export default function HomeView(props: HomeViewProps) {
   };
   return (
     <div className={cx("Wrapper")}>
-      <div className={cx("Banner")} />
+      <div className={cx("Banner")}>
+        <img src="/vegan.png" alt="배너이미지" width={300} height={350} />
+        <img src="/vegan2.png" alt="배너이미지" width={300} height={350} />
+        <img src="/vegan3.png" alt="배너이미지" width={300} height={350} />
+        <img src="/vegan4.png" alt="배너이미지" width={290} height={350} />
+      </div>
       <SearchBox
         placeholder="음식점,카페, 제품 등등을 검색해보세요"
         value={undefined}
@@ -69,17 +84,34 @@ export default function HomeView(props: HomeViewProps) {
           </div>
 
           <div className={cx("CafeContent")}>
-            {randomCafeList?.map((item: any, index: any) => (
-              <ul key={index}>
-                <li onClick={() => goDetail(item.id)}>
-                  <div className={cx("Image")} />
-
-                  <button className={cx("Name")}>
-                    <p>{item.upso_name}</p>
-                  </button>
-                </li>
-              </ul>
-            ))}
+            <Swiper
+              className={cx("Swiper")}
+              wrapperClass={cx("SwipperWrapper")}
+              spaceBetween={50}
+              slidesPerView={3}
+              onSwiper={(swiper) => console.log(swiper)}
+              pagination={{ clickable: true }}
+              modules={[Autoplay, Pagination]}
+            >
+              {cafeList?.map((item, index: number) => {
+                const imageUrl = item.initialBlogImages?.[0];
+                return (
+                  <SwiperSlide key={item.id} className={cx("Slide")}>
+                    <Link
+                      className={cx("Link")}
+                      href={LINK_ROUTE.RESTAURANT.DETAIL.uri({ id: item.id })}
+                    >
+                      <div className={cx("Thumbnail")}>
+                        <RestaurantImage src={imageUrl} alt={item.upso_name} />
+                      </div>
+                      <button className={cx("Name")}>
+                        <p>{item.upso_name}</p>
+                      </button>
+                    </Link>
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
           </div>
         </div>
       </section>

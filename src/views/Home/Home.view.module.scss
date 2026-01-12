@@ -5,7 +5,7 @@
   padding-bottom: 20px;
 }
 .Banner {
-  border: 1px solid rgb(118, 159, 118);
+  // border: 1px solid rgb(118, 159, 118);
   max-width: 1200px;
   width: 100%;
   height: 350px;
@@ -87,7 +87,7 @@
   width: 100%;
   margin: 0 auto;
   gap: 20px;
-
+  overflow: visible;
   flex-direction: column;
 
   @media screen and (max-width: 1400px) {
@@ -136,11 +136,32 @@
   }
 
   .CafeContent {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-
+    display: flex;
+    align-items: center;
     width: 100%;
     gap: 20px;
+    overflow: visible;
+    :global {
+      .swiper-button-next,
+      .swiper-button-prev {
+        color: green;
+        padding: 10px;
+        &:after {
+          font-size: 30px;
+        }
+      }
+      .swiper-button-prev {
+        left: 0; // 패딩 영역 안에 배치
+      }
+
+      .swiper-button-next {
+        right: 0; // 패딩 영역 안에 배치
+      }
+
+      .swiper-pagination-bullet-active {
+        background-color: green;
+      }
+    }
 
     @media screen and (max-width: 1200px) {
       margin: 0;
@@ -212,12 +233,13 @@
     text-align: left;
   }
 
-  .Image {
-    // width: 100px;
-    // height: 100px;
-    border-radius: 5px;
-    background-color: rgb(183, 183, 183);
-  }
+  // .Image {
+  //   border: 1px solid red;
+  //   // width: 100px;
+  //   // height: 100px;
+  //   border-radius: 5px;
+  //   background-color: rgb(183, 183, 183);
+  // }
 
   .Right {
     display: flex;
@@ -243,4 +265,44 @@
   background-color: #fdf5e6;
 
   height: 150px;
+}
+
+.Swiper {
+  width: 100%;
+}
+.SwipperWrapper {
+  display: flex;
+}
+
+.Slide {
+  // opacity: 1; // 추가
+  // transform: translateY(0);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+
+  &.Visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Thumbnail {
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%; /* 4:3 비율 유지 */
+  position: relative;
+  box-shadow: 3px 3px 2px lightgray;
+
+  overflow: hidden;
+}
+
+.Thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 70%;
 }
