@@ -89,7 +89,7 @@ export const createServerAjax = (accessToken: string) => {
     baseURL: API_BASE_URL,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 };
