@@ -6,7 +6,7 @@ import cn from "classnames/bind";
 import { useState } from "react";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
@@ -36,10 +36,46 @@ export default function HomeView(props: HomeViewProps) {
   const randomResList = randomItem(data, showItems);
 
   const cafeList = data.filter((item) => item.category === "과자점");
-  const randomCafeList = randomItem(cafeList, showItems);
+
   const goDetail = (id: string) => {
     router.push(LINK_ROUTE.RESTAURANT.DETAIL.uri({ id }));
   };
+
+  const FAQ_QUESTIONS = [
+    "비건 음식점에 가면 보통 뭐 먹어요?",
+    "고기 없이도 배부를 수 있나요?",
+    "비건 초보자가 실패 안 하는 메뉴 추천해줘",
+    "비건 음식은 맛이 없지 않나요?",
+    "비건이랑 비건 옵션은 뭐가 다른가요?",
+  ];
+
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [answer, setAnswer] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+
+  const fetchFaqAnswer = async (question: string) => {
+    setSelectedQuestion(question);
+    setLoading(true);
+    setAnswer("");
+
+    try {
+      const res = await fetch("/api/ai/faq", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question }),
+      });
+
+      const data = await res.json();
+      setAnswer(data.answer);
+    } catch (error) {
+      setAnswer("답변을 불러오지 못했어요. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={cx("Wrapper")}>
       <div className={cx("Banner")}>
@@ -53,6 +89,34 @@ export default function HomeView(props: HomeViewProps) {
         value={undefined}
         onChange={undefined}
       />
+      <div className={cx("FaqList")}>
+        <h2 className={cx("Title")}>
+          AI를 통해 사용자가 원하는 맛집을 알 수 있어요
+        </h2>
+        <div className={cx("AnswerContent")}>
+          {FAQ_QUESTIONS.map((q) => (
+            <button
+              key={q}
+              className={cx("FaqButton", {
+                active: selectedQuestion === q,
+              })}
+              onClick={() => fetchFaqAnswer(q)}
+            >
+              {q}
+            </button>
+          ))}
+          {answer && (
+            <div className={cx("AnswerBox")}>
+              {loading ? (
+                <p className={cx("Answer")}>답변을 불러오는 중...</p>
+              ) : (
+                <p className={cx("Answer")}>{answer}</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
       <section className={cx("Content")}>
         <div className={cx("Popular")}>
           <div className={cx("Header")}>
@@ -61,7 +125,7 @@ export default function HomeView(props: HomeViewProps) {
               className={cx("More")}
               onClick={() => router.push("/restaurant")}
             >
-              &gt; 더보기
+              더보기
             </p>
           </div>{" "}
           <div className={cx("RestauantContent")}>
@@ -93,7 +157,7 @@ export default function HomeView(props: HomeViewProps) {
           <div className={cx("Header")}>
             <h2>비건 카페</h2>
             <p className={cx("More")} onClick={() => router.push("/cafe")}>
-              &gt; 더보기
+              더보기
             </p>
           </div>
 
