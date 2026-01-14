@@ -10,37 +10,32 @@ const cx = cn.bind(styles);
 
 const BrandView = () => {
   return (
-    <>
+    <div className={cx("Wrapper")}>
       <div className={cx("Banner")}>
-        <div className={cx("Inside")}>
-          <img
-            src="../brand.png"
-            style={{ width: "100%", height: "auto", marginTop: "-1px" }}
-          />
-        </div>
+        <img src="/vegan.png" alt="배너이미지" width={300} height={350} />
+        <img src="/vegan2.png" alt="배너이미지" width={300} height={350} />
+        <img src="/vegan3.png" alt="배너이미지" width={300} height={350} />
+        <img src="/vegan4.png" alt="배너이미지" width={290} height={350} />
       </div>
       <div className={cx("Intro")}>
-        <div className={cx("Content1")}>
-          <div className={cx("Left")}>
-            <p className={cx("description")}>
-              채소, 과일, 해초 따위의 식물성 음식 이외에는 아무것도 먹지 않는
-              철저하고 완전한 채식주의자를 뜻해요. 고기는 물론 우유, 달걀도 먹지
-              않으며 어떤 이들은 실크나 가죽같이 동물에게서 원료를 얻는 제품도
-              사용하지 않아요.
-            </p>
-          </div>
-
+        <div className={cx("TopContent")}>
           <h2 className={cx("SubTitle")}>
-            비건이 무엇인가요?
+            우선, 비건이 무엇인가요?
             <br />
-            What is vegan?
+            <p className={cx("Detail")}>What is vegan?</p>
           </h2>
+          <p className={cx("description")}>
+            채소, 과일, 해초 따위의 식물성 음식 이외에는 아무것도 먹지 않는
+            철저하고 완전한 채식주의자를 뜻해요. 고기는 물론 우유, 달걀도 먹지
+            않으며 어떤 이들은 실크나 가죽같이 동물에게서 원료를 얻는 제품도
+            사용하지 않아요.
+          </p>
         </div>
-        <div className={cx("Divider")} />
-        <div className={cx("Content2")}>
-          <h2 className={cx("TitlePurpose")}>
-            Veganer의 추구하는 가치는 무엇인가요? <br />
-            What is our purpose?
+
+        <div className={cx("TopContent")}>
+          <h2 className={cx("SubTitle")}>
+            그렇다면 Veganer의 추구하는 가치는 무엇인가요? <br />
+            <p className={cx("Detail")}>What is our purpose?</p>
           </h2>
           <div className={cx("TitlePurposeContent")}>
             기후변화대응을 위해 작은 실천움직임에 대한 관심도가 확산되면서
@@ -51,17 +46,19 @@ const BrandView = () => {
               작은 행동일지라도 환경 보호에 이바지할 수 있도록 발판을
               마련해드리고 싶습니다.
             </span>
-            <span>
-              비건에 대한 거부감 및 무관심을 친밀함 또는 익숙함으로 느껴지도록
-              작은 관심들이 모여 함께 공존하는 지구의 평화에 함께 해주세요.
-            </span>
           </div>
         </div>
 
         <div className={cx("Content3")}>
           <div className={cx("Title")}>
-            <h2>비건에도 단계가 있다는 사실을 알고계시나요?</h2>
-            <h2>비건이라고 해서 only 채식만 섭취하는게 아니라는 사실!</h2>
+            <h2 style={{ color: "gray" }}>
+              비건에도 <strong style={{ color: "black" }}>단계</strong>가 있다는
+              사실을 알고계시나요?
+            </h2>
+            <h2>
+              비건이라고 해서 only 채식만 섭취하는게{" "}
+              <strong style={{ color: "gray" }}>아니</strong>라는 사실!
+            </h2>
           </div>
           <div>
             <div className={cx("Container")}>
@@ -197,8 +194,12 @@ const BrandView = () => {
             </div>
           </div>
         </div>
+        <h3 className={cx("BottomContent")}>
+          비건에 대한 거부감 및 무관심을 친밀함 또는 익숙함으로 느껴지도록 작은
+          관심들이 모여 공존하도록 관심을 기울여주세요.
+        </h3>
       </div>
-    </>
+    </div>
   );
 };
 
