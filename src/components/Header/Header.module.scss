@@ -7,6 +7,7 @@
 .Wrapper {
   height: 70px;
   padding: 20px;
+  border-bottom: 1px solid #c3c3c3;
 }
 .Header {
   display: flex;
@@ -22,6 +23,8 @@
   align-items: center;
   gap: 10px;
   margin-right: 10px;
+  @media screen and (max-width: 1200px) {
+  }
 }
 
 .MenuList {
@@ -160,4 +163,8 @@
   color: #338d58;
   font-weight: 900;
   cursor: pointer;
+}
+
+.Logo {
+  width: 110px;
 }

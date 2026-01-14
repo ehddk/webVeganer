@@ -108,7 +108,7 @@ export default function Header({ session }: { session: SessionProps }) {
     <div className={cx("Wrapper", { closing: !isMenuOpen })}>
       <div className={cx("Header")}>
         <a href="/">
-          <h1>Veganer</h1>
+          <img src="/logo.svg" alt="로고" className={cx("Logo")} />
         </a>
         <nav className={cx("Menu")}>
           <ul className={cx("MenuList", { closing: !isMenuOpen })}>
