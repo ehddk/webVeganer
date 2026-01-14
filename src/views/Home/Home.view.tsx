@@ -13,6 +13,9 @@ import "swiper/css/pagination";
 import Link from "next/link";
 import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
 import useIsMobile from "@/hooks/useIsMobile";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUp } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 
 const cx = cn.bind(styles);
 
@@ -28,14 +31,20 @@ export default function HomeView(props: HomeViewProps) {
   let router = useRouter();
   const [showItems, setShowItems] = useState(6);
   const isMobile = useIsMobile();
+  const [customQuestion, setCustomQuestion] = useState<string>(""); // 추가
+
   function randomItem(arr: any, num: any) {
     const mix = arr.sort(() => 0.5 - Math.random());
     return mix.slice(0, num);
   }
 
-  const randomResList = randomItem(data, showItems);
+  const randomResList = React.useMemo(() => {
+    return randomItem(data, showItems);
+  }, [data, showItems]); // data나 showItems가 변경될 때만 재계산
 
-  const cafeList = data.filter((item) => item.category === "과자점");
+  const cafeList = React.useMemo(() => {
+    return data.filter((item) => item.category === "과자점");
+  }, [data]);
 
   const goDetail = (id: string) => {
     router.push(LINK_ROUTE.RESTAURANT.DETAIL.uri({ id }));
@@ -78,49 +87,22 @@ export default function HomeView(props: HomeViewProps) {
 
   return (
     <div className={cx("Wrapper")}>
-      <div className={cx("Banner")}>
+      {/* <div className={cx("Banner")}>
         <img src="/vegan.png" alt="배너이미지" width={300} height={350} />
         <img src="/vegan2.png" alt="배너이미지" width={300} height={350} />
         <img src="/vegan3.png" alt="배너이미지" width={300} height={350} />
         <img src="/vegan4.png" alt="배너이미지" width={290} height={350} />
-      </div>
-      <SearchBox
+      </div> */}
+      {/* <SearchBox
         placeholder="음식점,카페, 제품 등등을 검색해보세요"
         value={undefined}
         onChange={undefined}
-      />
-      <div className={cx("FaqList")}>
-        <h2 className={cx("Title")}>
-          AI를 통해 사용자가 원하는 맛집을 알 수 있어요
-        </h2>
-        <div className={cx("AnswerContent")}>
-          {FAQ_QUESTIONS.map((q) => (
-            <button
-              key={q}
-              className={cx("FaqButton", {
-                active: selectedQuestion === q,
-              })}
-              onClick={() => fetchFaqAnswer(q)}
-            >
-              {q}
-            </button>
-          ))}
-          {answer && (
-            <div className={cx("AnswerBox")}>
-              {loading ? (
-                <p className={cx("Answer")}>답변을 불러오는 중...</p>
-              ) : (
-                <p className={cx("Answer")}>{answer}</p>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
+      /> */}
 
       <section className={cx("Content")}>
         <div className={cx("Popular")}>
           <div className={cx("Header")}>
-            <h2>요즘 뜨는 인기 식당</h2>
+            <h2>인기 식당</h2>
             <p
               className={cx("More")}
               onClick={() => router.push("/restaurant")}
@@ -191,6 +173,57 @@ export default function HomeView(props: HomeViewProps) {
                 );
               })}
             </Swiper>
+          </div>
+        </div>
+        <div className={cx("FaqList")}>
+          <h2 className={cx("Title")}>
+            탭을 클릭하고 입력하여 궁금한 점을 물어보세요!
+          </h2>
+          <div className={cx("AnswerContent")}>
+            {FAQ_QUESTIONS.map((q) => (
+              <button
+                key={q}
+                className={cx("FaqButton", {
+                  active: selectedQuestion === q,
+                })}
+                onClick={() => fetchFaqAnswer(q)}
+              >
+                {q}
+              </button>
+            ))}
+            {answer && (
+              <div className={cx("AnswerBox")}>
+                {loading ? (
+                  <p className={cx("Answer")}>답변을 불러오는 중...</p>
+                ) : (
+                  <p className={cx("Answer")}>{answer}</p>
+                )}
+              </div>
+            )}
+            <div className={cx("CustomQuestion")}>
+              <input
+                type="text"
+                className={cx("QuestionInput")}
+                placeholder="질문을 선택하거나 새로운 질문을 입력해 보세요"
+                value={customQuestion}
+                onChange={(e) => setCustomQuestion(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && customQuestion.trim()) {
+                    fetchFaqAnswer(customQuestion);
+                  }
+                }}
+              />
+
+              <FontAwesomeIcon
+                className={cx("SendIcon")}
+                icon={faCircleUp}
+                onClick={() => {
+                  if (customQuestion.trim()) {
+                    fetchFaqAnswer(customQuestion);
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
       </section>
