@@ -14,7 +14,8 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: "너는 포트폴리오 사이트의 FAQ를 친절하게 답변하는 AI야.",
+          content:
+            "너는 비건,비건 음식점 및 카페 사이트의 FAQ를 친절하게 답변하는 AI야.",
         },
         {
           role: "user",
