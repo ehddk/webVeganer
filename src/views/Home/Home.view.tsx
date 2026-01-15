@@ -78,6 +78,7 @@ export default function HomeView(props: HomeViewProps) {
 
       const data = await res.json();
       setAnswer(data.answer);
+      setCustomQuestion("");
     } catch (error) {
       setAnswer("답변을 불러오지 못했어요. 잠시 후 다시 시도해주세요.");
     } finally {
