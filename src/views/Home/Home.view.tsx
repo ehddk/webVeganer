@@ -40,7 +40,7 @@ export default function HomeView(props: HomeViewProps) {
 
   const randomResList = React.useMemo(() => {
     return randomItem(data, showItems);
-  }, [data, showItems]); // data나 showItems가 변경될 때만 재계산
+  }, [showItems]); //  showItems가 변경될 때만 재계산
 
   const cafeList = React.useMemo(() => {
     return data.filter((item) => item.category === "과자점");
@@ -61,7 +61,13 @@ export default function HomeView(props: HomeViewProps) {
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [answer, setAnswer] = useState<string>("");
   const [loading, setLoading] = useState(false);
-
+  const [isMounted, setIsMounted] = useState(false);
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) {
+    return null;
+  }
   const fetchFaqAnswer = async (question: string) => {
     setSelectedQuestion(question);
     setLoading(true);
@@ -88,18 +94,6 @@ export default function HomeView(props: HomeViewProps) {
 
   return (
     <div className={cx("Wrapper")}>
-      {/* <div className={cx("Banner")}>
-        <img src="/vegan.png" alt="배너이미지" width={300} height={350} />
-        <img src="/vegan2.png" alt="배너이미지" width={300} height={350} />
-        <img src="/vegan3.png" alt="배너이미지" width={300} height={350} />
-        <img src="/vegan4.png" alt="배너이미지" width={290} height={350} />
-      </div> */}
-      {/* <SearchBox
-        placeholder="음식점,카페, 제품 등등을 검색해보세요"
-        value={undefined}
-        onChange={undefined}
-      /> */}
-
       <section className={cx("Content")}>
         <div className={cx("Popular")}>
           <div className={cx("Header")}>
