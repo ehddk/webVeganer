@@ -20,9 +20,11 @@ const BrandView = () => {
       <div className={cx("Intro")}>
         <div className={cx("TopContent")}>
           <h2 className={cx("SubTitle")}>
-            우선, 비건이 무엇인가요?
+            우선, <strong className={cx("Focus")}>비건</strong>이 무엇인가요?
             <br />
-            <p className={cx("Detail")}>What is vegan?</p>
+            <p className={cx("Detail")}>
+              What is <strong className={cx("Focus")}>vegan?</strong>
+            </p>
           </h2>
           <p className={cx("description")}>
             채소, 과일, 해초 따위의 식물성 음식 이외에는 아무것도 먹지 않는
@@ -34,17 +36,21 @@ const BrandView = () => {
 
         <div className={cx("TopContent")}>
           <h2 className={cx("SubTitle")}>
-            그렇다면 Veganer의 추구하는 가치는 무엇인가요? <br />
+            그렇다면 <strong className={cx("Focus")}>Veganer</strong>의 추구하는
+            가치는 무엇인가요? <br />
             <p className={cx("Detail")}>What is our purpose?</p>
           </h2>
           <div className={cx("TitlePurposeContent")}>
             기후변화대응을 위해 작은 실천움직임에 대한 관심도가 확산되면서
-            사회적 인식 및 소비 또한 자연친환경 스타일로 확산되는 추세입니다.
+            사회적 인식 및 소비 또한{" "}
+            <strong className={cx("Focus")}>자연친환경</strong> 스타일로
+            확산되는 추세입니다.
             <span>
               ‘제로 웨이스트’, ‘비건’, 저탄소’ 등등 환경 보호 관련 캠페인 및
-              사업 또한 추진되고 있습니다. Veganer는 현재,새로운 세대를 위해
-              작은 행동일지라도 환경 보호에 이바지할 수 있도록 발판을
-              마련해드리고 싶습니다.
+              사업 또한 추진되고 있습니다.{" "}
+              <strong className={cx("Focus")}>Veganer</strong>는 현재,새로운
+              세대를 위해 작은 행동일지라도 환경 보호에 이바지할 수 있도록
+              발판을 마련해드리고 싶습니다.
             </span>
           </div>
         </div>
