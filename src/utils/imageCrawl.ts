@@ -13,7 +13,7 @@ export async function fetchImagesForRestaurant(
     );
 
     if (!res.ok) {
-      console.error(`HTTP error! status: ${res.status}`);
+      //console.error(`HTTP error! status: ${res.status}`);
       return [];
     }
 
