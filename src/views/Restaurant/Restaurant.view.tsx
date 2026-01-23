@@ -23,7 +23,6 @@ function RestaurantView(props: RestaurantViewProps) {
   let router = useRouter();
   const [selectedLocation, setSelectedLocation] = useState("");
   const [searchFood, setSearchFood] = useState("");
-  const [filteredRestaurants, setFilteredRestaurants] = useState(data);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const goDetail = (id: string) => {
@@ -49,27 +48,22 @@ function RestaurantView(props: RestaurantViewProps) {
     setSearchFood(e.target.value);
   };
 
-  // 데이터 필터링
-  useEffect(() => {
-    const filterRestaurants = () => {
-      const filteredByLocation = selectedLocation
-        ? data.filter((item) => item.cgg_code_name === selectedLocation)
-        : data;
+  const filteredRestaurants = React.useMemo(() => {
+    if (searchFood) {
+      return data.filter((item) =>
+        item.upso_name.toLowerCase().includes(searchFood.toLowerCase())
+      );
+    }
+    //검색어가 없을 경우 지역 필터 적용
+    else if (selectedLocation) {
+      return data.filter((item) => item.cgg_code_name === selectedLocation);
+    }
 
-      // 검색 결과에 따라 데이터 필터링
-      const filteredBySearch = searchFood
-        ? filteredByLocation.filter((item) =>
-            item.upso_name.toLowerCase().includes(searchFood.toLowerCase())
-          )
-        : filteredByLocation;
-
-      setFilteredRestaurants(filteredBySearch);
-    };
-    filterRestaurants();
-  }, [selectedLocation, searchFood]);
+    return data;
+  }, [selectedLocation, searchFood, data]);
 
   return (
-    <>
+    <div className={cx("Wrapper")}>
       <SearchBox
         value={searchFood}
         onChange={handleSearch}
@@ -86,12 +80,12 @@ function RestaurantView(props: RestaurantViewProps) {
 
       {filteredRestaurants.length > 0 ? (
         <div className={cx("Grid")}>
-          {filteredRestaurants.map((restaurant, index) => {
+          {filteredRestaurants.map((restaurant) => {
             const imageUrl = restaurant.initialBlogImages?.[0];
             return (
               <div
                 className={cx("Item")}
-                key={index}
+                key={restaurant.id}
                 onClick={() => goDetail(restaurant.id)}
               >
                 <div className={cx("Thumbnail")}>
@@ -120,7 +114,7 @@ function RestaurantView(props: RestaurantViewProps) {
           />
         </InfoModal>
       )}
-    </>
+    </div>
   );
 }
 
