@@ -1,5 +1,9 @@
 .Wrapper {
   padding: 0 90px;
+
+  @media screen and (max-width: 1200px) {
+    padding: 0;
+  }
 }
 
 .Banner {
