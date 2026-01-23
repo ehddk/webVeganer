@@ -9,44 +9,47 @@ export default function Footer() {
       <div className={cx("Wrapper")}>
         <div className={cx("List")}>
           <div className={cx("Logo")}>
-            <h2>Veganner</h2>
+            <a href="/">
+              <img
+                src="/logo.svg"
+                alt="로고"
+                className={cx("Logo")}
+                width={100}
+                style={{ opacity: 0.8 }}
+              />
+            </a>
           </div>
           <div className={cx("Content")}>
             <div className={cx("Info")}>
+              <ul className={cx("Menu")}>
+                <li>
+                  <a href="/brand">회사 소개</a>
+                </li>
+                <li>
+                  <a>이용약관</a>
+                </li>
+                <li>
+                  <a>개인정보보호</a>
+                </li>
+              </ul>
               <ul>
                 <li>
-                  <h4>회사 정보</h4>
+                  <p>
+                    대표자 <strong>김동아</strong>
+                  </p>
                 </li>
                 <li>
-                  <p>사업자명 : 김동아</p>
+                  <p>
+                    대표전화 <strong>010-3333-3333</strong>
+                  </p>
                 </li>
                 <li>
-                  <p>대표전화:010-9333-3333</p>
-                </li>
-                <li>
-                  <p>문의 및 추신이메일: bj9147@naver.com</p>
+                  <p>
+                    문의 및 추신이메일 <strong>bj9147@naver.com</strong>
+                  </p>
                 </li>
               </ul>
             </div>
-
-            <div className={cx("Call")}>
-              {/* <h3>고객문의</h3> */}
-              <h4>공지사항</h4>
-              <p style={{ color: "gray" }}> 대표문의: 010-1111-1111</p>
-            </div>
-          </div>
-          <div className={cx("BottomMenu")}>
-            <ul className={cx("Menu")}>
-              <li>
-                <a>비거너 소개</a>
-              </li>
-              <li>
-                <a>이용약관</a>
-              </li>
-              <li>
-                <a>개인정보보호</a>
-              </li>
-            </ul>
           </div>
         </div>
       </div>
