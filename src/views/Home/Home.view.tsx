@@ -1,5 +1,4 @@
 "use client";
-import SearchBox from "@/components/SearchBox/SearchBox";
 import { useRouter } from "next/navigation";
 import styles from "./Home.view.module.scss";
 import cn from "classnames/bind";
@@ -13,8 +12,7 @@ import "swiper/css/pagination";
 import Link from "next/link";
 import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
 import useIsMobile from "@/hooks/useIsMobile";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUp } from "@fortawesome/free-solid-svg-icons";
+import { AiOutlineEnter } from "react-icons/ai";
 import React from "react";
 
 const cx = cn.bind(styles);
@@ -209,9 +207,7 @@ export default function HomeView(props: HomeViewProps) {
                 }}
               />
 
-              <FontAwesomeIcon
-                className={cx("SendIcon")}
-                icon={faCircleUp}
+              <AiOutlineEnter
                 onClick={() => {
                   if (customQuestion.trim()) {
                     fetchFaqAnswer(customQuestion);
