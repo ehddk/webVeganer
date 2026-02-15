@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import InfoModal from "@/components/Modal/InfoModal/InfoModal";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
+import useInfinityScroll from "@/hooks/useIntersectionVisible";
 
 const cx = cn.bind(styles);
 
@@ -22,8 +23,11 @@ function RestaurantView(props: RestaurantViewProps) {
 
   let router = useRouter();
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [restaurants, setRestaurants] = useState(data);
   const [searchFood, setSearchFood] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [nowPage, setNowPage] = useState(0);
+  const observerRef = React.useRef<HTMLDivElement | null>(null);
 
   const goDetail = (id: string) => {
     router.push(LINK_ROUTE.RESTAURANT.DETAIL.uri({ id }));
@@ -62,6 +66,31 @@ function RestaurantView(props: RestaurantViewProps) {
     return data;
   }, [selectedLocation, searchFood, data]);
 
+  //nowpage 기반으로 보여줄 데이터
+  const displayedRestaurants = React.useMemo(() => {
+    return filteredRestaurants.slice(0, (nowPage + 1) * 10);
+  }, [filteredRestaurants, nowPage]);
+
+  React.useEffect(() => {
+    if (!observerRef.current) return;
+    const currentObserver = observerRef.current;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setNowPage((prev) => prev + 1);
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+    observer.observe(currentObserver);
+    return () => {
+      observer.unobserve(currentObserver);
+    };
+  }, []);
+
   return (
     <div className={cx("Wrapper")}>
       <SearchBox
@@ -80,7 +109,7 @@ function RestaurantView(props: RestaurantViewProps) {
 
       {filteredRestaurants.length > 0 ? (
         <div className={cx("Grid")}>
-          {filteredRestaurants.map((restaurant) => {
+          {displayedRestaurants.map((restaurant) => {
             const imageUrl = restaurant.initialBlogImages?.[0];
             return (
               <div
@@ -104,7 +133,10 @@ function RestaurantView(props: RestaurantViewProps) {
           <p>해당 데이터가 없습니다.</p>
         </div>
       )}
-
+      {/* // Grid 바깥 하단에 감지 타깃 추가 */}
+      {displayedRestaurants.length < filteredRestaurants.length && (
+        <div ref={observerRef} style={{ height: "50px" }} />
+      )}
       {isModalOpen && (
         <InfoModal onClose={closeModal} responsive={true}>
           <Modal
