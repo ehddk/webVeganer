@@ -18,9 +18,7 @@ import React from "react";
 const cx = cn.bind(styles);
 
 type HomeViewProps = {
-  data: Array<
-    Restaurant.GetList.Response[number] & { initialBlogImages: string[] }
-  >;
+  data: Array<Restaurant.GetList.Response[number]>;
 };
 
 export default function HomeView(props: HomeViewProps) {
@@ -147,7 +145,7 @@ export default function HomeView(props: HomeViewProps) {
               modules={[Autoplay, Pagination]}
             >
               {cafeList?.map((item) => {
-                const imageUrl = item.initialBlogImages?.[0];
+                const imageUrl = item.image_url?.[0];
                 return (
                   <SwiperSlide key={item.id} className={cx("Slide")}>
                     <Link

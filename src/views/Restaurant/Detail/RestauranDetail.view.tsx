@@ -16,7 +16,7 @@ import ReviewForm from "@/components/Form/ReviewForm";
 const cx = cn.bind(styles);
 
 type RestaurantInfoViewProps = {
-  data: Restaurant.GetOne.Response & { initialBlogImages: string[] };
+  data: Restaurant.GetOne.Response;
   reviewData: Review.GetList.Response;
   isAuthenticated: boolean;
   currentUserId?: string | null;
@@ -24,8 +24,8 @@ type RestaurantInfoViewProps = {
 export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
   const { data, reviewData, isAuthenticated, currentUserId } = props;
   const { showModal, hideModal, ModalComponent } = useModal();
-  const firstImageUrl = data.initialBlogImages?.[0]; // 첫 번째 이미지 (인덱스 0)
-  const secondImageUrl = data.initialBlogImages?.[1];
+  const firstImageUrl = data.image_url?.[0]; // 첫 번째 이미지 (인덱스 0)
+  const secondImageUrl = data.image_url?.[1];
   const params = useParams<{ id: string }>();
 
   const id = params?.id;

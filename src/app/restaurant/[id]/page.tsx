@@ -73,20 +73,11 @@ export default async function RestaurantInfoPage(
     path: { restaurant_id },
   });
 
-  const initialImages = await fetchImagesForRestaurant(
-    restaurantData.upso_name
-  );
-  const dataForView = {
-    ...restaurantData,
-    // 뷰 컴포넌트에서 사용할 이미지 배열을 추가
-    initialBlogImages: initialImages,
-  };
-
   if ("message" in response || "message" in reviewData)
     throw new Error("데이터 조회 중 실패");
   return (
     <RestaurantInfoView
-      data={dataForView}
+      data={restaurantData}
       reviewData={reviewData.data}
       isAuthenticated={isAuthenticated}
       currentUserId={currentUserId}

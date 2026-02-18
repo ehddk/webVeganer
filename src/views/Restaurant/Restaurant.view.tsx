@@ -13,9 +13,7 @@ import useInfinityScroll from "@/hooks/useIntersectionVisible";
 const cx = cn.bind(styles);
 
 type RestaurantViewProps = {
-  data: Array<
-    Restaurant.GetList.Response[number] & { initialBlogImages: string[] }
-  >;
+  data: Array<Restaurant.GetList.Response[number]>;
 };
 
 function RestaurantView(props: RestaurantViewProps) {
@@ -110,7 +108,7 @@ function RestaurantView(props: RestaurantViewProps) {
       {filteredRestaurants.length > 0 ? (
         <div className={cx("Grid")}>
           {displayedRestaurants.map((restaurant) => {
-            const imageUrl = restaurant.initialBlogImages?.[0];
+            const imageUrl = restaurant.image_url?.[0];
             return (
               <div
                 className={cx("Item")}
