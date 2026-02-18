@@ -15,6 +15,7 @@ interface IRestaurant {
   created_at: Date;
   cgg_code_name: string;
   tel_no: string;
+  image_url?: string;
 }
 
 declare global {
