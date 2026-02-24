@@ -1,6 +1,5 @@
 import { pathToUrl } from "@/utils/path.util";
 import { AxiosInstance } from "axios";
-import path from "path";
 
 const COMMENT_ROUTES = {
   GET_LIST: "/api/comments/:article_id",
