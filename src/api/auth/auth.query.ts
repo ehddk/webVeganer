@@ -1,3 +1,4 @@
+"use server";
 import { handleServerError } from "@/utils/serverError.util";
 import { authService, reviewService } from "../services";
 
