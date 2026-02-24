@@ -321,6 +321,8 @@ export default function Comment(props: CommentProps) {
           <ul className={cx("CommentList")}>
             {commentData.map((a, i) => {
               const isCurrentlyEditing = isEdit === a.id;
+              const isMyComment =
+                isAuthenticated && currentUserId === String(a.user_id);
               return (
                 <li key={i} className={cx("CommentItem")}>
                   <div className={cx("CommentBox")}>
@@ -374,7 +376,7 @@ export default function Comment(props: CommentProps) {
                         onClick={() => toggleMenu(a.id)}
                       />
                     )}
-                    {isAuthenticated && openMenuId === a.id && (
+                    {isMyComment && openMenuId === a.id && (
                       <div className={cx("EditMenu")}>
                         <div
                           className={cx("MenuIcon")}
