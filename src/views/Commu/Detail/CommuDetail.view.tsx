@@ -79,9 +79,11 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
         onClick: async () => {
           const articleId = params?.id;
 
-          const res = await ArticleMutation.deleteArticle({ path: articleId });
+          const res = await ArticleMutation.deleteArticle({
+            path: { id: articleId },
+          });
 
-          if (res.statusCode !== 200) {
+          if (res && "message" in res) {
             showModal({
               type: "default",
               dimmedColor: "transparent",
