@@ -74,6 +74,10 @@ export default function Header({ session }: { session: SessionProps }) {
   const navgationList = React.useMemo(
     () => [
       {
+        label: "홈",
+        href: LINK_ROUTE.MAIN.uri,
+      },
+      {
         label: "비거너 소개",
         href: LINK_ROUTE.BRAND.uri,
       },
