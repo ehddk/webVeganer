@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import styles from "./CommuEdit.view.module.scss";
 import cn from "classnames/bind";
 import { Controller, FormProvider, useForm } from "react-hook-form";
@@ -26,7 +25,7 @@ export default function CommuEditView(props: CommuEditViewProps) {
   const router = useRouter();
   const { showModal, hideModal, ModalComponent } = useModal();
   const params = useParams<{ id: string }>();
-  const { id } = params;
+  const id = params?.id;
   const getDeltaContent = () => {
     const content = data.content;
     if (typeof content === "object" && content !== null && "ops" in content) {
@@ -43,7 +42,10 @@ export default function CommuEditView(props: CommuEditViewProps) {
   const form = useForm<FormType>({
     defaultValues: {
       title: data.title,
-      content: getDeltaContent(),
+      content:
+        typeof data.content === "string"
+          ? data.content
+          : JSON.stringify(data.content),
     },
   });
   const { control } = form;
@@ -75,16 +77,30 @@ export default function CommuEditView(props: CommuEditViewProps) {
             return text.trim();
           };
 
-          const plainContent = removeHtmlTags(formData.content);
+          //const plainContent = removeHtmlTags(formData.content);
+
+          if (!id) {
+            showModal({
+              type: "default",
+              description: "잘못된 요청입니다. 다시 시도해주세요.",
+              dimmedColor: "transparent",
+              positive: {
+                text: "확인",
+                onClick: () => {
+                  hideModal();
+                },
+              },
+            });
+            return;
+          }
 
           const res = await ArticleMutation.put({
             path: { id },
             body: {
               title: formData.title,
-              content: plainContent,
+              content: formData.content,
             },
           });
-          console.log("resss", res);
 
           if (res.statusCode >= 400) {
             showModal({
@@ -138,8 +154,16 @@ export default function CommuEditView(props: CommuEditViewProps) {
             render={({ field }) => (
               <DynamicQuillEditor
                 {...field}
-                // value={field.value}
-                onChange={field.onChange}
+                //}
+                onChange={(content) => {
+                  // Quill은 onChange 시 HTML 문자열을  인자로 줌.
+                  // onChange={field.onChange}로 했을때 첫번째 인자인
+                  // content 문자열을 제대로 처리하지 못하거나 불필요한
+                  // 이벤트 객체 정보가 들어가면서 꼬일 수 있고 렌더링 시 즉시 실행됨.
+                  // 화살표 함수로 감싸면 onChange에 함수를 전달하고,사용자가 에디터에서 입력할때마다
+                  // Quill이 content를 넘겨주고 그 값을 form에 정상 전달함.
+                  field.onChange(content);
+                }}
                 className={cx("ContentEditor")}
               />
             )}

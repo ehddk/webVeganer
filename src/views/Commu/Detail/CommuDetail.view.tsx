@@ -119,8 +119,11 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
           </div>
 
           <div className={cx("ContentWrapper")}>
-            <div className={cx("Content")}>
-              <p style={{ padding: "10px" }}>{getPlainText()}</p>
+            <div
+              className={cx("Content")}
+              dangerouslySetInnerHTML={{ __html: data.content }}
+            >
+              {/* <p style={{ padding: "10px" }}>{getPlainText()}</p> */}
             </div>
             <Divider />
             <div className={cx("BtnGroup")}>
