@@ -102,21 +102,21 @@ export default function HomeView(props: HomeViewProps) {
             </p>
           </div>{" "}
           <div className={cx("RestauantContent")}>
-            {randomResList.map((data: any, index: number) => {
-              const imageUrl = data.initialBlogImages?.[0];
+            {randomResList.map((item: any, index: number) => {
+              const imageUrl = item.image_url?.[0];
               return (
                 <ul key={index}>
                   <li>
                     <Link
                       className={cx("Link")}
-                      href={LINK_ROUTE.RESTAURANT.DETAIL.uri({ id: data.id })}
+                      href={LINK_ROUTE.RESTAURANT.DETAIL.uri({ id: item.id })}
                     >
                       <div className={cx("Thumbnail")}>
-                        <RestaurantImage src={imageUrl} alt={data.upso_name} />
+                        <RestaurantImage src={imageUrl} alt={item.upso_name} />
                       </div>
                       <button className={cx("Name")}>
-                        <p>{data.upso_name} </p>
-                        <p>[{data.cgg_code_name}]</p>
+                        <p>{item.upso_name} </p>
+                        <p>[{item.cgg_code_name}]</p>
                       </button>
                     </Link>
                   </li>
