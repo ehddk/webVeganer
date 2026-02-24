@@ -48,9 +48,7 @@ export default function JoinView() {
             hideModal();
 
             const errorMessage =
-              res.details ||
-              res.message ||
-              "알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+              "이미 존재하는 이메일입니다.다시 시도해주세요.";
 
             // 가입 실패 모달 표시
             showModal({
