@@ -249,18 +249,20 @@ export default function Comment(props: CommentProps) {
         </div>
 
         <div className={cx("CommentWrapper")}>
-          <div className={cx("Content")}>
+          <div className={cx("Content", { isEdit: !!isEdit })}>
             <div className={cx("InputArea")}>
-              {isUser ? (
+              {isUser && isEdit === null ? (
                 <h4>{currentUserName}</h4>
               ) : (
-                <p className={cx("LoginRequired")}>
-                  댓글 작성을 하려면 먼저{" "}
-                  <Link href="/login" style={{ color: "#288CD2" }}>
-                    로그인
-                  </Link>{" "}
-                  해주세요.
-                </p>
+                isEdit === null && (
+                  <p className={cx("LoginRequired")}>
+                    댓글 작성을 하려면 먼저{" "}
+                    <Link href="/login" style={{ color: "#288CD2" }}>
+                      로그인
+                    </Link>{" "}
+                    해주세요.
+                  </p>
+                )
               )}
               {/* 2. 등록 폼 Controller (isUser이고 isEdit이 아닐 때만 렌더링) */}
               {isUser && isEdit === null && (
