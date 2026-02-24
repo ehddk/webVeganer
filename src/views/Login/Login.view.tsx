@@ -18,10 +18,6 @@ import { AuthMutation } from "@/\bapi/mutation";
 import { LINK_ROUTE } from "@/constants/link.constants";
 const cx = cn.bind(styles);
 
-type LoginInFormRef = {
-  form: UseFormReturn<LogInFormType, any, undefined>;
-};
-
 type LogInFormType = Auth.Post.Request["body"];
 
 function LoginView() {
