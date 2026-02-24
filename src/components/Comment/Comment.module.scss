@@ -20,6 +20,10 @@
   border: 1px solid rgb(230, 230, 230);
   border-radius: 6px;
   padding: 15px;
+
+  &.isEdit {
+    display: none;
+  }
 }
 
 .Profile {
