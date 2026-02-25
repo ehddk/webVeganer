@@ -16,6 +16,7 @@ import Button from "@/components/Button/Button";
 import { useModal } from "@/hooks/modal/useModal";
 import { AuthMutation } from "@/\bapi/mutation";
 import { LINK_ROUTE } from "@/constants/link.constants";
+import { createClient } from "@/utils/client";
 const cx = cn.bind(styles);
 
 type LogInFormType = Auth.Post.Request["body"];
@@ -59,6 +60,16 @@ function LoginView() {
     }
   });
 
+  const supabase = createClient();
+  const handleGithubLogin = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+  };
+
   return (
     <FormProvider {...form}>
       <div className={cx("Wrapper")}>
@@ -99,7 +110,7 @@ function LoginView() {
             colorType="primary"
             variant="contained"
             text="       로그인"
-            onClick={goRegister}
+            onClick={handleGithubLogin}
           ></Button>
 
           <Button
