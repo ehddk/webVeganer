@@ -16,11 +16,11 @@ import Button from "@/components/Button/Button";
 import { useModal } from "@/hooks/modal/useModal";
 import { AuthMutation } from "@/\bapi/mutation";
 import { LINK_ROUTE } from "@/constants/link.constants";
-import { createClient } from "@/utils/client";
+import { supabase } from "@/lib/supabaseClient";
+// import { createClient } from "@/utils/client";
 const cx = cn.bind(styles);
 
 type LogInFormType = Auth.Post.Request["body"];
-
 function LoginView() {
   const { showModal, hideModal, ModalComponent } = useModal();
   const router = useRouter();
@@ -60,10 +60,10 @@ function LoginView() {
     }
   });
 
-  const supabase = createClient();
+  // const supabase = createClient();
   const handleGithubLogin = async () => {
     await supabase.auth.signInWithOAuth({
-      provider: "github",
+      provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
@@ -109,7 +109,7 @@ function LoginView() {
           <Button
             colorType="primary"
             variant="contained"
-            text="       로그인"
+            text="로그인"
             onClick={handleGithubLogin}
           ></Button>
 
