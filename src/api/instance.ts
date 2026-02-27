@@ -84,6 +84,7 @@ baseAjax.interceptors.response.use(
   }
 );
 
+//인증 정보가 포함된 Axios 인스턴스를 만들어주는 팩토리 함수
 export const createServerAjax = (accessToken: string) => {
   return axios.create({
     baseURL: API_BASE_URL,
