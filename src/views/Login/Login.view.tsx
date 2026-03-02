@@ -17,7 +17,6 @@ import { useModal } from "@/hooks/modal/useModal";
 import { AuthMutation } from "@/\bapi/mutation";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import { supabase } from "@/lib/supabaseClient";
-// import { createClient } from "@/utils/client";
 const cx = cn.bind(styles);
 
 type LogInFormType = Auth.Post.Request["body"];
