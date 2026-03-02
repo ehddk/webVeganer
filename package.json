@@ -11,6 +11,7 @@
   "dependencies": {
     "@fortawesome/free-regular-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@supabase/ssr": "^0.8.0",
     "@tanstack/react-table": "^8.21.3",
     "dayjs": "^1.11.19",
     "groq": "^5.2.0",
