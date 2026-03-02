@@ -1,6 +1,8 @@
 "use server";
 import { handleServerError } from "@/utils/serverError.util";
 import { authService } from "../services";
+import { createSupabaseServerClient } from "@/lib/supabaseServer";
+import { NextResponse } from "next/server";
 
 export const post = async (req: Auth.Post.Request) => {
   try {
@@ -24,8 +26,12 @@ export const login = async (req: Auth.Login.Request) => {
 
 export const logout = async (req: Auth.Logout.Request) => {
   try {
-    const data = await authService.logout(req);
-    return data;
+    // const data = await authService.logout(req);
+    // return data;
+
+    const supabase = createSupabaseServerClient();
+    await (await supabase).auth.signOut();
+    return NextResponse.json({ ok: true });
   } catch (error) {
     const data = await handleServerError(error);
     return data;
