@@ -13,7 +13,12 @@ import Link from "next/link";
 const cx = cn.bind(styles);
 type CommentProps = {
   commentData: Comment.GetList.Response["items"];
-  isAuthenticated: boolean;
+  session: {
+    user: {
+      id: string;
+      email: string | undefined;
+    } | null;
+  };
   currentUserId?: string | null;
   currentUserName?: string | null;
 };
@@ -21,18 +26,16 @@ type FormType = Comment.Post.Request["body"] | Comment.Put.Request["body"];
 type CommentItemType = Comment.GetList.Response["items"][number];
 
 export default function Comment(props: CommentProps) {
-  const { commentData, isAuthenticated, currentUserId, currentUserName } =
-    props;
+  const { commentData, session, currentUserId, currentUserName } = props;
 
   const params = useParams<{ id: string }>();
 
   const article_id = params?.id ?? "";
-
+  const isMyComment = session && currentUserId === session.user?.id;
   const [openMenuId, setOpenMenuId] = useState<string | null>(null); // 열린 메뉴의 ID를 저장
   const [isEdit, setIsEdit] = useState<string | null>(null);
   const { showModal, hideModal, ModalComponent } = useModal();
   const router = useRouter();
-
   const form = useForm<FormType>({
     defaultValues: {
       content: "",
@@ -142,7 +145,7 @@ export default function Comment(props: CommentProps) {
       negative: undefined,
     });
   };
-  const isUser = isAuthenticated && currentUserId;
+  const isUser = session && currentUserId;
 
   let inputValue = useWatch({
     name: "content",
@@ -155,7 +158,7 @@ export default function Comment(props: CommentProps) {
 
   const handleUpdate = useCallback(
     async (id: string) => {
-      if (!currentUserId || !isAuthenticated) {
+      if (!currentUserId || !session) {
         showModal({
           type: "default",
           dimmedColor: "transparent",
@@ -254,6 +257,7 @@ export default function Comment(props: CommentProps) {
               {isUser && isEdit === null ? (
                 <h4>{currentUserName}</h4>
               ) : (
+                !isMyComment &&
                 isEdit === null && (
                   <p className={cx("LoginRequired")}>
                     댓글 작성을 하려면 먼저{" "}
@@ -283,20 +287,7 @@ export default function Comment(props: CommentProps) {
                   ></Controller>
                 </div>
               )}
-              {/* 3. 버튼 영역: inputValue가 있고 isEdit이 아닐 때만 렌더링 */}
 
-              {/* <Controller
-                name="content"
-                control={control}
-                render={({ field }) => (
-                  <textarea
-                    className={cx("Input")}
-                    placeholder="댓글을 입력하세요."
-                    {...field}
-                    value={field.value}
-                  />
-                )}
-              ></Controller> */}
               {inputValue && isEdit === null && (
                 <div className={cx("ButtonArea")}>
                   <Button
@@ -321,8 +312,7 @@ export default function Comment(props: CommentProps) {
           <ul className={cx("CommentList")}>
             {commentData.map((a, i) => {
               const isCurrentlyEditing = isEdit === a.id;
-              const isMyComment =
-                isAuthenticated && currentUserId === String(a.user_id);
+              const isMyComment = session?.user?.id === a.user_id;
               return (
                 <li key={i} className={cx("CommentItem")}>
                   <div className={cx("CommentBox")}>
@@ -369,7 +359,7 @@ export default function Comment(props: CommentProps) {
                         <p>{a.content}</p>
                       )}
                     </div>
-                    {isUser && (
+                    {isUser && isMyComment && (
                       <img
                         src="/dot.svg"
                         width={20}
