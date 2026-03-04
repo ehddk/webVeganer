@@ -31,7 +31,7 @@ export const logout = async (req: Auth.Logout.Request) => {
 
     const supabase = createSupabaseServerClient();
     await (await supabase).auth.signOut();
-    return NextResponse.json({ ok: true });
+    return { ok: true };
   } catch (error) {
     const data = await handleServerError(error);
     return data;
