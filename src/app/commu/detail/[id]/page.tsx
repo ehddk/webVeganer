@@ -1,5 +1,6 @@
 "use server";
 import { ArticleQuery, AuthQuery, CommentQuery } from "@/\bapi/query";
+import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import CommuDetailView from "@/views/Commu/Detail/CommuDetail.view";
 import { cookies } from "next/headers";
 type CommuDetailPageProps = PageProps<
@@ -47,29 +48,27 @@ export default async function CommuDetailPage(props: CommuDetailPageProps) {
   const limitValue = rawLimit ? parseInt(String(rawLimit), 10) : 20;
 
   //로그인 확인
-  const cookieStore = cookies();
-  const isAuthenticated = (await cookieStore).has("accessToken");
-  const accessToken = (await cookieStore).get("accessToken")?.value;
-
+  const supabase = createSupabaseServerClient();
+  const { data } = await (await supabase).auth.getUser();
+  const session = {
+    user: data.user
+      ? {
+          id: data.user.id,
+          email: data.user.email,
+        }
+      : null,
+  };
   let currentUserId: string | null = null;
   let currentUserName: string | null = null;
 
-  if (accessToken) {
-    // 추출된 accessToken 변수를 디코딩 함수에 전달합니다.
-    currentUserId = getUserIdFromToken(accessToken);
+  if (data.user) {
+    currentUserId = data.user.id; //  Supabase user id (uuid)
+    currentUserName = data.user.email ?? null;
   }
 
-  if (currentUserId) {
-    const userData = await AuthQuery.getOne({
-      path: { id: currentUserId },
-    });
-
-    if (!("message" in userData)) {
-      // userData가 { name: '홍길동', ... } 형태라고 가정
-      currentUserName = userData.name;
-    } else {
-      console.error("사용자 정보 조회 실패:", userData.message);
-    }
+  if (data.user) {
+    currentUserId = data.user.id;
+    currentUserName = data.user.user_metadata?.name ?? data.user.email ?? null;
   }
 
   const [response, commentData] = await Promise.all([
@@ -88,7 +87,7 @@ export default async function CommuDetailPage(props: CommuDetailPageProps) {
   return (
     <CommuDetailView
       data={response}
-      isAuthenticated={isAuthenticated}
+      session={session}
       commentData={commentData.data}
       currentUserId={currentUserId}
       currentUserName={currentUserName}
