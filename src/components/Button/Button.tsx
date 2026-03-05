@@ -17,13 +17,12 @@ export default function Button(props: ButtonProps) {
   const {
     text,
     onClick,
-    backgroundColor,
+
     size,
     colorType = "primary",
     variant,
     className,
   } = props;
-  let router = useRouter();
 
   return (
     <button
