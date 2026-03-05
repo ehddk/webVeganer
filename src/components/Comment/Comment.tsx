@@ -142,7 +142,12 @@ export default function Comment(props: CommentProps) {
           });
         },
       },
-      negative: undefined,
+      negative: {
+        text: "취소",
+        onClick: () => {
+          hideModal();
+        },
+      },
     });
   };
   const isUser = session && currentUserId;
@@ -375,12 +380,11 @@ export default function Comment(props: CommentProps) {
                           <img src="/edit.svg" width={15} />
                           <span>수정</span>
                         </div>
-                        <div className={cx("MenuIcon")}>
-                          <img
-                            src="/trash.svg"
-                            width={15}
-                            onClick={() => goDelete(a.id)}
-                          />
+                        <div
+                          className={cx("MenuIcon")}
+                          onClick={() => goDelete(a.id)}
+                        >
+                          <img src="/trash.svg" width={15} />
                           <span>삭제</span>
                         </div>
                       </div>
