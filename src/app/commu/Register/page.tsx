@@ -13,7 +13,7 @@ export default async function CommuRegisterPage() {
       ? {
           id: user.id,
           email: user.email,
-          name: user.user_metadata.name ?? "익명",
+          name: user.user_metadata.name,
         }
       : null,
   };
