@@ -15,52 +15,22 @@ const cx = cn.bind(styles);
 type CommuDetailViewProps = {
   data: Article.GetOne.Response;
   commentData: Comment.GetList.Response;
-  isAuthenticated: boolean;
+  session: {
+    user: {
+      id: string;
+      email: string | undefined;
+    } | null;
+  };
   currentUserId?: string | null;
   currentUserName?: string | null;
 };
 export default function CommuDetailView(props: CommuDetailViewProps) {
-  const { data, commentData, isAuthenticated, currentUserId, currentUserName } =
-    props;
+  const { data, commentData, session, currentUserId, currentUserName } = props;
 
   const router = useRouter();
   const params = useParams<{ id: string }>();
 
   const { showModal, hideModal, ModalComponent } = useModal();
-  // const db = (await connectDB).db("vegan");
-  // let result = await db
-  //   .collection("post")
-  //   .findOne({ _id: new ObjectId(data.id) });
-  // //const filteredList = commuData.category.filter(item => item.category === selectedMenu || selectedMenu === "");
-  // console.log(result);
-
-  const getPlainText = () => {
-    const content = data.content;
-
-    // 이미 객체인 경우
-    // if (typeof content === "object" && content !== null && "ops" in content) {
-    //   return content.ops
-    //     .map((op: any) => op.insert)
-    //     .join("")
-    //     .trim();
-    // }
-
-    // 문자열인 경우 파싱
-    if (typeof content === "string") {
-      try {
-        const deltaContent = JSON.parse(content);
-        return deltaContent.ops
-          .map((op: any) => op.insert)
-          .join("")
-          .trim();
-      } catch {
-        // Delta 형식이 아닌 경우 일반 텍스트로 처리
-        return content;
-      }
-    }
-
-    return { ops: [] };
-  };
 
   const handleDelete = () => {
     showModal({
@@ -157,7 +127,7 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
 
             <Comment
               commentData={commentData.items}
-              isAuthenticated={!!isAuthenticated}
+              session={session}
               currentUserId={currentUserId}
               currentUserName={currentUserName}
             />

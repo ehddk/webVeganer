@@ -18,11 +18,16 @@ const cx = cn.bind(styles);
 type RestaurantInfoViewProps = {
   data: Restaurant.GetOne.Response;
   reviewData: Review.GetList.Response;
-  isAuthenticated: boolean;
+  session: {
+    user: {
+      id: string;
+      email: string | undefined;
+    } | null;
+  };
   currentUserId?: string | null;
 };
 export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
-  const { data, reviewData, isAuthenticated, currentUserId } = props;
+  const { data, reviewData, session, currentUserId } = props;
   const { showModal, hideModal, ModalComponent } = useModal();
   const firstImageUrl = data.image_url?.[0]; // 첫 번째 이미지 (인덱스 0)
   const secondImageUrl = data.image_url?.[1];
@@ -103,7 +108,7 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
         <div className={cx("Item")}>
           <h2>{`리뷰 및 평가 (${reviewData.total})`}</h2>
           <ReviewForm
-            isAuthenticated={!!isAuthenticated}
+            session={session}
             reviewData={reviewData}
             currentUserId={currentUserId}
           />

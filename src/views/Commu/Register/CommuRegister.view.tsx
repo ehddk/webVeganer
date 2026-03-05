@@ -16,7 +16,17 @@ type FormType = {
   content: any;
   file: FileList | null;
 };
-export default function CommuWRegisterView() {
+type CommuRegisterViewProps = {
+  session: {
+    user: {
+      id: string;
+      email: string | undefined;
+      name: string | null;
+    } | null;
+  };
+};
+export default function CommuWRegisterView(props: CommuRegisterViewProps) {
+  const { session } = props;
   const router = useRouter();
   const { showModal, hideModal, ModalComponent } = useModal();
   const form = useForm<FormType>({
@@ -26,10 +36,6 @@ export default function CommuWRegisterView() {
       file: null,
     },
   });
-
-  const handleCancel = () => {
-    router.push("/Commu");
-  };
 
   const { control } = form;
 
@@ -70,8 +76,8 @@ export default function CommuWRegisterView() {
 
           const res = await ArticleMutation.post({
             body: {
-              author: "익명",
-              author_id: "12",
+              author: session.user?.name || "익명",
+              author_id: session.user?.id || "",
               title: formData.title,
               content: text,
             },

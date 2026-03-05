@@ -1,4 +1,5 @@
 import { RestaurantQuery, ReviewQuery } from "@/\bapi/query";
+import { createSupabaseServerClient } from "@/lib/supabaseServer";
 
 import { fetchImagesForRestaurant } from "@/utils/imageCrawl";
 import RestaurantInfoView from "@/views/Restaurant/Detail/RestauranDetail.view";
@@ -52,16 +53,23 @@ export default async function RestaurantInfoPage(
   const limitValue = rawLimit ? parseInt(String(rawLimit), 10) : 20;
 
   //로그인 확인
-  const cookieStore = cookies();
-  const isAuthenticated = (await cookieStore).has("accessToken");
-  const accessToken = (await cookieStore).get("accessToken")?.value;
-
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase.auth.getUser();
+  const session = {
+    user: data.user
+      ? {
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.user_metadata.name,
+        }
+      : null,
+  };
   let currentUserId: string | null = null;
 
-  if (accessToken) {
-    // 추출된 accessToken 변수를 디코딩 함수에 전달
-    currentUserId = getUserIdFromToken(accessToken);
-  }
+  // if (accessToken) {
+  //   // 추출된 accessToken 변수를 디코딩 함수에 전달
+  //   currentUserId = getUserIdFromToken(accessToken);
+  // }
 
   const response = await RestaurantQuery.getOne({ path: { id } });
   const restaurantData = response as Restaurant.GetOne.Response;
@@ -79,7 +87,7 @@ export default async function RestaurantInfoPage(
     <RestaurantInfoView
       data={restaurantData}
       reviewData={reviewData.data}
-      isAuthenticated={isAuthenticated}
+      session={session}
       currentUserId={currentUserId}
     />
   );

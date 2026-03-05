@@ -62,11 +62,6 @@ export default async function CommuDetailPage(props: CommuDetailPageProps) {
   let currentUserName: string | null = null;
 
   if (data.user) {
-    currentUserId = data.user.id; //  Supabase user id (uuid)
-    currentUserName = data.user.email ?? null;
-  }
-
-  if (data.user) {
     currentUserId = data.user.id;
     currentUserName = data.user.user_metadata?.name ?? data.user.email ?? null;
   }
