@@ -146,6 +146,16 @@
     width: 50px;
   }
 }
+.PreivewWrapper {
+  gap: 5px;
+  padding: 10px;
+
+  display: flex;
+
+  .PreviewItem {
+    position: relative;
+  }
+}
 .ImageInput {
   display: none;
 }
@@ -155,4 +165,14 @@
   background-color: transparent;
   cursor: pointer;
   padding: 5px;
+}
+
+.DeleteBtn {
+  border: none;
+  position: absolute;
+  right: 5px;
+  opacity: 40%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }

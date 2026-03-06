@@ -1,28 +1,34 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import Button from "@/components/Button/Button";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ReviewMutation } from "@/\bapi/mutation";
 import { useModal } from "@/hooks/modal/useModal";
-
+import { FaImage } from "react-icons/fa";
 import styles from "./ReviewForm.module.scss";
 import cn from "classnames/bind";
 import dayjs from "dayjs";
+import Image from "next/image";
 const cx = cn.bind(styles);
 
 type FormType = Review.Post.Request["body"] | Review.Put.Request["body"];
 type ReviewItemType = Review.GetList.Response["items"][number];
 
 type ReviewFormProps = {
-  isAuthenticated: boolean;
   reviewData: Review.GetList.Response;
   currentUserId?: string | null;
+  session: {
+    user: {
+      id: string;
+      email: string | undefined;
+    } | null;
+  };
 };
 
 export default function ReviewForm(props: ReviewFormProps) {
-  const { isAuthenticated, reviewData, currentUserId } = props;
+  const { reviewData, currentUserId, session } = props;
 
   const { showModal, hideModal, ModalComponent } = useModal();
   const router = useRouter();
@@ -30,6 +36,7 @@ export default function ReviewForm(props: ReviewFormProps) {
 
   const [openMenuId, setOpenMenuId] = useState<string | null>(null); // 열린 메뉴의 ID를 저장
   const [isEdit, setIsEdit] = useState<string | null>(null);
+  const imageRef = useRef<HTMLInputElement | null>(null);
   const form = useForm<FormType>({
     defaultValues: {
       content: "",
@@ -183,7 +190,6 @@ export default function ReviewForm(props: ReviewFormProps) {
               id: String(id),
             },
           });
-          console.log("resss", res);
           const isErrorObject =
             typeof res === "object" && res !== null && "statusCode" in res;
 
@@ -224,7 +230,7 @@ export default function ReviewForm(props: ReviewFormProps) {
 
   const handleUpdate = useCallback(
     async (id: string) => {
-      if (!currentUserId || !isAuthenticated) {
+      if (!currentUserId || !session) {
         showModal({
           type: "default",
           dimmedColor: "transparent",
@@ -331,6 +337,39 @@ export default function ReviewForm(props: ReviewFormProps) {
       router,
     ]
   );
+  // 미리보기 데이터
+  const [previewFile, setPreviewFile] = useState<string[]>([]);
+  const handleImageClick = () => {
+    imageRef.current?.click();
+  };
+
+  const uploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const imageFile = event.currentTarget.files;
+    if (!imageFile || imageFile.length === 0) return;
+
+    setPreviewFile([]); //새 데이터 들어오기 전에 명시적으로 비운다. 굳이 이 코드는 없어도 이전새 파일로 교체되긴 함.
+    const imageUrls: string[] = [];
+
+    for (let i = 0; i < imageFile.length; i++) {
+      const file = imageFile[i];
+      const reader = new FileReader();
+      //file으ㄹ base64로 전환
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        if (reader.result) {
+          imageUrls.push(reader.result as string);
+          if (imageUrls.length === imageFile.length) {
+            setPreviewFile([...imageUrls]);
+          }
+        }
+      };
+    }
+  };
+
+  const handleDelete = (index: number) => {
+    setPreviewFile((prev) => prev.filter((_, i) => i !== index));
+  };
 
   return (
     <FormProvider {...form}>
@@ -340,7 +379,7 @@ export default function ReviewForm(props: ReviewFormProps) {
             const isCurrentlyEditing = isEdit === item.id;
 
             const isAuthor =
-              isAuthenticated &&
+              session &&
               currentUserId &&
               String(item.user_id) === currentUserId;
 
@@ -416,7 +455,7 @@ export default function ReviewForm(props: ReviewFormProps) {
                         />
                       )}
 
-                      {isAuthenticated && openMenuId === item.id && (
+                      {session && openMenuId === item.id && (
                         <div className={cx("EditMenu")}>
                           <div className={cx("MenuIcon")}>
                             <img
@@ -447,7 +486,7 @@ export default function ReviewForm(props: ReviewFormProps) {
           <p>등록된 후기가 없습니다. 첫 후기를 남겨주세요!</p>
         )}
       </div>
-      {isAuthenticated && isEdit === null ? (
+      {session && isEdit === null ? (
         <div className={cx("WriteReviewForm")}>
           {" "}
           {/* SCSS에서 정의된 클래스 사용 */}
@@ -479,26 +518,65 @@ export default function ReviewForm(props: ReviewFormProps) {
             control={control}
             render={({ field }) => {
               return (
-                <textarea
-                  className={cx("ReviewText")}
-                  {...field}
-                  value={field.value}
-                  placeholder="내용을 입력해주세요"
-                ></textarea>
+                <div className={cx("InputWrapper")}>
+                  <textarea
+                    className={cx("ReviewText")}
+                    {...field}
+                    value={field.value}
+                    placeholder="내용을 입력해주세요"
+                  ></textarea>
+                  {previewFile.length > 0 && (
+                    <div className={cx("PreivewWrapper")}>
+                      {previewFile.map((src, index) => (
+                        <div key={index} className={cx("PreviewItem")}>
+                          <Image
+                            src={src}
+                            alt={`preview-${index}`}
+                            width={100}
+                            height={100}
+                          ></Image>{" "}
+                          <button
+                            className={cx("DeleteBtn")}
+                            onClick={() => handleDelete(index)}
+                          >
+                            x
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className={cx("BtnWrapper")}>
+                    <input
+                      className={cx("ImageInput")}
+                      type="file"
+                      name="image"
+                      multiple
+                      ref={imageRef}
+                      onChange={uploadImage}
+                    />
+                    <button
+                      onClick={handleImageClick}
+                      className={cx("ImageBtn")}
+                    >
+                      <FaImage />
+                    </button>
+
+                    <Button
+                      colorType="primary"
+                      variant="outlined"
+                      text="등록"
+                      onClick={goRegister}
+                      className={cx("Btn")}
+                    ></Button>
+                  </div>
+                </div>
               );
             }}
           ></Controller>
-          <Button
-            size="small"
-            colorType="primary"
-            variant="contained"
-            text="등록"
-            onClick={goRegister}
-            className={cx("Btn")}
-          ></Button>
         </div>
       ) : (
-        !isAuthenticated && (
+        !session && (
           <p className={cx("LoginRequired")}>
             후기 작성을 하려면 먼저{" "}
             <Link href="/login" style={{ color: "#288CD2" }}>
