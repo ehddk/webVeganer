@@ -50,7 +50,7 @@
   display: flex;
 
   gap: 10px;
-
+  overflow: hidden;
   .Profile {
     border-radius: 20px;
     border: 1px solid black;
@@ -67,7 +67,8 @@
     flex-direction: column;
     gap: 6px;
     position: relative;
-    flex-grow: 1;
+
+    min-width: 0;
   }
 }
 
@@ -175,4 +176,28 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
+}
+
+.CommentArea {
+  background-color: #ffffff;
+}
+
+.Rating {
+  display: flex;
+  gap: 10px;
+}
+
+.ImageWrapper {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  min-width: 0; // ← 추가
+  max-width: 100%;
+}
+
+.ReviewImage {
+  flex: 0 0 150px; // ← 고정 너비
+  height: 150px;
+  object-fit: cover;
 }
