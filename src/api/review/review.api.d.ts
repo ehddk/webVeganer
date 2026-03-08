@@ -6,6 +6,7 @@ type IReview = {
   rating: number;
   createdAt: string;
   updatedAt?: string;
+  image?: string[];
 };
 
 interface PaginatedReview {
@@ -29,12 +30,17 @@ declare global {
   type createReviewRequestBody = {
     content: string;
     rating: number;
+    image?: string[];
   };
   type createReviewResponse = IReview;
   /*수정 */
   type updateReviewRequestPath = { restaurant_id: string; id: string };
 
-  type updateReviewRequestBody = { content: string; rating?: number };
+  type updateReviewRequestBody = {
+    content: string;
+    rating?: number;
+    image?: string[];
+  };
   type updateReviewResponse = IReview;
 
   /* 삭제 */
