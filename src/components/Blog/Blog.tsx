@@ -46,7 +46,6 @@ export default function Blog(props: BlogProps) {
         }
 
         const data = await res.json();
-        console.log("받아온 데이터:", data);
 
         // 데이터 구조 확인 - 네이버 API는 items 배열로 반환
         if (data.items && Array.isArray(data.items)) {
