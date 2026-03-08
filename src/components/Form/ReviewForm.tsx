@@ -11,6 +11,7 @@ import styles from "./ReviewForm.module.scss";
 import cn from "classnames/bind";
 import dayjs from "dayjs";
 import Image from "next/image";
+import { supabase } from "@/lib/supabaseClient";
 const cx = cn.bind(styles);
 
 type FormType = Review.Post.Request["body"] | Review.Put.Request["body"];
@@ -96,10 +97,25 @@ export default function ReviewForm(props: ReviewFormProps) {
       });
       return;
     }
+    const imageUrls: string[] = [];
+    for (const file of imageFiles) {
+      const extenstion = file.name.split(".").pop();
+      const fileName = `${Date.now()}_${extenstion}`;
+      const { error } = await supabase.storage //storage.upload()가 반환하는 객체가 {data,error} 형태임.error만 구조분해한이유 :업로드 후 url은 getPublicUrl()로 따로 가져오는 게 더 편해서 .
+        .from("review-images")
+        .upload(fileName, file);
 
+      if (!error) {
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("review-images").getPublicUrl(fileName);
+        imageUrls.push(publicUrl);
+      }
+    }
     const body: Review.Post.Request["body"] = {
       content: formData.content,
       rating: formData.rating ?? 0,
+      image: imageUrls,
     };
 
     const res = await ReviewMutation.post({
@@ -108,7 +124,6 @@ export default function ReviewForm(props: ReviewFormProps) {
         restaurant_id,
       },
     });
-
     if (res && typeof res === "object" && "statusCode" in res) {
       showModal({
         type: "default",
@@ -124,6 +139,7 @@ export default function ReviewForm(props: ReviewFormProps) {
     // 성공 시 리뷰 목록 새로고침
     setValue("content", "");
     setValue("rating", 0);
+    setValue("image", []);
     setIsClicked([false, false, false, false, false]);
     router.refresh();
   });
@@ -342,12 +358,15 @@ export default function ReviewForm(props: ReviewFormProps) {
   const handleImageClick = () => {
     imageRef.current?.click();
   };
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   const uploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const imageFile = event.currentTarget.files;
     if (!imageFile || imageFile.length === 0) return;
+    setImageFiles(Array.from(imageFile)); // ← 추가
 
-    setPreviewFile([]); //새 데이터 들어오기 전에 명시적으로 비운다. 굳이 이 코드는 없어도 이전새 파일로 교체되긴 함.
+    //setPreviewFile([]); //새 데이터 들어오기 전에 명시적으로 비운다. 굳이 이 코드는 없어도 이전새 파일로 교체되긴 함.
+
     const imageUrls: string[] = [];
 
     for (let i = 0; i < imageFile.length; i++) {
@@ -392,14 +411,32 @@ export default function ReviewForm(props: ReviewFormProps) {
                       <div className={cx("ProfileContent")}>
                         <div>
                           <p className={cx("User")}>{item.user}</p>
-                          {renderStars(item.rating)}
+                          <div className={cx("Rating")}>
+                            {renderStars(item.rating)}
 
-                          <p className={cx("Date")}>
-                            {dayjs(item.createdAt.slice(0, 10)).format(
-                              "YYYY.MM.DD"
-                            )}
-                          </p>
+                            <p className={cx("Date")}>
+                              {dayjs(item.createdAt.slice(0, 10)).format(
+                                "YYYY.MM.DD"
+                              )}
+                            </p>
+                          </div>
                         </div>
+                        {item.image && (
+                          <div className={cx("ImageWrapper")}>
+                            {item.image.map((src, index) => (
+                              <div key={index}>
+                                <Image
+                                  className={cx("ReviewImage")}
+                                  src={src}
+                                  alt="review image"
+                                  objectFit="contain"
+                                  width={150}
+                                  height={150}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
 
                         <div className={cx("ReviewContent")}>
                           {isCurrentlyEditing ? (
@@ -513,67 +550,65 @@ export default function ReviewForm(props: ReviewFormProps) {
               );
             }}
           ></Controller>
-          <Controller
-            name="content"
-            control={control}
-            render={({ field }) => {
-              return (
-                <div className={cx("InputWrapper")}>
-                  <textarea
-                    className={cx("ReviewText")}
-                    {...field}
-                    value={field.value}
-                    placeholder="내용을 입력해주세요"
-                  ></textarea>
-                  {previewFile.length > 0 && (
-                    <div className={cx("PreivewWrapper")}>
-                      {previewFile.map((src, index) => (
-                        <div key={index} className={cx("PreviewItem")}>
-                          <Image
-                            src={src}
-                            alt={`preview-${index}`}
-                            width={100}
-                            height={100}
-                          ></Image>{" "}
-                          <button
-                            className={cx("DeleteBtn")}
-                            onClick={() => handleDelete(index)}
-                          >
-                            x
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className={cx("BtnWrapper")}>
-                    <input
-                      className={cx("ImageInput")}
-                      type="file"
-                      name="image"
-                      multiple
-                      ref={imageRef}
-                      onChange={uploadImage}
-                    />
-                    <button
-                      onClick={handleImageClick}
-                      className={cx("ImageBtn")}
-                    >
-                      <FaImage />
-                    </button>
-
-                    <Button
-                      colorType="primary"
-                      variant="outlined"
-                      text="등록"
-                      onClick={goRegister}
-                      className={cx("Btn")}
-                    ></Button>
+          <div className={cx("CommentArea")}>
+            <Controller
+              name="content"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <div className={cx("InputWrapper")}>
+                    <textarea
+                      className={cx("ReviewText")}
+                      {...field}
+                      value={field.value}
+                      placeholder="내용을 입력해주세요"
+                    ></textarea>
                   </div>
-                </div>
-              );
-            }}
-          ></Controller>
+                );
+              }}
+            ></Controller>
+            {previewFile.length > 0 && (
+              <div className={cx("PreivewWrapper")}>
+                {previewFile.map((src, index) => (
+                  <div key={index} className={cx("PreviewItem")}>
+                    <Image
+                      src={src}
+                      alt={`preview-${index}`}
+                      width={100}
+                      height={100}
+                    ></Image>{" "}
+                    <button
+                      className={cx("DeleteBtn")}
+                      onClick={() => handleDelete(index)}
+                    >
+                      x
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className={cx("BtnWrapper")}>
+              <input
+                className={cx("ImageInput")}
+                type="file"
+                name="image"
+                multiple
+                ref={imageRef}
+                onChange={uploadImage}
+              />
+              <button onClick={handleImageClick} className={cx("ImageBtn")}>
+                <FaImage />
+              </button>
+
+              <Button
+                colorType="primary"
+                variant="outlined"
+                text="등록"
+                onClick={goRegister}
+                className={cx("Btn")}
+              ></Button>
+            </div>
+          </div>
         </div>
       ) : (
         !session && (
