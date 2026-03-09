@@ -30,6 +30,7 @@ export default function HomeView(props: HomeViewProps) {
   const [customQuestion, setCustomQuestion] = useState<string>(""); // 추가
 
   function randomItem(arr: any, num: any) {
+    if (!Array.isArray(arr)) return [];
     const mix = arr.sort(() => 0.5 - Math.random());
     return mix.slice(0, num);
   }
