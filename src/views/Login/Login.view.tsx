@@ -30,7 +30,7 @@ function LoginView() {
   });
   const { control } = form;
 
-  const goRegister = form.handleSubmit(async (formData) => {
+  const goLogin = form.handleSubmit(async (formData) => {
     const body = {
       email: formData.email,
       password: formData.password,
@@ -52,7 +52,6 @@ function LoginView() {
     } else {
       hideModal();
       router.push(LINK_ROUTE.MAIN.appDir);
-      router.refresh();
     }
   });
 
@@ -106,6 +105,12 @@ function LoginView() {
             colorType="primary"
             variant="contained"
             text="로그인"
+            onClick={goLogin}
+          ></Button>
+          <Button
+            colorType="primary"
+            variant="contained"
+            text="소셜 로그인"
             onClick={handleGithubLogin}
           ></Button>
 
