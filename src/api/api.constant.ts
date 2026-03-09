@@ -8,5 +8,5 @@ export const API_MOCK_URL = "https://67a4467431d0d3a6b785c768.mockapi.io/";
 export const API_BASE_URL = (() => {
   if (isMock) return API_MOCK_URL;
   if (isLocal) return localURL;
-  return isDev ? "http://localhost:4000" : "http://localhost:4000";
+  return isDev ? "http://localhost:4000" : "https://veganerserver.onrender.com";
 })();
