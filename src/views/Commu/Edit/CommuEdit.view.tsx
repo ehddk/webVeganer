@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 
 import { useModal } from "@/hooks/modal/useModal";
 import Divider from "@/components/Divider/Divider";
-import { ArticleMutation } from "@/\bapi/mutation";
+import { ArticleMutation } from "@/api/mutation";
 
 const cx = cn.bind(styles);
 

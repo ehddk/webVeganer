@@ -6,7 +6,7 @@ import styles from "./Join.view.module.scss";
 import cn from "classnames/bind";
 import Button from "@/components/Button/Button";
 import { useModal } from "@/hooks/modal/useModal";
-import { AuthMutation } from "@/\bapi/mutation";
+import { AuthMutation } from "@/api/mutation";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import { useRouter } from "next/navigation";
 const cx = cn.bind(styles);

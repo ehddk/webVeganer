@@ -4,7 +4,7 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 import Button from "@/components/Button/Button";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ReviewMutation } from "@/\bapi/mutation";
+import { ReviewMutation } from "@/api/mutation";
 import { useModal } from "@/hooks/modal/useModal";
 import { FaImage } from "react-icons/fa";
 import styles from "./ReviewForm.module.scss";

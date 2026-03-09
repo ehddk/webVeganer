@@ -7,7 +7,7 @@ import Button from "@/components/Button/Button";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import { useParams, useRouter } from "next/navigation";
 import { useModal } from "@/hooks/modal/useModal";
-import { ArticleMutation } from "@/\bapi/mutation";
+import { ArticleMutation } from "@/api/mutation";
 import Comment from "@/components/Comment/Comment";
 
 const cx = cn.bind(styles);

@@ -1,5 +1,5 @@
 "use server";
-import { ArticleQuery, AuthQuery, CommentQuery } from "@/\bapi/query";
+import { ArticleQuery, AuthQuery, CommentQuery } from "@/api/query";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import CommuDetailView from "@/views/Commu/Detail/CommuDetail.view";
 import { cookies } from "next/headers";

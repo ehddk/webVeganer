@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import Button from "../Button/Button";
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import dayjs from "dayjs";
-import { CommentMutation } from "@/\bapi/mutation";
+import { CommentMutation } from "@/api/mutation";
 import { useParams, useRouter } from "next/navigation";
 import { useModal } from "@/hooks/modal/useModal";
 import Link from "next/link";

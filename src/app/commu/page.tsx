@@ -1,5 +1,5 @@
 "use server";
-import { ArticleQuery } from "@/\bapi/query";
+import { ArticleQuery } from "@/api/query";
 import CommuView from "@/views/Commu/Default/Commu.view";
 
 type CommuPageProps = PageProps<"", Article.GetList.Params>;

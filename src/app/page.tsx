@@ -1,4 +1,4 @@
-import { RestaurantQuery } from "@/\bapi/query";
+import { RestaurantQuery } from "@/api/query";
 import { fetchImagesForRestaurant } from "@/utils/imageCrawl";
 import HomeView from "@/views/Home/Home.view";
 

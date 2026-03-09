@@ -11,7 +11,7 @@ import {
 import React from "react";
 import Button from "@/components/Button/Button";
 import { useModal } from "@/hooks/modal/useModal";
-import { AuthMutation } from "@/\bapi/mutation";
+import { AuthMutation } from "@/api/mutation";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import { supabase } from "@/lib/supabaseClient";
 const cx = cn.bind(styles);

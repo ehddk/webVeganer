@@ -4,7 +4,7 @@ import styles from "./CommuRegister.view.module.scss";
 import cn from "classnames/bind";
 import { Controller, Form, useForm } from "react-hook-form";
 import { useModal } from "@/hooks/modal/useModal";
-import { ArticleMutation } from "@/\bapi/mutation";
+import { ArticleMutation } from "@/api/mutation";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import { LINK_ROUTE } from "@/constants/link.constants";

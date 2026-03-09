@@ -1,4 +1,4 @@
-import { RestaurantQuery, ReviewQuery } from "@/\bapi/query";
+import { RestaurantQuery, ReviewQuery } from "@/api/query";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 
 import { fetchImagesForRestaurant } from "@/utils/imageCrawl";

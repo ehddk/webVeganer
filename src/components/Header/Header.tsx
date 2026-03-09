@@ -9,7 +9,7 @@ import styles from "./Header.module.scss";
 import cn from "classnames/bind";
 import Link from "next/link";
 import Dropdown from "../Dropdown/Dropdown";
-import { AuthMutation } from "@/\bapi/mutation";
+import { AuthMutation } from "@/api/mutation";
 
 import React from "react";
 import { LINK_ROUTE } from "@/constants/link.constants";

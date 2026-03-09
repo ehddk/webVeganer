@@ -1,5 +1,5 @@
 "use server";
-import { ArticleQuery } from "@/\bapi/query";
+import { ArticleQuery } from "@/api/query";
 import CommuEditView from "@/views/Commu/Edit/CommuEdit.view";
 
 type CommuEditPageProps = PageProps<{
