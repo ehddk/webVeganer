@@ -37,9 +37,10 @@ export default function HomeView(props: HomeViewProps) {
 
   const randomResList = React.useMemo(() => {
     return randomItem(data, showItems);
-  }, [showItems]); //  showItems가 변경될 때만 재계산
+  }, [data, showItems]); //  showItems가 변경될 때만 재계산
 
   const cafeList = React.useMemo(() => {
+    if (!Array.isArray(data)) return [];
     return data.filter((item) => item.category === "과자점");
   }, [data]);
 
