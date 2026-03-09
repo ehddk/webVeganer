@@ -98,11 +98,9 @@
     gap: 20px;
     overflow: visible;
 
-    :global {
-      .swiper-pagination {
-        bottom: -3px !important;
-        position: relative;
-      }
+    :global(.swiper-pagination) {
+      bottom: -3px !important;
+      position: relative;
     }
     @media screen and (max-width: 1200px) {
       margin: 0;
