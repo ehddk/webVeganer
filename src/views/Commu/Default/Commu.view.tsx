@@ -55,7 +55,7 @@ export default function CommuView(props: CommuViewProps) {
   });
 
   const goRegister = () => {
-    router.push("/commu/register");
+    router.push(LINK_ROUTE.ARTICLE.REGISTER.uri);
   };
   const goDetail = (id: string) => {
     router.push(LINK_ROUTE.ARTICLE.DETAIL.uri({ id }));

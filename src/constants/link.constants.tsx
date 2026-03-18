@@ -36,7 +36,7 @@ export const LINK_ROUTE = {
       [ROUTE_KEY.URI]: (params?: WithIdParams) => `/commu/edit/${params?.id}`,
     },
     REGISTER: {
-      [ROUTE_KEY.APP_DIR]: "/commu/Register",
+      [ROUTE_KEY.APP_DIR]: "/commu/register",
       [ROUTE_KEY.URI]: "/commu/register",
     },
   },
@@ -55,9 +55,5 @@ export const LINK_ROUTE = {
       [ROUTE_KEY.APP_DIR]: "/restaurant/Register",
       [ROUTE_KEY.URI]: "/restaurant/register",
     },
-  },
-  EVENT: {
-    [ROUTE_KEY.APP_DIR]: "/event/tab1",
-    [ROUTE_KEY.URI]: "/event/tab1",
   },
 };
