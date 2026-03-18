@@ -1,5 +1,3 @@
-"use server";
-
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import CommuRegisterView from "@/views/Commu/Register/CommuRegister.view";
 
