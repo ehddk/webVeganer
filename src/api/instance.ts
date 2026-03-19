@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "qs";
 
 import { API_BASE_URL } from "./api.constant";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 
 export const baseAjax = axios.create({
   baseURL: API_BASE_URL,
@@ -59,9 +59,10 @@ export const baseAjax = axios.create({
 //   }
 // );
 baseAjax.interceptors.request.use(
-  function (config) {
+  async function (config) {
     // 브라우저 환경에서만 실행
     if (typeof window !== "undefined") {
+      const Cookies = (await import("js-cookie")).default; // ← 동적 import로 변경
       const token = Cookies.get("accessToken");
 
       if (token) {
@@ -79,8 +80,8 @@ baseAjax.interceptors.response.use(
     return config;
   },
   async function (err) {
-    // console.log(JSON.stringify(err.response.data, null, 2));
-    throw new Error(err?.response?.data?.detail);
+    console.log("인터셉터에서 에러 감지!");
+    return Promise.reject(err);
   }
 );
 
