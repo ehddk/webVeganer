@@ -113,15 +113,17 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
                 variant="outlined"
                 onClick={() => router.push(LINK_ROUTE.ARTICLE.DEFAULT.uri)}
               />
-              <Button
-                size="small"
-                text="수정"
-                colorType="primary"
-                variant="contained"
-                onClick={() =>
-                  router.push(LINK_ROUTE.ARTICLE.EDIT.uri({ id: data.id }))
-                }
-              />
+              {session.user?.id === data.author_id && (
+                <Button
+                  size="small"
+                  text="수정"
+                  colorType="primary"
+                  variant="contained"
+                  onClick={() =>
+                    router.push(LINK_ROUTE.ARTICLE.EDIT.uri({ id: data.id }))
+                  }
+                />
+              )}
             </div>
             <Divider />
 
