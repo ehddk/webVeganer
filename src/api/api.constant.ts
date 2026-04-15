@@ -1,7 +1,7 @@
 const isMock = false;
 const isDev =
   process.env.NEXT_PUBLIC_ENVIRONMENT === "development" ? true : false;
-const isLocal = true;
+const isLocal = isDev;
 const localURL = "http://localhost:4000";
 
 export const API_MOCK_URL = "https://67a4467431d0d3a6b785c768.mockapi.io/";
