@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 
 import styles from "./RestaurantDetail.view.module.scss";
 import cn from "classnames/bind";
-import KakaoMap from "@/app/services/kakaoMap";
+import LeafletMap from "@/app/services/LeafletMap";
 import Blog from "../../../components/Blog/Blog";
 import { Suspense } from "react";
 import Item from "@/components/Item/Item";
@@ -117,7 +117,7 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
           <h2>지도</h2>
 
           <Suspense fallback={<div>지도를 불러오는 중...</div>}>
-            <KakaoMap address={data.rdn_code} />
+            <LeafletMap address={data.rdn_code} />
           </Suspense>
         </div>
         <div className={cx("Item")}>
