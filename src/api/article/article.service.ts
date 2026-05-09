@@ -4,6 +4,7 @@ import { AxiosInstance } from "axios";
 const ARTICLE_ROUTES = {
   GET_LIST: "/api/articles",
   GET_ONE: "/api/articles/:id",
+  GET_BY_AUTHOR_ID: "/api/articles/author/:author_id",
   PUT: "/api/articles/:id",
   POST: "/api/articles",
   DELETE: "/api/articles/:id",
@@ -25,6 +26,17 @@ export class ArticleService {
     const { data } = await this._ajax.get<Article.GetOne.Response>(
       pathToUrl(ARTICLE_ROUTES.GET_ONE, req.path)
     );
+
+    return data;
+  }
+
+  async getByAuthorId(req: Article.GetByAuthorId.Request) {
+    const { limit = 15, offset = 0 } = req.params ?? {};
+    const queryString = `?limit=${limit}&offset=${offset}`;
+    const fullUrl = `${pathToUrl(ARTICLE_ROUTES.GET_BY_AUTHOR_ID, req.path)}${queryString}`;
+
+    const { data } =
+      await this._ajax.get<Article.GetByAuthorId.Response>(fullUrl);
 
     return data;
   }

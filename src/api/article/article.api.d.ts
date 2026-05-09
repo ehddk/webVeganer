@@ -74,6 +74,22 @@ declare global {
     }
 
     /**
+     * @path /api/articles/author/:author_id
+     * @description 작성자별 게시글 조회
+     */
+    namespace GetByAuthorId {
+      type Path = { author_id: string };
+      type Params = getArticlesPaginationParams;
+      type Body = {};
+      type Request = {
+        path: Path;
+        params?: Params;
+        body?: Body;
+      };
+      type Response = PaginatedArticle;
+    }
+
+    /**
      * @path /api/article/:id
      * @description 상세 조회
      */

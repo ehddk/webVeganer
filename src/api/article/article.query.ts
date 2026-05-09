@@ -21,3 +21,13 @@ export const getOne = async (req: Article.GetOne.Request) => {
     return data;
   }
 };
+
+export const getByAuthorId = async (req: Article.GetByAuthorId.Request) => {
+  try {
+    const data = await articleService.getByAuthorId(req);
+    return data;
+  } catch (error) {
+    const data = await handleServerError(error);
+    return data;
+  }
+};
