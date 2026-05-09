@@ -11,7 +11,6 @@ import {
 import React from "react";
 import Button from "@/components/Button/Button";
 import { useModal } from "@/hooks/modal/useModal";
-import { AuthMutation } from "@/api/mutation";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import { supabase } from "@/lib/supabaseClient";
 const cx = cn.bind(styles);
@@ -31,28 +30,28 @@ function LoginView() {
   const { control } = form;
 
   const goLogin = form.handleSubmit(async (formData) => {
-    const body = {
+    const { error } = await supabase.auth.signInWithPassword({
       email: formData.email,
       password: formData.password,
-    };
-    const res = await AuthMutation.login({
-      body: body,
     });
-    if ("message" in res) {
+
+    if (error) {
       showModal({
         type: "default",
         title: "로그인 실패",
-        description: "로그인에 실패했습니다.\n다시 시도해주세요",
+        description: error.message ?? "로그인에 실패했습니다.\n다시 시도해주세요",
         positive: {
           text: "확인",
           onClick: hideModal,
         },
         negative: undefined,
       });
-    } else {
-      hideModal();
-      router.push(LINK_ROUTE.MAIN.appDir);
+      return;
     }
+
+    hideModal();
+    router.push(LINK_ROUTE.MAIN.appDir);
+    router.refresh();
   });
 
   // const supabase = createClient();

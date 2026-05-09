@@ -62,11 +62,14 @@ baseAjax.interceptors.request.use(
   async function (config) {
     // 브라우저 환경에서만 실행
     if (typeof window !== "undefined") {
-      const Cookies = (await import("js-cookie")).default; // ← 동적 import로 변경
-      const token = Cookies.get("accessToken");
+      const { supabase } = await import("@/lib/supabaseClient");
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const token = session?.access_token;
 
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`; // Bearer 추가!
+        config.headers.Authorization = `Bearer ${token}`;
       }
     }
     return config;
@@ -75,13 +78,44 @@ baseAjax.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+const MAX_RETRY = 3;
+const RETRY_DELAY_MS = 3000;
+
+const isRetryableError = (err: unknown): boolean => {
+  if (!axios.isAxiosError(err)) return false;
+  if (err.code === "ECONNABORTED") return true;
+  if (err.code === "ERR_NETWORK") return true;
+  const status = err.response?.status;
+  if (status && status >= 500 && status < 600) return true;
+  return !err.response;
+};
+
 baseAjax.interceptors.response.use(
   async function (config) {
     return config;
   },
   async function (err) {
-    console.log("인터셉터에서 에러 감지!");
-    return Promise.reject(err);
+    const config = err?.config as
+      | (import("axios").InternalAxiosRequestConfig & { __retryCount?: number })
+      | undefined;
+
+    if (!config || !isRetryableError(err)) {
+      console.log("인터셉터에서 에러 감지!");
+      return Promise.reject(err);
+    }
+
+    config.__retryCount = config.__retryCount ?? 0;
+    if (config.__retryCount >= MAX_RETRY) {
+      return Promise.reject(err);
+    }
+
+    config.__retryCount += 1;
+    const delay = RETRY_DELAY_MS * config.__retryCount;
+    console.log(
+      `서버 응답 없음 - ${config.__retryCount}/${MAX_RETRY} 재시도 (${delay}ms 후)`
+    );
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    return baseAjax(config);
   }
 );
 

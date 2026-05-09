@@ -6,9 +6,9 @@ import styles from "./Join.view.module.scss";
 import cn from "classnames/bind";
 import Button from "@/components/Button/Button";
 import { useModal } from "@/hooks/modal/useModal";
-import { AuthMutation } from "@/api/mutation";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 const cx = cn.bind(styles);
 
 type FormType = Auth.Post.Request["body"] & { passwordConfirm: string };
@@ -34,52 +34,55 @@ export default function JoinView() {
       positive: {
         text: "확인",
         onClick: async () => {
-          const body = {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-          };
-
-          const res: any = await AuthMutation.post({
-            body: body,
-          });
-
-          if (res && (res.details || res.message)) {
+          if (formData.password !== formData.passwordConfirm) {
             hideModal();
-
-            const errorMessage =
-              "이미 존재하는 이메일입니다.다시 시도해주세요.";
-
-            // 가입 실패 모달 표시
             showModal({
               type: "default",
               title: "가입 실패",
-              description: `${errorMessage}`,
-              positive: {
-                text: "확인",
-                onClick: () => {
-                  hideModal();
-                },
-              },
+              description: "비밀번호가 일치하지 않습니다.",
+              positive: { text: "확인", onClick: hideModal },
               negative: undefined,
             });
-          } else {
-            // 2. 성공 응답 확인 및 모달 표시
+            return;
+          }
+
+          const { data, error } = await supabase.auth.signUp({
+            email: formData.email,
+            password: formData.password,
+            options: {
+              data: { name: formData.name, role: "user" },
+            },
+          });
+
+          if (error) {
+            hideModal();
             showModal({
               type: "default",
-              title: "회원가입 완료 ",
-              dimmedColor: "transparent",
-              description: "회원가입이 되었습니다. 로그인 해주세요",
-              positive: {
-                text: "확인",
-                onClick: () => {
-                  router.push(LINK_ROUTE.MAIN.appDir);
-                  hideModal();
-                },
-              },
+              title: "가입 실패",
+              description: error.message ?? "알 수 없는 오류가 발생했습니다.",
+              positive: { text: "확인", onClick: hideModal },
               negative: undefined,
             });
+            return;
           }
+
+          const needsEmailConfirm = !data.session;
+          showModal({
+            type: "default",
+            title: "회원가입 완료",
+            dimmedColor: "transparent",
+            description: needsEmailConfirm
+              ? "가입 확인 메일을 보냈습니다.\n메일에서 인증 후 로그인해 주세요."
+              : "회원가입이 되었습니다. 로그인 해주세요",
+            positive: {
+              text: "확인",
+              onClick: () => {
+                router.push(LINK_ROUTE.MAIN.appDir);
+                hideModal();
+              },
+            },
+            negative: undefined,
+          });
         },
       },
       negative: {
