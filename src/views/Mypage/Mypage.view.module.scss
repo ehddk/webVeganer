@@ -1,0 +1,54 @@
+.Wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1250px;
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 40px;
+
+  @media screen and (max-width: 1200px) {
+    max-width: none;
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+.ProfileBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.ProfileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.UserName {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.UserEmail {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.SectionTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.Empty {
+  padding: 40px 0;
+  text-align: center;
+  color: #9ca3af;
+}

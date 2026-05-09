@@ -35,6 +35,10 @@ export default function Header({ session }: { session: SessionProps }) {
   };
   const loggedInOptions = [
     {
+      label: "마이페이지",
+      value: LINK_ROUTE.MYPAGE.uri,
+    },
+    {
       label: "로그아웃",
       value: "/logout",
     },

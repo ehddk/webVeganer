@@ -24,6 +24,10 @@ export const LINK_ROUTE = {
     [ROUTE_KEY.APP_DIR]: "/login",
     [ROUTE_KEY.URI]: "/login",
   },
+  MYPAGE: {
+    [ROUTE_KEY.APP_DIR]: "/mypage",
+    [ROUTE_KEY.URI]: "/mypage",
+  },
   ARTICLE: {
     DEFAULT: { [ROUTE_KEY.APP_DIR]: "/commu", [ROUTE_KEY.URI]: "/commu" },
 
