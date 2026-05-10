@@ -6,6 +6,50 @@ type LeafletMapProps = {
   address: string;
 };
 
+const CITY_REGEX =
+  /(서울특별시|부산광역시|대구광역시|인천광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|경기도|강원도|강원특별자치도|충청북도|충청남도|전라북도|전북특별자치도|전라남도|경상북도|경상남도|제주특별자치도)/;
+const DISTRICT_REGEX = /(\S+?[구시군])/;
+const ROAD_REGEX = /(\S*?[로길])\s*(\d+(?:-\d+)?)/;
+
+function buildAddressVariants(raw: string): string[] {
+  const city = raw.match(CITY_REGEX)?.[1];
+  const district = raw.match(DISTRICT_REGEX)?.[1];
+  const roadMatch = raw.match(ROAD_REGEX);
+  const road = roadMatch?.[1];
+  const num = roadMatch?.[2];
+
+  const variants: string[] = [];
+
+  if (city && district && road && num) {
+    variants.push(`${city} ${district} ${road} ${num}`);
+  }
+  if (district && road && num) {
+    variants.push(`${district} ${road} ${num}`);
+  }
+  if (road && num) {
+    variants.push(`${road} ${num}`);
+  }
+  variants.push(raw);
+
+  return Array.from(new Set(variants));
+}
+
+async function geocode(
+  address: string
+): Promise<{ lat: number; lon: number } | null> {
+  for (const query of buildAddressVariants(address)) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+      query
+    )}&limit=1&countrycodes=kr`;
+    const res = await fetch(url, { headers: { "Accept-Language": "ko" } });
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+    }
+  }
+  return null;
+}
+
 function LeafletMap({ address }: LeafletMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -27,30 +71,22 @@ function LeafletMap({ address }: LeafletMapProps) {
           "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        address
-      )}&limit=1`;
-
       try {
-        const response = await fetch(url, {
-          headers: { "Accept-Language": "ko" },
-        });
-        const results = await response.json();
-
+        const coords = await geocode(address);
         if (cancelled) return;
-        if (!Array.isArray(results) || results.length === 0) {
+        if (!coords) {
           console.error("주소를 찾을 수 없습니다:", address);
           return;
         }
-
-        const lat = parseFloat(results[0].lat);
-        const lon = parseFloat(results[0].lon);
 
         if (mapInstanceRef.current) {
           mapInstanceRef.current.remove();
         }
 
-        const map = L.map(containerRef.current!).setView([lat, lon], 16);
+        const map = L.map(containerRef.current!).setView(
+          [coords.lat, coords.lon],
+          16
+        );
         mapInstanceRef.current = map;
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -58,7 +94,10 @@ function LeafletMap({ address }: LeafletMapProps) {
           maxZoom: 19,
         }).addTo(map);
 
-        L.marker([lat, lon]).addTo(map).bindPopup("여기!").openPopup();
+        L.marker([coords.lat, coords.lon])
+          .addTo(map)
+          .bindPopup("여기!")
+          .openPopup();
       } catch (err) {
         console.error("지도 로딩 실패:", err);
       }
