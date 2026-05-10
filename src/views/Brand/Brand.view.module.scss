@@ -1,181 +1,377 @@
+// ============================================================
+// Color tokens (베이지 + 그린)
+// ============================================================
+$color-cream-50: #fbf7ef;
+$color-cream-100: #f4ecda;
+$color-cream-200: #e8dcc0;
+$color-green-700: #2f5d3a;
+$color-green-500: #5f8b5a;
+$color-green-300: #87b073;
+$color-green-100: #d6e6c9;
+$color-text: #2a2a2a;
+$color-muted: #6b6b6b;
+
 .Wrapper {
-  padding: 0 90px;
-
-  @media screen and (max-width: 1200px) {
-    padding: 0;
-  }
-}
-
-.Banner {
-  display: flex;
-  max-width: 1200px;
+  background: $color-cream-50;
+  color: $color-text;
   width: 100%;
-  height: 350px;
-  margin: 0 auto;
-  overflow-x: auto;
-
-  @media screen and (max-width: 1200px) {
-    display: flex;
-  }
 }
 
-.Intro {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
-}
-// .TopContent {
-//   max-width: 1100px;
-
-//   margin: 0 auto;
-//   display: flex;
-//   //align-items: center;
-//   // padding-top: 20px;
-
-//   //justify-content: center;
-
-//   @media screen and (max-width: 1200px) {
-//     padding: 20px;
-//     flex-direction: column-reverse;
-//   }
-// }
-.SubTitle {
+// ============================================================
+// Hero
+// ============================================================
+.Hero {
+  position: relative;
   width: 100%;
-  @media screen and (max-width: 1200px) {
-    font-size: 17px;
-  }
-}
-.Focus {
-  color: #006400;
-}
-
-.TitlePurpose {
-  @media screen and (max-width: 1200px) {
-    font-size: 17px;
-  }
-}
-.Divider {
-  height: 1px;
-  width: 300px;
-  margin: 0 auto;
-  background-color: #006400;
-}
-.TopContent {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  max-width: 900px;
-
-  .description {
-    font-size: 15px;
-    line-height: 20px;
-  }
-
-  .Detail {
-    font-size: 20px;
-    color: gray;
-  }
-
-  @media screen and (max-width: 1200px) {
-    padding: 10px;
-    width: 100%;
-  }
-  //width: 55%;
-  // height: auto;
-  // padding: 80px;
-}
-
-.Content3 {
-  width: 100%;
-  max-width: 1260px;
-
-  margin: 0 auto;
-  padding-block: 30px;
-  background-color: ivory;
-}
-
-.Title {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-
-  @media screen and (max-width: 1200px) {
-    font-size: 10px;
-  }
-}
-.Container {
-  display: flex;
-  padding: 50px;
-  margin: 0 auto;
-  // height: 230px;
-
-  @media screen and (max-width: 1200px) {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-  }
-}
-
-.Icons {
+  height: 480px;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 30px;
+  justify-content: center;
+
+  @media screen and (max-width: 768px) {
+    height: 360px;
+  }
+}
+
+.HeroImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.HeroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(47, 93, 58, 0.55) 0%,
+    rgba(47, 93, 58, 0.7) 100%
+  );
+  z-index: 1;
+}
+
+.HeroContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  padding: 0 20px;
+
+  .HeroTagline {
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: $color-cream-100;
+    margin-bottom: 16px;
+    opacity: 0.9;
+  }
+
+  .HeroTitle {
+    font-size: 56px;
+    font-weight: 800;
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+
+    @media screen and (max-width: 768px) {
+      font-size: 36px;
+    }
+  }
+
+  .HeroSubtitle {
+    font-size: 17px;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.92);
+
+    @media screen and (max-width: 768px) {
+      font-size: 14px;
+    }
+  }
+}
+
+// Section 스타일
+
+.Section {
+  padding: 100px 24px;
+
+  @media screen and (max-width: 768px) {
+    padding: 60px 20px;
+  }
+}
+
+.SectionCream {
+  background: $color-cream-100;
+  scroll-margin-top: 40px;
+}
+
+.SectionGreen {
+  background: linear-gradient(
+    135deg,
+    $color-green-100 0%,
+    $color-cream-50 100%
+  );
+}
+
+.SectionInner {
+  max-width: 1100px;
   margin: 0 auto;
-  @media screen and (max-width: 1200px) {
-    padding: 0;
-  }
-}
-.Img {
-  width: 70px;
-  height: 60px;
-}
-.LeftSide {
-  width: 50%;
-  padding: 30px;
-
-  border-right: 1px solid #006400;
-
-  @media screen and (max-width: 1200px) {
-    border: 0;
-    width: 100%;
-  }
 }
 
-.Icon {
-  //height: 30px;
-  color: rgb(175, 175, 175);
-}
-.First {
-  width: 45%;
-  padding: 30px;
-  margin-top: 40px;
-  border-right: 1px solid #006400;
-}
-
-.Step {
+.SectionHead {
   display: flex;
   flex-direction: column;
-  font-size: 20px;
-  font-weight: 800;
-  gap: 10px;
-  @media screen and (max-width: 1200px) {
-    font-size: 15px;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.Eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: $color-green-500;
+  font-weight: 600;
+}
+
+.SectionTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: $color-text;
+  line-height: 1.3;
+  margin: 0;
+
+  strong {
+    color: $color-green-700;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 26px;
   }
 }
 
-.TitlePurposeContent {
-  font-size: 15px;
-  line-height: 30px;
+.Body {
+  font-size: 16px;
+  line-height: 1.85;
+  color: $color-muted;
+  max-width: 720px;
 
-  @media screen and (max-width: 1200px) {
-    width: 100%;
+  strong {
+    color: $color-green-700;
+    font-weight: 700;
   }
 }
 
-.BottomContent {
+.IntroGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+
+  @media screen and (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.IntroImage {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px -20px rgba(47, 93, 58, 0.3);
+
+  @media screen and (max-width: 900px) {
+    height: 240px;
+  }
+}
+
+.IntroReverse {
+  direction: rtl;
+  > * {
+    direction: ltr;
+  }
+}
+
+.LevelsHead {
   text-align: center;
-  padding: 20px;
+  align-items: center;
+  margin-bottom: 56px;
+
+  .Body {
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+.LevelsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @media screen and (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.LevelCard {
+  background: #fff;
+  border: 1px solid $color-cream-200;
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(47, 93, 58, 0.25);
+    border-color: $color-green-300;
+  }
+}
+
+.LevelCardHighlight {
+  grid-column: 1 / -1;
+  background: linear-gradient(
+    135deg,
+    $color-green-700 0%,
+    $color-green-500 100%
+  );
+  border-color: transparent;
+  color: #fff;
+
+  .LevelName,
+  .LevelDescription {
+    color: #fff;
+  }
+
+  .LevelLeaf {
+    color: $color-green-100;
+  }
+
+  .Pip {
+    background: rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.6);
+
+    &.PipActive {
+      background: #fff;
+      color: $color-green-700;
+    }
+  }
+}
+
+.LevelHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.LevelLeaf {
+  color: $color-green-500;
+  font-size: 22px;
+}
+
+.LevelName {
+  font-size: 20px;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0;
+}
+
+.LevelDescription {
+  font-size: 14px;
+  line-height: 1.7;
+  color: $color-muted;
+  flex: 1;
+}
+
+.PipRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.Pip {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: $color-cream-100;
+  color: $color-cream-200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all 0.2s;
+
+  &.PipActive {
+    background: $color-green-100;
+    color: $color-green-700;
+  }
+}
+
+.CTA {
+  background: $color-green-700;
+  color: #fff;
+  padding: 80px 24px;
+  text-align: center;
+
+  @media screen and (max-width: 768px) {
+    padding: 60px 20px;
+  }
+}
+
+.CTAInner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.CTATitle {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 16px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 22px;
+  }
+}
+
+.CTASubtitle {
+  font-size: 15px;
+  line-height: 1.8;
+  color: $color-cream-100;
+  opacity: 0.92;
+}
+
+.Section,
+.CTA,
+.SectionGreen {
+  scroll-margin-top: 100px;
+}
+
+.Reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s ease-out;
+  will-change: opacity, transform;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
