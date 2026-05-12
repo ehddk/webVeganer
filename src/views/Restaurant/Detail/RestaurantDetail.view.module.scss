@@ -41,8 +41,19 @@
   font-size: 15px;
   display: flex;
   gap: 4px;
+  cursor: pointer;
 }
 
+.LikeBtn {
+  position: absolute;
+
+  &:hover {
+    width: 20px;
+  }
+}
+.Text {
+  margin-left: 20px;
+}
 .RestaurantImage {
   object-fit: cover;
 }

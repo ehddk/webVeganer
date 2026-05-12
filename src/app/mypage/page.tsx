@@ -29,10 +29,13 @@ export default async function MypagePage(props: MypagePageProps) {
     params: { offset: offsetValue, limit: limitValue },
   });
 
-  if ("message" in data) throw new Error("내 글 조회 중 실패");
+  if ("message" in data) {
+    throw new Error(
+      `내 글 조회 실패 [${data.statusCode ?? "no-status"}]: ${data.message ?? "no-message"} | author_id=${user.id}`
+    );
+  }
 
-  const displayName =
-    user.user_metadata?.name ?? user.email ?? "사용자";
+  const displayName = user.user_metadata?.name ?? user.email ?? "사용자";
 
   return (
     <MypageView
