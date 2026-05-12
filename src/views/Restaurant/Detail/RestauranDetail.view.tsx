@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import styles from "./RestaurantDetail.view.module.scss";
 import cn from "classnames/bind";
@@ -12,6 +12,7 @@ import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
 import { useModal } from "@/hooks/modal/useModal";
 
 import ReviewForm from "@/components/Form/ReviewForm";
+import { ScrapMutation } from "@/api/mutation";
 
 const cx = cn.bind(styles);
 
@@ -29,11 +30,18 @@ type RestaurantInfoViewProps = {
 export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
   const { data, reviewData, session, currentUserId } = props;
   const { showModal, hideModal, ModalComponent } = useModal();
+  const router = useRouter();
   const firstImageUrl = data.image_url?.[0]; // 첫 번째 이미지 (인덱스 0)
   const secondImageUrl = data.image_url?.[1];
   const params = useParams<{ id: string }>();
 
   const id = params?.id;
+
+  // 낙관적 업데이트: 서버 상태와 별개로 즉시 UI 반영
+  const [isScrapped, setIsScrapped] = React.useState<boolean>(
+    data.scrapped_by_me ?? false
+  );
+  const [isScrapPending, startScrapTransition] = React.useTransition();
 
   const handleCopy = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -48,6 +56,46 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
           hideModal();
         },
       },
+    });
+  };
+
+  const handleScrap = () => {
+    if (!session) {
+      showModal({
+        type: "default",
+        dimmedColor: "transparent",
+        description: "로그인 후 스크랩할 수 있습니다.",
+        positive: { text: "확인", onClick: hideModal },
+        negative: undefined,
+      });
+      return;
+    }
+
+    // 낙관적 업데이트
+    const prev = isScrapped;
+    setIsScrapped(!prev);
+
+    startScrapTransition(async () => {
+      const res = await ScrapMutation.toggle({
+        path: { restaurant_id: String(id) },
+      });
+
+      // 에러 응답이면 롤백
+      if (res && typeof res === "object" && "statusCode" in res) {
+        setIsScrapped(prev);
+        showModal({
+          type: "default",
+          dimmedColor: "transparent",
+          description: "스크랩 처리에 실패했습니다.",
+          positive: { text: "확인", onClick: hideModal },
+          negative: undefined,
+        });
+        return;
+      }
+
+      // 서버 응답으로 최종 상태 확정
+      setIsScrapped(res.scrapped);
+      router.refresh();
     });
   };
   return (
@@ -77,9 +125,17 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
           </div>
 
           <ul className={cx("Ul")}>
-            <li className={cx("Util")}>
-              <img src="/like.svg" width={15} />
-              좋아요
+            <li
+              className={cx("Util", { disabled: isScrapPending })}
+              onClick={handleScrap}
+            >
+              <img
+                src={isScrapped ? "/bookmark-filled.svg" : "/bookmark.svg"}
+                width={15}
+                className={cx("LikeBtn")}
+                alt="스크랩"
+              />
+              <p className={cx("Text")}>{isScrapped ? "스크랩됨" : "스크랩"}</p>
             </li>
 
             <li className={cx("Util")}>
