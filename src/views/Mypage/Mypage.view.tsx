@@ -10,6 +10,7 @@ import { LINK_ROUTE } from "@/constants/link.constants";
 import Button from "@/components/Button/Button";
 import { AuthMutation } from "@/api/mutation";
 import RestaurantCard from "@/components/RestaurantCard/RestaurantCard";
+import EmptyState from "@/components/EmptyState/EmptyState";
 
 const cx = cn.bind(styles);
 
@@ -80,7 +81,10 @@ export default function MypageView(props: MypageViewProps) {
       </div>
 
       {items.length === 0 ? (
-        <div className={cx("Empty")}>아직 작성한 글이 없습니다.</div>
+        <EmptyState
+          title="아직 작성한 글이 없습니다"
+          description="자유롭게 의견을 나눠보세요"
+        />
       ) : (
         <PostListTable
           table={table}
@@ -94,7 +98,10 @@ export default function MypageView(props: MypageViewProps) {
       <div className={cx("ScrapWrapper")}>
         <h3>스크랩 리스트 ({scrapData.total})</h3>
         {scrapData.items.length === 0 ? (
-          <div className={cx("Empty")}>아직 스크랩한 식당이 없습니다.</div>
+          <EmptyState
+            title="아직 스크랩한 식당이 없습니다"
+            description="마음에 드는 식당을 발견하면 스크랩해 보세요"
+          />
         ) : (
           <div className={cx("ScrapList")}>
             {scrapData.items.map((restaurant) => (
