@@ -9,11 +9,10 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import Link from "next/link";
-import { RestaurantImage } from "@/components/RestaurantImage/RestaurantImage";
 import useIsMobile from "@/hooks/useIsMobile";
 import { AiOutlineEnter } from "react-icons/ai";
 import React from "react";
+import RestaurantCard from "@/components/RestaurantCard/RestaurantCard";
 
 const cx = cn.bind(styles);
 
@@ -104,27 +103,11 @@ export default function HomeView(props: HomeViewProps) {
             </p>
           </div>{" "}
           <div className={cx("RestauantContent")}>
-            {randomResList.map((item: any, index: number) => {
-              const imageUrl = item.image_url?.[0];
-              return (
-                <ul key={index}>
-                  <li>
-                    <Link
-                      className={cx("Link")}
-                      href={LINK_ROUTE.RESTAURANT.DETAIL.uri({ id: item.id })}
-                    >
-                      <div className={cx("Thumbnail")}>
-                        <RestaurantImage src={imageUrl} alt={item.upso_name} />
-                      </div>
-                      <button className={cx("Name")}>
-                        <p>{item.upso_name} </p>
-                        <p>[{item.cgg_code_name}]</p>
-                      </button>
-                    </Link>
-                  </li>
-                </ul>
-              );
-            })}{" "}
+            {randomResList.map(
+              (item: Restaurant.GetList.Response[number]) => (
+                <RestaurantCard key={item.id} restaurant={item} />
+              )
+            )}
           </div>
         </div>
 
@@ -146,25 +129,11 @@ export default function HomeView(props: HomeViewProps) {
               pagination={{ clickable: true, dynamicBullets: true }}
               modules={[Autoplay, Pagination]}
             >
-              {cafeList?.map((item) => {
-                const imageUrl = item.image_url?.[0];
-                return (
-                  <SwiperSlide key={item.id} className={cx("Slide")}>
-                    <Link
-                      className={cx("Link")}
-                      href={LINK_ROUTE.RESTAURANT.DETAIL.uri({ id: item.id })}
-                    >
-                      <div className={cx("Thumbnail")}>
-                        <RestaurantImage src={imageUrl} alt={item.upso_name} />
-                      </div>
-                      <button className={cx("Name")}>
-                        <p>{item.upso_name} </p>
-                        <p>[{item.cgg_code_name}]</p>
-                      </button>
-                    </Link>
-                  </SwiperSlide>
-                );
-              })}
+              {cafeList?.map((item) => (
+                <SwiperSlide key={item.id} className={cx("Slide")}>
+                  <RestaurantCard restaurant={item} />
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </div>

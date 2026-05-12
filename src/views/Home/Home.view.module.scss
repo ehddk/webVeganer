@@ -119,50 +119,6 @@
   }
 }
 
-.Name {
-  background-color: #ffff;
-  border: 1px solid lightgray;
-  padding: 10px;
-  border-radius: 5px;
-  width: 100%;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  display: flex;
-  //margin: 0 auto;
-  margin-top: -20px;
-  justify-content: space-between;
-  position: relative;
-  cursor: pointer;
-  transform-style: preserve-3d;
-  transition: all 175ms cubic-bezier(0, 0, 1, 1);
-  font-size: 15px;
-  font-weight: 600;
-
-  &::before {
-    position: absolute;
-    content: "";
-    transform: translate3d(0, 0.75em, -1em);
-    transition: all 175ms cubic-bezier(0, 0, 1, 1);
-  }
-
-  &:hover {
-    transform: translate(0, -1.375em);
-  }
-  &:hover::before {
-    transform: translate3d(0, 0.75em, -1em);
-  }
-  & :active {
-    transform: translate(0em, 0.75em);
-  }
-
-  &:active::before {
-    transform: translate3d(0, 0, -1em);
-
-    box-shadow:
-      0 0 0 2px var(--colorShadeB),
-      0 0.25em 0 0 var(--colorShadeB);
-  }
-}
-
 .BoardWrapper {
   display: flex;
   width: 100%;
@@ -239,17 +195,14 @@
 .SwipperWrapper {
   display: flex;
   &:hover {
-    .Link {
+    a {
       filter: brightness(0.9);
     }
 
-    .Link:hover {
+    a:hover {
       filter: brightness(1.02);
     }
   }
-}
-.Link {
-  transition: filter 0.25s ease-in-out;
 }
 
 .Slide {
@@ -261,25 +214,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.Thumbnail {
-  width: 100%;
-  height: 0;
-  padding-bottom: 75%;
-  position: relative;
-  box-shadow: 3px 3px 2px lightgray;
-
-  overflow: hidden;
-}
-
-.Thumbnail img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .FaqList {
@@ -305,8 +239,6 @@
   border-radius: 20px;
   background-color: transparent;
   border: 3px solid #77af9c;
-  //color: darkgray;
-  // box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
   text-decoration: none;
   font-weight: 600;
   transition: 0.25s;
