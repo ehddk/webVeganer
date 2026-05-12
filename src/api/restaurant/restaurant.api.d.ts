@@ -1,24 +1,22 @@
-import { ErrorType } from "next/dist/client/components/react-dev-overlay/pages/pages-dev-overlay";
-import { IRestaurant } from "./Restaurant.type";
-
-interface IRestaurant {
-  id: string;
-  upso_name: string;
-  rdn_code: string;
-  source_id: string;
-  category: string;
-  latitude?: Int;
-  longitude?: Int;
-  rdn_detail_addr: string;
-  ctfc_gbn_name: string;
-  source_type: string;
-  created_at: Date;
-  cgg_code_name: string;
-  tel_no: string;
-  image_url?: string;
-}
-
 declare global {
+  type IRestaurant = {
+    id: string;
+    upso_name: string;
+    rdn_code: string;
+    source_id: string;
+    category: string;
+    latitude?: Int;
+    longitude?: Int;
+    rdn_detail_addr: string;
+    ctfc_gbn_name: string;
+    source_type: string;
+    created_at: Date;
+    cgg_code_name: string;
+    tel_no: string;
+    image_url?: string;
+    scrapped_by_me?: boolean;
+  };
+
   /**목록 조회 */
   type getRestaurantsResponse = IRestaurant[];
   /**상세 조회 */
