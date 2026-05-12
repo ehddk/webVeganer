@@ -5,7 +5,7 @@
   max-width: 1250px;
   width: 100%;
   margin: 0 auto;
-  padding-top: 40px;
+  padding-block: 40px;
 
   @media screen and (max-width: 1200px) {
     max-width: none;
@@ -51,4 +51,21 @@
   padding: 40px 0;
   text-align: center;
   color: #9ca3af;
+}
+
+.ScrapWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.ScrapList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @media screen and (max-width: 930px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

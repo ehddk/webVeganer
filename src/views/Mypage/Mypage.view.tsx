@@ -9,18 +9,20 @@ import useConditionalState from "@/hooks/useConditionalState";
 import { LINK_ROUTE } from "@/constants/link.constants";
 import Button from "@/components/Button/Button";
 import { AuthMutation } from "@/api/mutation";
+import RestaurantCard from "@/components/RestaurantCard/RestaurantCard";
 
 const cx = cn.bind(styles);
 
 interface MypageViewProps {
   data: Article.GetByAuthorId.Response;
+  scrapData: Scrap.GetList.Response;
   offset?: number;
   userName: string;
   userEmail: string;
 }
 
 export default function MypageView(props: MypageViewProps) {
-  const { data, offset, userName, userEmail } = props;
+  const { data, scrapData, offset, userName, userEmail } = props;
   const { items, total } = data;
 
   const router = useRouter();
@@ -87,6 +89,20 @@ export default function MypageView(props: MypageViewProps) {
           onPageChange={handlePageChange}
         />
       )}
+
+      {/* 스크랩 목록 */}
+      <div className={cx("ScrapWrapper")}>
+        <h3>스크랩 리스트 ({scrapData.total})</h3>
+        {scrapData.items.length === 0 ? (
+          <div className={cx("Empty")}>아직 스크랩한 식당이 없습니다.</div>
+        ) : (
+          <div className={cx("ScrapList")}>
+            {scrapData.items.map((restaurant) => (
+              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
