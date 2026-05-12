@@ -42,6 +42,7 @@ export default function ReviewForm(props: ReviewFormProps) {
     defaultValues: {
       content: "",
       rating: 0,
+      image: [],
     },
   });
 
@@ -179,6 +180,7 @@ export default function ReviewForm(props: ReviewFormProps) {
     if (nextEditId) {
       setValue("content", item.content);
       setValue("rating", item.rating);
+      setValue("image", item.image ?? []);
 
       const star = array.map((i) => i < item.rating);
       setIsClicked(star);
@@ -186,6 +188,7 @@ export default function ReviewForm(props: ReviewFormProps) {
       //null이면 수정모드 종료되서 입력한 값 초기화.
       setValue("content", "");
       setValue("rating", 0);
+      setValue("image", []);
       setIsClicked([false, false, false, false, false]);
     }
   };

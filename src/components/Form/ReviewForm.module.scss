@@ -50,7 +50,6 @@
   display: flex;
 
   gap: 10px;
-  overflow: hidden;
   .Profile {
     border-radius: 20px;
     border: 1px solid black;
@@ -67,7 +66,7 @@
     flex-direction: column;
     gap: 6px;
     position: relative;
-
+    width: 100%;
     min-width: 0;
   }
 }
@@ -114,7 +113,7 @@
   position: absolute;
   top: 40px;
   right: 0;
-  z-index: 10;
+  z-index: 9999;
 
   .MenuIcon {
     display: flex;
@@ -192,12 +191,12 @@
   gap: 10px;
   overflow-x: auto;
   flex-wrap: nowrap;
-  min-width: 0; // ← 추가
+  min-width: 0;
   max-width: 100%;
 }
 
 .ReviewImage {
-  flex: 0 0 150px; // ← 고정 너비
+  flex: 0 0 150px;
   height: 150px;
   object-fit: cover;
 }
