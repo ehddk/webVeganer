@@ -51,13 +51,10 @@ export default function Header({ session }: { session: SessionProps }) {
 
   const options = session.isAuthenticated ? loggedInOptions : option;
 
-  // 상태 관리를 위한 추가 코드
-  const [selectedOption, setSelectedOption] = useState("");
-
   // 드롭다운용 handleChange 함수
+  // 액션 메뉴이므로 선택 상태를 유지하지 않음 (controlled value 사용 X)
   const handleOptionChange = async (value: string | string[]) => {
     const selectedValue = Array.isArray(value) ? value[0] : value;
-    setSelectedOption(selectedValue);
 
     if (selectedValue === "/logout") {
       const res = await AuthMutation.logout({});
@@ -163,7 +160,7 @@ export default function Header({ session }: { session: SessionProps }) {
               </ul>
             </div>
           )}
-          <Dropdown.Root value={selectedOption} onChange={handleOptionChange}>
+          <Dropdown.Root onChange={handleOptionChange}>
             <Dropdown.Trigger
               as={(props) => (
                 <div onClick={props.handleTriggerClick}>
