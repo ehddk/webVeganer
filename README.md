@@ -12,25 +12,6 @@
 
 ---
 
-## 🔗 링크
-
-- **🌐 서비스**: https://veganer.vercel.app (예시)
-- **📂 백엔드 레포**: https://github.com/ehddk/veganerserver
-
----
-
-## 📸 스크린샷
-
-| 메인 페이지 | 식당 상세 |
-|---|---|
-| ![main](./docs/main.png) | ![detail](./docs/detail.png) |
-
-| AI 챗 인터페이스 | 리뷰 작성 |
-|---|---|
-| ![chat](./docs/chat.png) | ![review](./docs/review.png) |
-
----
-
 ## ✨ 주요 기능
 
 - 🍽️ **식당 정보 조회** — 카테고리·검색·지도 기반 탐색
@@ -55,7 +36,6 @@
 ### Backend
 - **Runtime**: Node.js + Express
 - **Database**: PostgreSQL (Supabase 호스팅)
-- **ORM**: 사용 안 함 (raw SQL with `pg`)
 - **Auth**: Supabase Auth (OAuth)
 - **Storage**: Supabase Storage
 
@@ -67,9 +47,5 @@
 - **Frontend**: Vercel
 - **Backend**: Render
 - **DB/Storage**: Supabase
-
----
-
-## 🏗 시스템 아키텍처
 
 ```
