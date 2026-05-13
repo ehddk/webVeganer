@@ -8,11 +8,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-
 import useIsMobile from "@/hooks/useIsMobile";
-import { AiOutlineEnter } from "react-icons/ai";
 import React from "react";
 import RestaurantCard from "@/components/RestaurantCard/RestaurantCard";
+import Chat from "@/components/Chat/Chat";
 
 const cx = cn.bind(styles);
 
@@ -26,7 +25,6 @@ export default function HomeView(props: HomeViewProps) {
   let router = useRouter();
   const [showItems, setShowItems] = useState(6);
   const isMobile = useIsMobile();
-  const [customQuestion, setCustomQuestion] = useState<string>(""); // 추가
 
   function randomItem(arr: any, num: any) {
     if (!Array.isArray(arr)) return [];
@@ -47,47 +45,25 @@ export default function HomeView(props: HomeViewProps) {
     router.push(LINK_ROUTE.RESTAURANT.DETAIL.uri({ id }));
   };
 
-  const FAQ_QUESTIONS = [
-    "비건 음식점에 가면 보통 뭐 먹어요?",
-    "고기 없이도 배부를 수 있나요?",
-    "비건 초보자가 실패 안 하는 메뉴 추천해줘",
-    "비건 음식은 맛이 없지 않나요?",
-    "비건이랑 비건 옵션은 뭐가 다른가요?",
-  ];
-
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [answer, setAnswer] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const chatAreaRef = React.useRef<HTMLDivElement>(null);
+
   React.useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // 답변이나 로딩 상태 변경 시 채팅 영역 하단으로 자동 스크롤
+  React.useEffect(() => {
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+    }
+  }, [selectedQuestion, answer, loading]);
   if (!isMounted) {
     return null;
   }
-  const fetchFaqAnswer = async (question: string) => {
-    setSelectedQuestion(question);
-    setLoading(true);
-    setAnswer("");
-
-    try {
-      const res = await fetch("/api/ai/faq", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ question }),
-      });
-
-      const data = await res.json();
-      setAnswer(data.answer);
-      setCustomQuestion("");
-    } catch (error) {
-      setAnswer("답변을 불러오지 못했어요. 잠시 후 다시 시도해주세요.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className={cx("Wrapper")}>
@@ -103,20 +79,15 @@ export default function HomeView(props: HomeViewProps) {
             </p>
           </div>{" "}
           <div className={cx("RestauantContent")}>
-            {randomResList.map(
-              (item: Restaurant.GetList.Response[number]) => (
-                <RestaurantCard key={item.id} restaurant={item} />
-              )
-            )}
+            {randomResList.map((item: Restaurant.GetList.Response[number]) => (
+              <RestaurantCard key={item.id} restaurant={item} />
+            ))}
           </div>
         </div>
 
         <div className={cx("CafeWrapper")}>
           <div className={cx("Header")}>
             <h2>비건 카페</h2>
-            <p className={cx("More")} onClick={() => router.push("/cafe")}>
-              더보기
-            </p>
           </div>
 
           <div className={cx("CafeContent")}>
@@ -137,55 +108,7 @@ export default function HomeView(props: HomeViewProps) {
             </Swiper>
           </div>
         </div>
-        <div className={cx("FaqList")}>
-          <h2 className={cx("Title")}>
-            탭을 클릭하고 입력하여 궁금한 점을 물어보세요!
-          </h2>
-          <div className={cx("AnswerContent")}>
-            {FAQ_QUESTIONS.map((q) => (
-              <button
-                key={q}
-                className={cx("FaqButton", {
-                  active: selectedQuestion === q,
-                })}
-                onClick={() => fetchFaqAnswer(q)}
-              >
-                {q}
-              </button>
-            ))}
-            {answer && (
-              <div className={cx("AnswerBox")}>
-                {loading ? (
-                  <p className={cx("Answer")}>답변을 불러오는 중...</p>
-                ) : (
-                  <p className={cx("Answer")}>{answer}</p>
-                )}
-              </div>
-            )}
-            <div className={cx("CustomQuestion")}>
-              <input
-                type="text"
-                className={cx("QuestionInput")}
-                placeholder="질문을 선택하거나 새로운 질문을 입력해 보세요"
-                value={customQuestion}
-                onChange={(e) => setCustomQuestion(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && customQuestion.trim()) {
-                    fetchFaqAnswer(customQuestion);
-                  }
-                }}
-              />
-
-              <AiOutlineEnter
-                onClick={() => {
-                  if (customQuestion.trim()) {
-                    fetchFaqAnswer(customQuestion);
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        <Chat />
       </section>
     </div>
   );
