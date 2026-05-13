@@ -1,9 +1,12 @@
 "use client";
+import { LINK_ROUTE } from "@/constants/link.constants";
 import styles from "./Footer.module.scss";
 import cn from "classnames/bind";
+import { useRouter } from "next/navigation";
 const cx = cn.bind(styles);
 
 export default function Footer() {
+  const router = useRouter();
   return (
     <>
       <div className={cx("Wrapper")}>
@@ -23,13 +26,15 @@ export default function Footer() {
             <div className={cx("Info")}>
               <ul className={cx("Menu")}>
                 <li>
-                  <a href="/brand">회사 소개</a>
+                  <p onClick={() => router.push(LINK_ROUTE.BRAND.uri)}>
+                    회사 소개
+                  </p>
                 </li>
                 <li>
-                  <a>이용약관</a>
+                  <p>이용약관</p>
                 </li>
                 <li>
-                  <a>개인정보보호</a>
+                  <p>개인정보보호</p>
                 </li>
               </ul>
               <ul>
@@ -38,11 +43,7 @@ export default function Footer() {
                     대표자 <strong>김동아</strong>
                   </p>
                 </li>
-                <li>
-                  <p>
-                    대표전화 <strong>010-3333-3333</strong>
-                  </p>
-                </li>
+
                 <li>
                   <p>
                     문의 및 추신이메일 <strong>bj9147@naver.com</strong>

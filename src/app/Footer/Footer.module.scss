@@ -30,7 +30,7 @@
   list-style: none;
   gap: 10px;
   li {
-    a {
+    p {
       color: gray;
       &::after {
         content: "|";
@@ -38,7 +38,7 @@
       }
     }
     &:last-child {
-      a {
+      p {
         &::after {
           content: "";
         }
