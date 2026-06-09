@@ -26,7 +26,6 @@ type CommuDetailViewProps = {
 };
 export default function CommuDetailView(props: CommuDetailViewProps) {
   const { data, commentData, session, currentUserId, currentUserName } = props;
-
   const router = useRouter();
   const params = useParams<{ id: string }>();
 
@@ -99,13 +98,16 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
             </div>
             <Divider />
             <div className={cx("BtnGroup")}>
-              <Button
-                size="small"
-                text="삭제"
-                colorType="primary"
-                variant="outlined"
-                onClick={handleDelete}
-              />
+              {session.user?.id === data.author_id && (
+                <Button
+                  size="small"
+                  text="삭제"
+                  colorType="primary"
+                  variant="outlined"
+                  onClick={handleDelete}
+                />
+              )}
+
               <Button
                 size="small"
                 text="목록"
