@@ -101,3 +101,43 @@
   align-items: center;
   min-height: 461px;
 }
+
+.RegisterBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  margin-bottom: 8px;
+  background-color: #f3faf5;
+  border: 1px solid #d7ecdd;
+  border-radius: 10px;
+
+  p {
+    font-size: 14px;
+    color: #4a6b56;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+}
+
+.RegisterButton {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  background-color: #2e9e5b;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.88;
+  }
+}

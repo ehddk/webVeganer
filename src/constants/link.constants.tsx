@@ -56,7 +56,7 @@ export const LINK_ROUTE = {
     },
 
     REGISTER: {
-      [ROUTE_KEY.APP_DIR]: "/restaurant/Register",
+      [ROUTE_KEY.APP_DIR]: "/restaurant/register",
       [ROUTE_KEY.URI]: "/restaurant/register",
     },
   },

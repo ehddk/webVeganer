@@ -173,8 +173,13 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
           <h2>지도</h2>
 
           <Suspense fallback={<div>지도를 불러오는 중...</div>}>
-            <LeafletMap address={data.rdn_code} />
+            <LeafletMap
+              address={data.rdn_code}
+              lat={data.latitude != null ? Number(data.latitude) : undefined}
+              lon={data.longitude != null ? Number(data.longitude) : undefined}
+            />
           </Suspense>
+          {!data.rdn_code && <p>주소 정보가 없습니다.</p>}
         </div>
         <div className={cx("Item")}>
           <h2>블로그 후기</h2>

@@ -105,6 +105,17 @@ function RestaurantView(props: RestaurantViewProps) {
         </div>
       </div>
 
+      <div className={cx("RegisterBar")}>
+        <p>찾는 식당이 목록에 없나요?</p>
+        <button
+          type="button"
+          className={cx("RegisterButton")}
+          onClick={() => router.push(LINK_ROUTE.RESTAURANT.REGISTER.uri)}
+        >
+          + 다녀온 식당 등록
+        </button>
+      </div>
+
       {filteredRestaurants.length > 0 ? (
         <div className={cx("Grid")}>
           {displayedRestaurants.map((restaurant) => {
