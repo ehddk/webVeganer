@@ -98,7 +98,7 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
             </div>
             <Divider />
             <div className={cx("BtnGroup")}>
-              {session.user?.id === data.author_id && (
+              {session.user?.id && session.user?.id === data.author_id && (
                 <Button
                   size="small"
                   text="삭제"
