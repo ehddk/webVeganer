@@ -4,58 +4,39 @@ import "leaflet/dist/leaflet.css";
 
 type LeafletMapProps = {
   address: string;
+  // 저장된 좌표가 있으면 지오코딩 없이 바로 사용한다.
+  lat?: number;
+  lon?: number;
 };
 
-const CITY_REGEX =
-  /(서울특별시|부산광역시|대구광역시|인천광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|경기도|강원도|강원특별자치도|충청북도|충청남도|전라북도|전북특별자치도|전라남도|경상북도|경상남도|제주특별자치도)/;
-const DISTRICT_REGEX = /(\S+?[구시군])/;
-const ROAD_REGEX = /(\S*?[로길])\s*(\d+(?:-\d+)?)/;
-
-function buildAddressVariants(raw: string): string[] {
-  const city = raw.match(CITY_REGEX)?.[1];
-  const district = raw.match(DISTRICT_REGEX)?.[1];
-  const roadMatch = raw.match(ROAD_REGEX);
-  const road = roadMatch?.[1];
-  const num = roadMatch?.[2];
-
-  const variants: string[] = [];
-
-  if (city && district && road && num) {
-    variants.push(`${city} ${district} ${road} ${num}`);
-  }
-  if (district && road && num) {
-    variants.push(`${district} ${road} ${num}`);
-  }
-  if (road && num) {
-    variants.push(`${road} ${num}`);
-  }
-  variants.push(raw);
-
-  return Array.from(new Set(variants));
-}
-
+// 같은 출처(Next 서버) 프록시를 통해 지오코딩한다 → 브라우저 CORS 회피
 async function geocode(
   address: string
 ): Promise<{ lat: number; lon: number } | null> {
-  for (const query of buildAddressVariants(address)) {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-      query
-    )}&limit=1&countrycodes=kr`;
-    const res = await fetch(url, { headers: { "Accept-Language": "ko" } });
+  try {
+    const res = await fetch(`/api/geocode?address=${encodeURIComponent(address)}`);
+    if (!res.ok) return null;
     const data = await res.json();
-    if (Array.isArray(data) && data.length > 0) {
-      return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+    if (typeof data?.lat === "number" && typeof data?.lon === "number") {
+      return { lat: data.lat, lon: data.lon };
     }
+  } catch {
+    return null;
   }
   return null;
 }
 
-function LeafletMap({ address }: LeafletMapProps) {
+function isValidCoord(v?: number): v is number {
+  return typeof v === "number" && !Number.isNaN(v) && v !== 0;
+}
+
+function LeafletMap({ address, lat, lon }: LeafletMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
 
   useEffect(() => {
-    if (!containerRef.current || !address) return;
+    if (!containerRef.current || (!address && !(isValidCoord(lat) && isValidCoord(lon))))
+      return;
     let cancelled = false;
 
     (async () => {
@@ -72,7 +53,11 @@ function LeafletMap({ address }: LeafletMapProps) {
       });
 
       try {
-        const coords = await geocode(address);
+        // 저장된 좌표가 있으면 우선 사용, 없으면 주소로 지오코딩
+        const coords =
+          isValidCoord(lat) && isValidCoord(lon)
+            ? { lat: lat as number, lon: lon as number }
+            : await geocode(address);
         if (cancelled) return;
         if (!coords) {
           console.error("주소를 찾을 수 없습니다:", address);
@@ -110,7 +95,7 @@ function LeafletMap({ address }: LeafletMapProps) {
         mapInstanceRef.current = null;
       }
     };
-  }, [address]);
+  }, [address, lat, lon]);
 
   return (
     <div ref={containerRef} style={{ width: "100%", height: "500px" }} />
