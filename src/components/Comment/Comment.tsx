@@ -34,7 +34,7 @@ export default function Comment(props: CommentProps) {
   const isMyComment = session && currentUserId === session.user?.id;
   const [openMenuId, setOpenMenuId] = useState<string | null>(null); // 열린 메뉴의 ID를 저장
   const [isEdit, setIsEdit] = useState<string | null>(null);
-  const { showModal, hideModal, ModalComponent } = useModal();
+  const { showModal, hideModal } = useModal();
   const router = useRouter();
   const form = useForm<FormType>({
     defaultValues: {
@@ -394,7 +394,6 @@ export default function Comment(props: CommentProps) {
               );
             })}
           </ul>
-          <ModalComponent />
         </div>
       </div>
     </FormProvider>

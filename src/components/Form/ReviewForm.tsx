@@ -31,7 +31,7 @@ type ReviewFormProps = {
 export default function ReviewForm(props: ReviewFormProps) {
   const { reviewData, currentUserId, session } = props;
 
-  const { showModal, hideModal, ModalComponent } = useModal();
+  const { showModal, hideModal } = useModal();
   const router = useRouter();
   const params = useParams<{ id: string }>();
 
@@ -625,7 +625,6 @@ export default function ReviewForm(props: ReviewFormProps) {
           </p>
         )
       )}
-      <ModalComponent />
     </FormProvider>
   );
 }

@@ -13,7 +13,7 @@ const cx = cn.bind(styles);
 
 type FormType = Auth.Post.Request["body"] & { passwordConfirm: string };
 export default function JoinView() {
-  const { showModal, hideModal, ModalComponent } = useModal();
+  const { showModal, hideModal } = useModal();
   const router = useRouter();
   const form = useForm<FormType>({
     mode: "onSubmit",
@@ -201,8 +201,6 @@ export default function JoinView() {
             ></Button>
           </div>
         </FormProvider>
-
-        <ModalComponent />
       </div>
     </>
   );

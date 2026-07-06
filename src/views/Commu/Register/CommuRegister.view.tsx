@@ -28,7 +28,7 @@ type CommuRegisterViewProps = {
 export default function CommuWRegisterView(props: CommuRegisterViewProps) {
   const { session } = props;
   const router = useRouter();
-  const { showModal, hideModal, ModalComponent } = useModal();
+  const { showModal, hideModal } = useModal();
   const form = useForm<FormType>({
     defaultValues: {
       title: "",
@@ -161,7 +161,6 @@ export default function CommuWRegisterView(props: CommuRegisterViewProps) {
             </div>
           </div>
         </div>
-        <ModalComponent />
       </div>
     </>
   );

@@ -17,7 +17,7 @@ const cx = cn.bind(styles);
 
 type LogInFormType = Auth.Post.Request["body"];
 function LoginView() {
-  const { showModal, hideModal, ModalComponent } = useModal();
+  const { showModal, hideModal } = useModal();
   const router = useRouter();
 
   const form = useForm<LogInFormType>({
@@ -39,7 +39,8 @@ function LoginView() {
       showModal({
         type: "default",
         title: "로그인 실패",
-        description: error.message ?? "로그인에 실패했습니다.\n다시 시도해주세요",
+        description:
+          error.message ?? "로그인에 실패했습니다.\n다시 시도해주세요",
         positive: {
           text: "확인",
           onClick: hideModal,
@@ -123,7 +124,6 @@ function LoginView() {
           ></Button>
         </div>
       </div>
-      <ModalComponent />
     </FormProvider>
   );
 }

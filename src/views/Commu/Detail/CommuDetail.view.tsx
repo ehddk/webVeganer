@@ -29,7 +29,7 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
   const router = useRouter();
   const params = useParams<{ id: string }>();
 
-  const { showModal, hideModal, ModalComponent } = useModal();
+  const { showModal, hideModal } = useModal();
 
   const handleDelete = () => {
     showModal({
@@ -137,7 +137,6 @@ export default function CommuDetailView(props: CommuDetailViewProps) {
             />
           </div>
         </div>
-        <ModalComponent />
       </section>
     </>
   );

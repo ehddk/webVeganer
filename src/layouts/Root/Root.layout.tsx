@@ -5,6 +5,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/app/Footer/Footer";
 import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
+import GlobalModal from "@/components/GlobalModal/GlobalModal";
 
 const cx = cn.bind(styles);
 
@@ -29,7 +30,7 @@ const RootLayout = async (props: RootLayoutProps) => {
       <body className={cx("Wrapper")}>
         <Header session={session} />
         <div className={cx("ContentContainer")}>{children}</div>
-        <Footer />
+        <Footer /> <GlobalModal />ㄴ
       </body>
     </html>
   );

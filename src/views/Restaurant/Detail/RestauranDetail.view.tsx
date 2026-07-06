@@ -29,7 +29,7 @@ type RestaurantInfoViewProps = {
 };
 export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
   const { data, reviewData, session, currentUserId } = props;
-  const { showModal, hideModal, ModalComponent } = useModal();
+  const { showModal, hideModal } = useModal();
   const router = useRouter();
   const firstImageUrl = data.image_url?.[0]; // 첫 번째 이미지 (인덱스 0)
   const secondImageUrl = data.image_url?.[1];
@@ -187,7 +187,6 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
             <Blog query={data.upso_name} />
           </div>
         </div>
-        <ModalComponent />
       </section>
     </>
   );

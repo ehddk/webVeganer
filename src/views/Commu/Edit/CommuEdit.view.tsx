@@ -23,7 +23,7 @@ type FormType = Article.Put.Body;
 export default function CommuEditView(props: CommuEditViewProps) {
   const { data } = props;
   const router = useRouter();
-  const { showModal, hideModal, ModalComponent } = useModal();
+  const { showModal, hideModal } = useModal();
   const params = useParams<{ id: string }>();
   const id = params?.id;
   const getDeltaContent = () => {
@@ -189,7 +189,6 @@ export default function CommuEditView(props: CommuEditViewProps) {
           />
         </div>
       </FormProvider>
-      <ModalComponent />
     </div>
   );
 }
