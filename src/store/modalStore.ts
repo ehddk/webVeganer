@@ -6,7 +6,7 @@ type ButtonProps = {
 };
 
 interface ModalStore {
-  modalState: ModalState<ButtonProps> | null;
+  modalState: ModalState<ButtonProps> | null; // 무엇을 보여줄지 담은 상태값 (모달이 떠 있는지, 떠있으면 어떤 내용인지를 담는 값)
   showModal: (props: ModalState<ButtonProps>) => void;
   hideModal: () => void;
 }
