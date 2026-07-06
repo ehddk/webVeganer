@@ -11,16 +11,43 @@ const cx = cn.bind(styles);
 
 // 서울 25개 자치구 (지역 필터의 cgg_code_name 과 값이 일치해야 검색에 걸린다)
 const SEOUL_DISTRICTS = [
-  "강남구", "강동구", "강북구", "강서구", "관악구",
-  "광진구", "구로구", "금천구", "노원구", "도봉구",
-  "동대문구", "동작구", "마포구", "서대문구", "서초구",
-  "성동구", "성북구", "송파구", "양천구", "영등포구",
-  "용산구", "은평구", "종로구", "중구", "중랑구",
+  "강남구",
+  "강동구",
+  "강북구",
+  "강서구",
+  "관악구",
+  "광진구",
+  "구로구",
+  "금천구",
+  "노원구",
+  "도봉구",
+  "동대문구",
+  "동작구",
+  "마포구",
+  "서대문구",
+  "서초구",
+  "성동구",
+  "성북구",
+  "송파구",
+  "양천구",
+  "영등포구",
+  "용산구",
+  "은평구",
+  "종로구",
+  "중구",
+  "중랑구",
 ];
 
 const CATEGORIES = [
-  "한식", "양식", "중식", "일식", "분식",
-  "카페/디저트", "베이커리", "채식뷔페", "기타",
+  "한식",
+  "양식",
+  "중식",
+  "일식",
+  "분식",
+  "카페/디저트",
+  "베이커리",
+  "채식뷔페",
+  "기타",
 ];
 
 type FormType = {
@@ -46,7 +73,7 @@ export default function RestaurantRegisterView(
 ) {
   const { session } = props;
   const router = useRouter();
-  const { showModal, hideModal, ModalComponent } = useModal();
+  const { showModal, hideModal } = useModal();
 
   const form = useForm<FormType>({
     defaultValues: {
@@ -245,17 +272,11 @@ export default function RestaurantRegisterView(
           <button type="submit" className={cx("Btn", "Primary")}>
             등록하기
           </button>
-          <button
-            type="button"
-            className={cx("Btn")}
-            onClick={handleCancel}
-          >
+          <button type="button" className={cx("Btn")} onClick={handleCancel}>
             취소
           </button>
         </div>
       </form>
-
-      <ModalComponent />
     </div>
   );
 }
