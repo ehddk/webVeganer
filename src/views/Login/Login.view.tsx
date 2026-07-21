@@ -56,7 +56,7 @@ function LoginView() {
   });
 
   // const supabase = createClient();
-  const handleGithubLogin = async () => {
+  const handleGoogleLogin = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -111,7 +111,7 @@ function LoginView() {
             colorType="primary"
             variant="contained"
             text="소셜 로그인"
-            onClick={handleGithubLogin}
+            onClick={handleGoogleLogin}
           ></Button>
 
           <Button
