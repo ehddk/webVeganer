@@ -12,6 +12,8 @@ import cn from "classnames/bind";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { supabase } from "@/lib/supabaseClient";
+import type { Session } from "@supabase/supabase-js";
+
 const cx = cn.bind(styles);
 
 type FormType = Review.Post.Request["body"] | Review.Put.Request["body"];
@@ -20,12 +22,7 @@ type ReviewItemType = Review.GetList.Response["items"][number];
 type ReviewFormProps = {
   reviewData: Review.GetList.Response;
   currentUserId?: string | null;
-  session: {
-    user: {
-      id: string;
-      email: string | undefined;
-    } | null;
-  };
+  session: Session | null;
 };
 
 export default function ReviewForm(props: ReviewFormProps) {
@@ -527,7 +524,7 @@ export default function ReviewForm(props: ReviewFormProps) {
           <p>등록된 후기가 없습니다. 첫 후기를 남겨주세요!</p>
         )}
       </div>
-      {session.user && isEdit === null ? (
+      {session?.user && isEdit === null ? (
         <div className={cx("WriteReviewForm")}>
           {" "}
           {/* SCSS에서 정의된 클래스 사용 */}
@@ -615,7 +612,7 @@ export default function ReviewForm(props: ReviewFormProps) {
           </div>
         </div>
       ) : (
-        session.user == null && (
+        session?.user == null && (
           <p className={cx("LoginRequired")}>
             후기 작성을 하려면 먼저{" "}
             <Link href="/login" style={{ color: "#288CD2" }}>

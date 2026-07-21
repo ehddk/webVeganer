@@ -81,6 +81,7 @@ declare global {
         path: Path;
         params?: Params;
         body?: Body;
+        token?: string;
       };
       type Response = getRestaurantResponse;
     }

@@ -1,6 +1,6 @@
 import { pathToUrl } from "@/utils/path.util";
 import { AxiosInstance } from "axios";
-
+import { createServerAjax } from "../instance";
 const RESTAURANT_ROUTES = {
   GET_LIST: "/api/restaurant",
   GET_ONE: "/api/restaurant/:id",
@@ -19,10 +19,11 @@ export class RestaurantService {
   }
 
   async getOne(req: Restaurant.GetOne.Request) {
-    const { data } = await this._ajax.get<Restaurant.GetOne.Response>(
+    const ajax = req.token ? createServerAjax(req.token) : this._ajax;
+
+    const { data } = await ajax.get<Restaurant.GetOne.Response>(
       pathToUrl(RESTAURANT_ROUTES.GET_ONE, req.path)
     );
-
     return data;
   }
 

@@ -61,6 +61,9 @@ function LoginView() {
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          prompt: "select_account", // 사용자가 계정을 선택하도록 강제
+        },
       },
     });
   };

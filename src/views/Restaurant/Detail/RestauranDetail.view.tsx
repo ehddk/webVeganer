@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
+import type { Session } from "@supabase/supabase-js"; // ← 상단에 추가
 
 import styles from "./RestaurantDetail.view.module.scss";
 import cn from "classnames/bind";
@@ -19,12 +20,7 @@ const cx = cn.bind(styles);
 type RestaurantInfoViewProps = {
   data: Restaurant.GetOne.Response;
   reviewData: Review.GetList.Response;
-  session: {
-    user: {
-      id: string;
-      email: string | undefined;
-    } | null;
-  };
+  session: Session | null;
   currentUserId?: string | null;
 };
 export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
@@ -34,7 +30,6 @@ export default function RestaurantInfoView(props: RestaurantInfoViewProps) {
   const firstImageUrl = data.image_url?.[0]; // 첫 번째 이미지 (인덱스 0)
   const secondImageUrl = data.image_url?.[1];
   const params = useParams<{ id: string }>();
-
   const id = params?.id;
 
   // 낙관적 업데이트: 서버 상태와 별개로 즉시 UI 반영

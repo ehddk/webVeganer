@@ -23,19 +23,13 @@ export default async function RestaurantInfoPage(
 
   //로그인 확인
   const supabase = await createSupabaseServerClient();
-  const { data } = await supabase.auth.getUser();
-  const session = {
-    user: data.user
-      ? {
-          id: data.user.id,
-          email: data.user.email,
-          name: data.user.user_metadata.name,
-        }
-      : null,
-  };
-  const currentUserId = data.user?.id ?? null;
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  const response = await RestaurantQuery.getOne({ path: { id } });
+  const token = session?.access_token;
+  const currentUserId = session?.user?.id ?? null;
+  const response = await RestaurantQuery.getOne({ path: { id }, token });
   const restaurantData = response as Restaurant.GetOne.Response;
   const reviewData = await ReviewQuery.getList({
     params: {
