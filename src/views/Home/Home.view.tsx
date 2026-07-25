@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import styles from "./Home.view.module.scss";
 import cn from "classnames/bind";
 import { useState } from "react";
-import { LINK_ROUTE } from "@/constants/link.constants";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -24,6 +23,11 @@ export default function HomeView(props: HomeViewProps) {
 
   let router = useRouter();
   const [showItems, setShowItems] = useState(6);
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [answer, setAnswer] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const chatAreaRef = React.useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
   function randomItem(arr: any, num: any) {
@@ -40,16 +44,6 @@ export default function HomeView(props: HomeViewProps) {
     if (!Array.isArray(data)) return [];
     return data.filter((item) => item.category === "과자점");
   }, [data]);
-
-  const goDetail = (id: string) => {
-    router.push(LINK_ROUTE.RESTAURANT.DETAIL.uri({ id }));
-  };
-
-  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
-  const [answer, setAnswer] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const chatAreaRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     setIsMounted(true);
