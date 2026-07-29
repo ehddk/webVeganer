@@ -11,6 +11,11 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?logo=postgresql&logoColor=white)
 
 ---
+개선해야할점
+- 초기 페이지 로딩 개선
+- 챗 부분 chat gpt처럼 한글자씩 타이핑 되도록
+- 지도 (지오코딩 -> 다른 지도 API 사용 하기)
+---
 
 ## ✨ 주요 기능
 
