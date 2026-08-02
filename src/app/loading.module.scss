@@ -1,0 +1,99 @@
+.Wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-block: 30px;
+}
+
+.Content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 90px;
+  gap: 50px;
+
+  @media screen and (max-width: 1200px) {
+    padding: 0 10px;
+  }
+}
+
+.Section {
+  display: flex;
+  flex-direction: column;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+.Grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  gap: 20px;
+
+  @media screen and (max-width: 930px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 스켈레톤 기본 블록 */
+.Block {
+  background-color: #ececec;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+
+  /* 로딩 중임을 알리는 shimmer */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmer 1.4s infinite;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 접근성: 모션 최소화 설정을 켠 사용자에게는 애니메이션을 끈다 */
+@media (prefers-reduced-motion: reduce) {
+  .Block::after {
+    animation: none;
+  }
+}
+
+.Title {
+  height: 28px;
+  width: 140px;
+}
+
+.CardImage {
+  width: 100%;
+  aspect-ratio: 400 / 360;
+}
+
+.CardLineLong {
+  height: 16px;
+  width: 70%;
+}
+
+.CardLineShort {
+  height: 14px;
+  width: 45%;
+}
+
+.Card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
