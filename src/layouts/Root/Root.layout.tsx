@@ -30,7 +30,7 @@ const RootLayout = async (props: RootLayoutProps) => {
       <body className={cx("Wrapper")}>
         <Header session={session} />
         <div className={cx("ContentContainer")}>{children}</div>
-        <Footer /> <GlobalModal />ㄴ
+        <Footer /> <GlobalModal />
       </body>
     </html>
   );
