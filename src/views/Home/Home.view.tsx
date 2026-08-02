@@ -2,62 +2,39 @@
 import { useRouter } from "next/navigation";
 import styles from "./Home.view.module.scss";
 import cn from "classnames/bind";
-import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import useIsMobile from "@/hooks/useIsMobile";
 import React from "react";
 import RestaurantCard from "@/components/RestaurantCard/RestaurantCard";
 import Chat from "@/components/Chat/Chat";
+import { LINK_ROUTE } from "@/constants/link.constants";
 
 const cx = cn.bind(styles);
 
+/** useIsMobile(1200)을 대체. JS 상태가 아닌 Swiper 자체 breakpoint로 처리해야
+ *  서버 렌더 결과와 클라이언트 첫 렌더가 어긋나지 않는다. */
+const SWIPER_BREAKPOINTS = {
+  0: { slidesPerView: 2 },
+  1201: { slidesPerView: 3 },
+};
+
 type HomeViewProps = {
-  data: Array<Restaurant.GetList.Response[number]>;
+  data: Restaurant.GetList.Response;
+  /** 서버에서 미리 추첨해 내려준 인기 식당 목록 */
+  popular: Restaurant.GetList.Response;
 };
 
 export default function HomeView(props: HomeViewProps) {
-  const { data } = props;
+  const { data, popular } = props;
 
-  let router = useRouter();
-  const [showItems, setShowItems] = useState(6);
-  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
-  const [answer, setAnswer] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const chatAreaRef = React.useRef<HTMLDivElement>(null);
-  const isMobile = useIsMobile();
-
-  function randomItem(arr: any, num: any) {
-    if (!Array.isArray(arr)) return [];
-    const mix = arr.sort(() => 0.5 - Math.random());
-    return mix.slice(0, num);
-  }
-
-  const randomResList = React.useMemo(() => {
-    return randomItem(data, showItems);
-  }, [data, showItems]); //  showItems가 변경될 때만 재계산
+  const router = useRouter();
 
   const cafeList = React.useMemo(() => {
     if (!Array.isArray(data)) return [];
     return data.filter((item) => item.category === "과자점");
   }, [data]);
-
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // 답변이나 로딩 상태 변경 시 채팅 영역 하단으로 자동 스크롤
-  React.useEffect(() => {
-    if (chatAreaRef.current) {
-      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
-    }
-  }, [selectedQuestion, answer, loading]);
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <div className={cx("Wrapper")}>
@@ -67,13 +44,13 @@ export default function HomeView(props: HomeViewProps) {
             <h2>인기 식당</h2>
             <p
               className={cx("More")}
-              onClick={() => router.push("/restaurant")}
+              onClick={() => router.push(LINK_ROUTE.RESTAURANT.DEFAULT.uri)}
             >
               더보기
             </p>
           </div>{" "}
           <div className={cx("RestauantContent")}>
-            {randomResList.map((item: Restaurant.GetList.Response[number]) => (
+            {popular.map((item) => (
               <RestaurantCard key={item.id} restaurant={item} />
             ))}
           </div>
@@ -89,8 +66,8 @@ export default function HomeView(props: HomeViewProps) {
               className={cx("Swiper")}
               wrapperClass={cx("SwipperWrapper")}
               spaceBetween={50}
-              slidesPerView={isMobile ? 2 : 3}
-              onSwiper={(swiper) => console.log(swiper)}
+              slidesPerView={3}
+              breakpoints={SWIPER_BREAKPOINTS}
               pagination={{ clickable: true, dynamicBullets: true }}
               modules={[Autoplay, Pagination]}
             >

@@ -5,7 +5,7 @@ type UpdateConditionFn<T> = (currentState: T) => T | null;
 /**
  * useState와 유사하지만 특정 의존성이 변경될 때 조건부로 상태를 업데이트하는 훅
  * @param initialState 초기 상태 값
- * @param updateCondition 상태 업데이트 조건 함수 또는 직접 설정할 값
+ * @param updateCondition 상태 업데이트 조건 함수 또는 직접 설정할 값 , 어떻게 바꿀지: 함수 or 값
  * @param dependencies 의존성 배열
  * @returns [상태, 상태 설정 함수]
  */
@@ -16,17 +16,18 @@ const useConditionalState = <T,>(
 ): [T, React.Dispatch<React.SetStateAction<T>>] => {
   // 상태와 초기 렌더링 여부
   const [state, setState] = React.useState<T>(initialState);
-  const isFirstRender = React.useRef(true);
+  const isFirstRender = React.useRef(true); // 첫 렌더링 여부를 추적하는 ref
 
   // 의존성 배열의 변경을 문자열로 추적 (예: "[1,2,3]" 형태)
   const dependenciesKey = React.useMemo(() => {
-    return dependencies ? JSON.stringify(dependencies) : "";
+    return dependencies ? JSON.stringify(dependencies) : ""; // 배열은 매 렌더마다 참조가 바뀌어서 useEffect가 오작동할 수 있어. 문자열로 만들면 값이 같으면 같다고 인식 → 정확한 비교
   }, [dependencies]);
 
   /**
    * 깊은 비교(단순화된 방식): 이전 값과 새 값의 JSON 문자열을 비교하여 달라졌는지 확인
    */
   const hasChanged = React.useCallback(
+    // 객체·배열은 === 로 비교하면 내용 같아도 다르다고 나옴(참조 비교). JSON으로 바꾸면 내용 비교 가능
     (prev: T, next: T) => JSON.stringify(prev) !== JSON.stringify(next),
     []
   );
@@ -57,7 +58,7 @@ const useConditionalState = <T,>(
 
   /**
    * 의존성 배열(dependenciesKey)이 변경될 때마다 updateCondition 실행
-   * - 첫 렌더링은 스킵
+   * - 첫 렌더링은 스킵 = > 초기 상태를 유지
    */
   React.useEffect(() => {
     if (isFirstRender.current) {

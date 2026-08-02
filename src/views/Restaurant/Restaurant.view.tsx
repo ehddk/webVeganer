@@ -70,22 +70,23 @@ function RestaurantView(props: RestaurantViewProps) {
   }, [filteredRestaurants, nowPage]);
 
   React.useEffect(() => {
-    if (!observerRef.current) return;
-    const currentObserver = observerRef.current;
+    if (!observerRef.current) return; //감시할 대상 요소
+    const currentObserver = observerRef.current; //ref.current는 클린업 시점에 null이 될 수 있으므로 별도의 변수에 저장
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setNowPage((prev) => prev + 1);
+            // 요소가 화면에 보이면
+            setNowPage((prev) => prev + 1); //다음 페이지로
           }
         });
       },
-      { threshold: 0.6 }
+      { threshold: 0.6 } // 요소가 60% 이상 보일 때 콜백 실행
     );
-    observer.observe(currentObserver);
+    observer.observe(currentObserver); // 감시 시작
     return () => {
-      observer.unobserve(currentObserver);
+      observer.unobserve(currentObserver); // 감시 해제
     };
   }, []);
 

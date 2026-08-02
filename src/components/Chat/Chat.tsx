@@ -20,7 +20,6 @@ const Chat = () => {
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [answer, setAnswer] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const chatAreaRef = React.useRef<HTMLDivElement>(null);
   const fetchFaqAnswer = async (question: string) => {
     setSelectedQuestion(question);
